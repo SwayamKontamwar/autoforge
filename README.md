@@ -68,6 +68,19 @@ cron (3×/day) ──► builder/run.py
   come back a second time.
 - **Stalls are handled.** Attempts per task are tracked in `.forge/state.json`.
   After three failures a task is marked skipped so the loop keeps moving.
+- **Nothing the model does can wedge the loop.** The dangerous failure here is not
+  a bad patch, it is a patch that crashes the run *before* the revert and *before*
+  the attempt is counted: the tree stays dirty, the attempt count never rises, so
+  the same task is picked again and crashes again on every future run, forever. Two
+  real routes to that were found and fixed — a generated test that never finishes,
+  and a file written where a package directory already exists. Applying and judging
+  a patch is now crash-proof as a whole, so any failure becomes an ordinary counted
+  attempt with the error text fed back to the model.
+- **The state file cannot brick the repository.** `.forge/state.json` is committed,
+  so a damaged one would come back on every checkout and stop the run before any
+  work began. It is written atomically, and anything unreadable is treated as "no
+  state yet" — losing attempt counts costs a few retries, refusing to start costs
+  the experiment.
 - **Failures are still commits.** A failed run commits a `DEVLOG.md` note, so the
   daily cadence and the audit trail continue even on a bad day.
 
