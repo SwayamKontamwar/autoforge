@@ -54,21 +54,43 @@ The builder is provider-agnostic. Pick one with `--provider` or `LLM_PROVIDER`:
 
 | provider | how to configure | cost |
 | --- | --- | --- |
-| `github` | default; uses the workflow's `GITHUB_TOKEN` against GitHub Models | free |
-| `openai` | set `LLM_BASE_URL`, `MODEL_ID`, and `LLM_API_KEY` (Groq, Gemini's OpenAI-compatible endpoint, OpenRouter, a local Ollama, …) | free tiers exist |
+| `openai` | **recommended** — set `LLM_BASE_URL`, `MODEL_ID`, and `LLM_API_KEY` (Groq, Gemini's OpenAI-compatible endpoint, OpenRouter, a local Ollama, …) | free tiers exist |
+| `github` | legacy; uses the workflow's `GITHUB_TOKEN` against GitHub Models | **being retired** |
 | `mock` | deterministic, offline; used for tests and local verification | free |
 
-If GitHub Models is disabled for your account or org, the run does **not** break:
-it commits a "blocked" note and retries next time. Switch to a free `openai`-
-compatible key by adding repo secrets and the loop resumes.
+> ⚠️ **GitHub Models is being retired.** As of this writing the inference
+> endpoint returns `HTTP 410 github_models_retirement_brownout`, so the `github`
+> provider is effectively unavailable. Use the `openai` provider with a free key
+> instead — the loop is designed for exactly this swap.
+
+A free key takes a minute to get. For example, with [Groq](https://console.groq.com):
+
+```
+LLM_PROVIDER=openai
+LLM_BASE_URL=https://api.groq.com/openai/v1
+MODEL_ID=llama-3.3-70b-versatile
+LLM_API_KEY=<your free groq key>
+```
+
+Add those four as repository **Actions secrets** (Settings → Secrets and
+variables → Actions) and the scheduled workflow picks them up automatically. If
+no provider is reachable, a run does **not** break: it commits a "blocked" note
+and retries next time.
 
 ## Honest caveats
 
 This is an experiment, and it is described as one:
 
-- **Free only for public repositories.** GitHub Actions minutes are unmetered on
-  public repos; on a private repo the same three-runs-a-day schedule fits inside
-  the monthly free allowance but is not unlimited.
+- **The default `github` provider is retired.** GitHub Models now returns 410, so
+  out of the box every run logs "blocked" until you configure the `openai`
+  provider with a free key (see above). This was verified live, not assumed.
+- **Hosting the schedule for free needs a personal public repo.** GitHub Actions
+  minutes are unmetered on public repositories. On **Enterprise Managed User
+  (EMU)** accounts, public repositories and GitHub-hosted runners are often
+  disabled by org policy — in which case the scheduled job cannot run on
+  GitHub's infrastructure at all. Run it under a personal public account, or
+  point a self-hosted runner at the repo, or drive `python -m builder.run` from a
+  local `cron`/`launchd` job.
 - **Cron is best-effort.** GitHub may delay scheduled runs under load, so "three
   a day, four hours apart" is the intent, not a guarantee.
 - **Sixty-day auto-disable.** GitHub disables scheduled workflows after 60 days
