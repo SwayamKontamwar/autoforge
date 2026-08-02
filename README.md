@@ -139,8 +139,11 @@ This is an experiment, and it is described as one:
   GitHub's infrastructure at all. Run it under a personal public account, or
   point a self-hosted runner at the repo, or drive `python -m builder.run` from a
   local `cron`/`launchd` job.
-- **Cron is best-effort.** GitHub may delay scheduled runs under load, so "three
-  a day, four hours apart" is the intent, not a guarantee.
+- **Cron is best-effort.** GitHub queues scheduled runs and drops them under
+  load, so "three a day, four hours apart" is the intent, not a guarantee. The
+  slots deliberately sit at odd minutes rather than on the hour, which is when
+  every other scheduled workflow on the platform wakes up. A missed slot costs one
+  task, not the project: the next run picks up exactly where this one left off.
 - **Sixty-day auto-disable.** GitHub disables scheduled workflows after 60 days
   with no repository activity; the daily commits themselves keep it alive.
 - **Some pins have expiry dates.** `actions/checkout@v4`, `actions/setup-python@v5`

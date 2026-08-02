@@ -2,10 +2,13 @@ name: daily-build
 
 on:
   schedule:
-    # Three times a day, roughly four hours apart (UTC). Cron is best-effort.
-    - cron: "0 13 * * *"
-    - cron: "0 17 * * *"
-    - cron: "0 21 * * *"
+    # Three times a day, roughly four hours apart (UTC). Cron is best-effort:
+    # GitHub queues scheduled runs and drops them under load, and the top of the
+    # hour is when every other scheduled workflow on the platform wakes up too.
+    # These deliberately sit at odd minutes off the hour to stay out of that peak.
+    - cron: "17 13 * * *"
+    - cron: "23 17 * * *"
+    - cron: "19 21 * * *"
   workflow_dispatch:
     inputs:
       provider:
