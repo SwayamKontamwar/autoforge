@@ -7,3 +7,7 @@ venv/
 *.egg-info/
 build/
 dist/
+
+# Atomic state writes land here briefly; a killed run can leave one behind, and it
+# must never be committed nor counted as a working-tree change.
+.forge/*.tmp
