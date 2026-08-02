@@ -318,6 +318,55 @@ def _outage_already_logged(repo_root: Path, provider: str) -> bool:
     return False
 
 
+def _safe_count_tests(repo_root: Path) -> int:
+    """``count_tests`` but never fatal; -1 means "could not measure"."""
+    try:
+        return count_tests(repo_root)
+    except Exception:
+        return -1
+
+
+def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
+    """Apply the patch and judge it, converting any crash into a failed attempt.
+
+    The model controls file paths and file contents, so applying a patch can raise
+    in ways no allowlist anticipates: writing a module where a package directory
+    already exists, a name the filesystem rejects, a path that is too long. Left
+    uncaught, the exception escapes before the revert and before the attempt is
+    recorded, so the tree stays dirty and the task keeps its old attempt count --
+    and is therefore chosen again, and crashes again, on every future run.
+
+    Treating it as an ordinary guardrail failure keeps the loop moving: the patch is
+    reverted, the attempt counts toward the skip threshold, and the error text goes
+    back to the model as feedback for its next try.
+    """
+    try:
+        _apply(repo_root, patch)
+        _autofix(repo_root, patch)
+        return run_guardrail(repo_root)
+    except Exception as exc:
+        paths = ", ".join(file.path for file in patch.files) or "(none)"
+        return GuardrailResult(
+            ok=False,
+            log=(
+                f"$ apply patch\n{type(exc).__name__}: {exc}\n"
+                f"Files in this patch: {paths}\n"
+                "The patch could not be written to disk. Check that every path is a "
+                "plain file that does not collide with an existing directory.\n"
+            ),
+        )
+
+
+def _baseline(repo_root: Path) -> GuardrailResult:
+    """Guardrail on the reverted tree; a crash here is an environment fault."""
+    try:
+        return run_guardrail(repo_root)
+    except Exception as exc:
+        return GuardrailResult(
+            ok=False, log=f"$ baseline guardrail\n{type(exc).__name__}: {exc}\n"
+        )
+
+
 def _tail(log: str, limit: int = 2000) -> str:
     return log if len(log) <= limit else "... (truncated)\n" + log[-limit:]
 
@@ -428,10 +477,8 @@ def main(argv: list[str] | None = None) -> int:
         _commit(repo_root, message, push)
         return 0
 
-    tests_before = count_tests(repo_root)
-    _apply(repo_root, patch)
-    _autofix(repo_root, patch)
-    result = run_guardrail(repo_root)
+    tests_before = _safe_count_tests(repo_root)
+    result = _judge(repo_root, patch)
 
     if result.ok:
         # A green suite is only meaningful if it is still the same suite. Patches may
@@ -439,7 +486,7 @@ def main(argv: list[str] | None = None) -> int:
         # test file with a thinner one: ruff, import and pytest all pass, on less
         # coverage. Left unchecked that quietly dismantles the one guarantee this
         # repository makes about its own history.
-        tests_after = count_tests(repo_root)
+        tests_after = _safe_count_tests(repo_root)
         if tests_before > 0 and 0 <= tests_after < tests_before:
             result = GuardrailResult(
                 ok=False,
@@ -472,7 +519,7 @@ def main(argv: list[str] | None = None) -> int:
     # Blaming the task there would burn three attempts, skip it, and then do the same
     # to every remaining task — silently shredding the backlog while every run still
     # reports success. Record it instead and change nothing.
-    baseline = run_guardrail(repo_root)
+    baseline = _baseline(repo_root)
     if not baseline.ok:
         print("guardrail fails on a clean tree; environment is broken, not the patch")
         if not _outage_already_logged(repo_root, "environment"):
