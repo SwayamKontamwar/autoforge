@@ -64,4 +64,13 @@ jobs:
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL || 'https://api.groq.com/openai/v1' }}
           MODEL_ID: ${{ secrets.MODEL_ID || 'openai/gpt-oss-120b' }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          # Read by builder/cost.py, which refuses to run if either could be
+          # billed. Public repositories get free, uncapped Actions minutes;
+          # private ones are metered. ubuntu-latest is free; larger, GPU, macOS
+          # and Windows runners are billed per minute even on public repos.
+          # tests/test_cost_guard.py asserts both are still passed in and that
+          # FORGE_RUNNER matches runs-on, so the guard cannot be quietly
+          # unplugged by editing this file.
+          FORGE_REPO_VISIBILITY: ${{ github.event.repository.visibility }}
+          FORGE_RUNNER: ubuntu-latest
         run: python -m builder.run

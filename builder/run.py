@@ -23,7 +23,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from builder import backlog, backlog_gen, devlog
+from builder import backlog, backlog_gen, cost, devlog
 from builder.guardrail import GuardrailResult, count_tests
 from builder.guardrail import run as run_guardrail
 from builder.llm import DoesNotFit, Patch, ProviderError, get_provider
@@ -574,6 +574,14 @@ def main(argv: list[str] | None = None) -> int:
     devlog_path = repo_root / args.devlog
     state_path = repo_root / ".forge" / "state.json"
     push = not args.no_push
+
+    # Before anything else, and before a single billable second is spent: this
+    # experiment must cost nothing, forever, with nobody watching it.
+    try:
+        cost.preflight_actions()
+    except cost.WouldCostMoney as exc:
+        print(f"refusing to run: {exc}", file=sys.stderr)
+        return 1
 
     if not _is_clean(repo_root):
         print("working tree is not clean; aborting", file=sys.stderr)

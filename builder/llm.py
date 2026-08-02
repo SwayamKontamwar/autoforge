@@ -16,6 +16,8 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
+from builder import cost
+
 _USER_AGENT = "autoforge/1.0 (+https://github.com/SwayamKontamwar/autoforge)"
 
 # A free-tier key is metered per minute, so a rate limit is a short wait rather
@@ -602,6 +604,10 @@ class OpenAICompatProvider:
     def generate(self, task: str, context: str) -> Patch:
         if not self.base_url or not self.model:
             raise ProviderError("LLM_BASE_URL and MODEL_ID must be set for the openai provider")
+        # Checked here rather than at startup because this is the exact line that
+        # could put a charge on someone's account. Anything not proven free is
+        # refused; see builder/cost.py.
+        cost.check_endpoint(self.name, self.base_url)
         raw = _chat_completion(
             self.base_url, "/chat/completions", self.model, self.token, task, context
         )

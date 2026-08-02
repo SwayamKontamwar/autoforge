@@ -187,6 +187,48 @@ weeks. That heartbeat is deliberate — GitHub disables scheduled workflows afte
 60 days without repository activity, so total silence would quietly end the
 experiment.
 
+## It costs nothing, and it is built so it cannot start
+
+Not "it's cheap" — **zero**, and enforced in code rather than promised in a
+README. GitHub's own accounting agrees: every run so far reports
+`billable_ubuntu_ms: 0`.
+
+That is true today because three things happen to be true — the repository is
+public (Actions minutes are free and uncapped on public repos), the runner is
+`ubuntu-latest` (free), and the model is Groq's free tier (no payment method, so
+it returns `HTTP 429` at the limit instead of billing). The problem is that all
+three can be undone silently. Flip the repo to private and it keeps building,
+just on metered minutes. Change one word of `runs-on`. Point `LLM_BASE_URL` at
+`api.openai.com` and every run still succeeds — the invoice just arrives later.
+
+So `builder/cost.py` checks before spending, and **refuses the run** if any of
+them stops being free:
+
+| what changed | what happens |
+| --- | --- |
+| repository turned private or internal | refuses — Actions minutes are metered there |
+| a larger, GPU, macOS or Windows runner | refuses — billed per minute even on public repos |
+| `LLM_BASE_URL` points anywhere not proven free | refuses — could bill per token |
+
+The endpoint check is an **allow-list**, not a blocklist: anything not known to
+be free is refused. A blocklist would be wrong the moment a new paid API exists,
+and this thing has to stay correct for years without supervision.
+
+The guard cannot be quietly unplugged either. `tests/test_cost_guard.py` asserts
+that the workflow still passes the repository visibility in, that `FORGE_RUNNER`
+still matches the `runs-on` the job actually uses, that the only triggers are
+`schedule` and `workflow_dispatch` (a `push` trigger would make every bot commit
+start another run), and that nothing uploads artifacts. Since the guardrail runs
+the full test suite before any commit, unplugging the guard fails the build and
+gets reverted.
+
+Storage is bounded too: `DEVLOG.md` rotates into `docs/devlog/` at 512 KB and
+finished backlog items are archived out of `BACKLOG.md`, so no file grows without
+limit. The whole repository is currently under half a megabyte.
+
+The one thing code cannot enforce is your Groq account: if you add a payment
+method there, overage stops being a `429` and starts being a charge. Don't.
+
 ## Honest caveats
 
 This is an experiment, and it is described as one:
@@ -248,6 +290,7 @@ builder/             the self-building engine
   guardrail.py       ruff + import + pytest
   backlog.py         read/advance/append BACKLOG.md
   backlog_gen.py     self-replenishing task generator (mines the toolkit)
+  cost.py            refuses to run anywhere that could ever be billed
   devlog.py          append dated notes to DEVLOG.md
 tools/
   gen_backlog.py     regenerates the 2,000+ task curated backlog (refuses to
