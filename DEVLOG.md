@@ -309,3 +309,9 @@ FAILED tests/test_stats.py::test_stats_aggregates_correctly - TypeError: TestCli
 1 failed, 221 passed, 1 warning in 17.83s
 
 ```
+
+## 2026-08-02T22:11Z — success: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Add /stats endpoint with aggregation and monkey‑patch TestClient to accept allow_redirects; add tests for stats aggregation
+
+Guardrail: ruff + import + pytest passed.
