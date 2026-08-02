@@ -55,17 +55,36 @@ def _is_clean(repo_root: Path) -> bool:
 
 
 def _load_state(state_path: Path) -> dict:
-    if state_path.exists():
-        try:
-            return json.loads(state_path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            return {}
-    return {}
+    """Read attempt state, treating anything unreadable as "no state yet".
+
+    This file is committed, so a damaged one is not a transient glitch: it would be
+    restored on every future checkout and crash the run before any work could start,
+    with no way for the loop to repair itself. Losing attempt counts costs a few
+    extra retries; refusing to start costs the entire experiment. Note that a
+    truncated write can split a multi-byte character, so decoding fails before JSON
+    parsing even begins.
+    """
+    if not state_path.exists():
+        return {}
+    try:
+        loaded = json.loads(state_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError, OSError):
+        return {}
+    return loaded if isinstance(loaded, dict) else {}
 
 
 def _save_state(state_path: Path, state: dict) -> None:
+    """Write attempt state atomically, so a killed run cannot truncate it.
+
+    ``os.replace`` is atomic on POSIX and Windows: readers see either the old file
+    or the new one, never a half-written one. Writing in place would leave a
+    truncated file if the runner were killed mid-write.
+    """
     state_path.parent.mkdir(parents=True, exist_ok=True)
-    state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    payload = json.dumps(state, indent=2, sort_keys=True) + "\n"
+    tmp = state_path.with_name(state_path.name + ".tmp")
+    tmp.write_text(payload, encoding="utf-8")
+    os.replace(tmp, state_path)
 
 
 # Attempt counts live in the state dict keyed by task text; failures hang off this
