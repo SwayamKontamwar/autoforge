@@ -337,3 +337,51 @@ E741 Ambiguous variable name: `l`
 Found 1 error.
 
 ```
+
+## 2026-08-02T23:33Z — failed: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+... (truncated)
+.............................. [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+.........................................F..                             [100%]
+=================================== FAILURES ===================================
+_____________________________ test_stats_endpoint ______________________________
+
+    def test_stats_endpoint() -> None:
+        client = TestClient(app)
+    
+        # Create two distinct links.
+        resp1 = client.post(
+            "/links",
+            json={"url": "https://example.com", "alias": "abc"},
+        )
+        assert resp1.status_code == 201
+    
+        resp2 = client.post(
+            "/links",
+            json={"url": "https://example.org", "alias": "def"},
+        )
+        assert resp2.status_code == 201
+    
+        # Access the first link twice.
+        for _ in range(2):
+>           r = client.get("/abc", allow_redirects=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: TestClient.get() got an unexpected keyword argument 'allow_redirects'
+
+tests/test_stats.py:24: TypeError
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_stats.py::test_stats_endpoint - TypeError: TestClient.get() got an unexpected keyword argument 'allow_redirects'
+1 failed, 259 passed, 1 warning in 20.94s
+
+```
