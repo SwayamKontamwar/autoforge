@@ -13,6 +13,13 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
+# Every subprocess here runs generated code, so any of them can hang: a test that
+# sleeps, waits on a socket, or loops forever. An unbounded wait would stall the
+# job until the runner is killed; an *unhandled* timeout is worse still, because it
+# escapes as an exception, leaves the patch applied, and records no attempt — so the
+# same task is retried and hangs again on every future run, permanently.
+CHECK_TIMEOUT_SECONDS = 600
+
 
 @dataclass
 class GuardrailResult:
@@ -23,13 +30,23 @@ class GuardrailResult:
 
 
 def _run(label: str, args: list[str], cwd: Path) -> tuple[bool, str]:
-    proc = subprocess.run(
-        args,
-        cwd=cwd,
-        capture_output=True,
-        text=True,
-        timeout=600,
-    )
+    try:
+        proc = subprocess.run(
+            args,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=CHECK_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        # A hang is a failed patch like any other: revert it, count the attempt, and
+        # tell the model what happened. Letting the exception escape instead would
+        # wedge the loop on this task forever.
+        return False, (
+            f"$ {label}\n(timed out after {CHECK_TIMEOUT_SECONDS}s)\n"
+            "The command never finished. Generated code must not sleep, wait on "
+            "network or user input, or loop without a termination condition.\n"
+        )
     ok = proc.returncode == 0
     output = (proc.stdout + proc.stderr).strip()
     return ok, f"$ {label}\n(exit {proc.returncode})\n{output}\n"
@@ -63,13 +80,18 @@ def count_tests(repo_root: Path) -> int:
     the safety net every other guarantee here depends on, while each run keeps
     reporting success.
     """
-    proc = subprocess.run(
-        [sys.executable, "-m", "pytest", "--collect-only", "-q"],
-        cwd=repo_root,
-        capture_output=True,
-        text=True,
-        timeout=600,
-    )
+    try:
+        proc = subprocess.run(
+            [sys.executable, "-m", "pytest", "--collect-only", "-q"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            timeout=CHECK_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        # Collection alone can hang on import-time side effects. Unknown, not zero:
+        # the caller treats -1 as "no comparison possible" rather than "no tests".
+        return -1
     if proc.returncode != 0:
         return -1
     return parse_collected(proc.stdout)
