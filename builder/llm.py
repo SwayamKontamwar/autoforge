@@ -273,6 +273,22 @@ def _retry_after_seconds(headers, default: float) -> float:
     return default
 
 
+def _decode_json_body(raw: bytes, source: str) -> dict:
+    """Parse a provider response body, or fail as a provider outage.
+
+    A 200 does not guarantee JSON. Proxies, gateways and bot-protection layers all
+    serve HTML interstitials with a success status, and a body can be truncated
+    mid-character. Letting the decode error escape turns a provider-side hiccup into
+    a crashed run; as a ProviderError it takes the outage path instead, which logs
+    it and retries on the next schedule.
+    """
+    try:
+        return json.loads(raw.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        snippet = raw.decode("utf-8", "replace")[:200].strip()
+        raise ProviderError(f"{source} returned a non-JSON body: {snippet}") from exc
+
+
 def _post_with_rate_limit_retry(request) -> dict:
     """POST, waiting out rate limits instead of treating them as an outage.
 
@@ -286,7 +302,7 @@ def _post_with_rate_limit_retry(request) -> dict:
     for attempt in range(_RATE_LIMIT_ATTEMPTS):
         try:
             with urllib.request.urlopen(request, timeout=180) as response:
-                return json.loads(response.read().decode("utf-8"))
+                return _decode_json_body(response.read(), "provider")
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", "replace")[:500]
             retryable = exc.code == 429 or 500 <= exc.code < 600
@@ -337,7 +353,7 @@ def _discover_chat_models(base_url: str, api_key: str) -> list[str]:
     )
     try:
         with urllib.request.urlopen(request, timeout=60) as response:
-            body = json.loads(response.read().decode("utf-8"))
+            body = _decode_json_body(response.read(), "model listing")
     except (urllib.error.URLError, json.JSONDecodeError, TimeoutError):
         return []
     ids = [
