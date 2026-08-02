@@ -212,6 +212,13 @@ def _build_context(repo_root: Path, task_text: str = "") -> str:
 
 
 def _reject_reason(patch: Patch) -> str | None:
+    # A task may only be closed by work that exists. Both response parsers already
+    # refuse an empty file list, but the invariant belongs where completion is
+    # decided rather than only where responses are parsed: a future provider or
+    # format would otherwise reopen the hole silently, and the symptom is the worst
+    # kind -- tasks ticked off with nothing written.
+    if not patch.files:
+        return "the patch contained no files"
     for file in patch.files:
         norm = os.path.normpath(file.path).replace(os.sep, "/")
         if norm.startswith("/") or norm.startswith(".."):
@@ -337,6 +344,14 @@ def _outage_already_logged(repo_root: Path, provider: str) -> bool:
     return False
 
 
+def _worktree_changed(repo_root: Path) -> bool:
+    """True when the working tree differs from HEAD."""
+    result = _git(repo_root, "status", "--porcelain", check=False)
+    if result.returncode != 0:
+        return True
+    return bool(result.stdout.strip())
+
+
 def _safe_count_tests(repo_root: Path) -> int:
     """``count_tests`` but never fatal; -1 means "could not measure"."""
     try:
@@ -362,6 +377,19 @@ def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
     try:
         _apply(repo_root, patch)
         _autofix(repo_root, patch)
+        if not _worktree_changed(repo_root):
+            # The tree was clean before the patch, so writing it and changing nothing
+            # means the model returned content identical to what is already on disk.
+            # The guardrail would pass on an unchanged repository and the task would
+            # be ticked off without a line of work behind it.
+            return GuardrailResult(
+                ok=False,
+                log=(
+                    "$ apply patch\nThe patch left the repository unchanged: every "
+                    "file matches what is already on disk. Implement the task, or say "
+                    "what is missing -- do not return existing files verbatim.\n"
+                ),
+            )
         return run_guardrail(repo_root)
     except Exception as exc:
         paths = ", ".join(file.path for file in patch.files) or "(none)"
