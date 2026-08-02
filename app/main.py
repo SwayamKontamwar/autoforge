@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Query
@@ -9,6 +10,9 @@ from fastapi.responses import RedirectResponse
 
 from app.models import LinkCreate, LinkInfoOut, LinkOut
 from app.storage import InMemoryStore
+
+# URL‑safe characters per RFC 3986 (unreserved)
+_ALIAS_REGEX = re.compile(r"^[A-Za-z0-9\-\._~]{3,32}$")
 
 
 def _validate_url(url: str) -> None:
@@ -20,6 +24,16 @@ def _validate_url(url: str) -> None:
     parsed = urlparse(url)
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise HTTPException(status_code=422, detail="Invalid URL")
+
+
+def _validate_alias(alias: str) -> None:
+    """Validate that ``alias`` contains only URL‑safe characters and length 3‑32.
+
+    Raises:
+        HTTPException: with status 422 if validation fails.
+    """
+    if not _ALIAS_REGEX.fullmatch(alias):
+        raise HTTPException(status_code=422, detail="Invalid alias")
 
 
 def create_app() -> FastAPI:
@@ -39,7 +53,9 @@ def create_app() -> FastAPI:
     def create_link(payload: LinkCreate) -> LinkOut:
         """Create a short link for the supplied URL."""
         _validate_url(payload.url)
-        link = store.create(payload.url)
+        if payload.alias is not None:
+            _validate_alias(payload.alias)
+        link = store.create(payload.url, payload.alias)
         # Ensure the URL is a plain string for Pydantic validation.
         return LinkOut(code=link.code, url=str(link.url))
 

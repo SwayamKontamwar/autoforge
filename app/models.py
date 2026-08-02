@@ -11,6 +11,12 @@ class LinkCreate(BaseModel):
     """Payload for creating a short link."""
 
     url: str = Field(..., description="The destination URL to shorten.")
+    alias: str | None = Field(
+        None,
+        description=(
+            "Optional custom alias for the short link. Must be URL‑safe, 3‑32 characters long."
+        ),
+    )
 
 
 class LinkOut(BaseModel):

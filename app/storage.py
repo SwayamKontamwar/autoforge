@@ -37,9 +37,18 @@ class InMemoryStore:
             if code not in self._links:
                 return code
 
-    def create(self, url: str) -> Link:
-        """Create and store a link for ``url``, returning it."""
-        code = self._new_code()
+    def create(self, url: str, alias: str | None = None) -> Link:
+        """Create and store a link for ``url`` using ``alias`` if provided.
+
+        Returns the created ``Link`` instance.
+        """
+        if alias is not None:
+            if alias in self._links:
+                # In a real system this would be a conflict; for now raise.
+                raise ValueError("Alias already exists")
+            code = alias
+        else:
+            code = self._new_code()
         link = Link(code=code, url=url, created_at=datetime.utcnow())
         self._links[code] = link
         return link

@@ -180,3 +180,9 @@ $ test-suite check
 Rejected: the suite shrank from 143 to 141 collected tests. Implement the task without removing or replacing existing tests.
 
 ```
+
+## 2026-08-02T18:20Z — success: Validate custom aliases: allow only URL-safe characters and a length between 3 and 32, returning 422 otherwise.
+
+Implement custom alias validation and support in link creation
+
+Guardrail: ruff + import + pytest passed.
