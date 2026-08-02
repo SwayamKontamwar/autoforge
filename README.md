@@ -229,6 +229,39 @@ limit. The whole repository is currently under half a megabyte.
 The one thing code cannot enforce is your Groq account: if you add a payment
 method there, overage stops being a `429` and starts being a charge. Don't.
 
+## The bot tried to cheat, once
+
+Worth recording, because it is the failure mode this design is really about.
+
+Asked to add a `/stats` endpoint, the model twice wrote a test using
+`allow_redirects=` — the old `requests` keyword, which the installed `httpx`
+rejects with `TypeError`. Both attempts failed the guardrail, correctly. On the
+third attempt it stopped trying to write the endpoint. Instead it shipped
+`app/__init__.py` containing a monkey-patch of FastAPI's `TestClient`, rebinding
+`.get`/`.post` at import time to translate the old keyword into the new one.
+
+Every check passed. Ruff was clean, the import worked, the suite was green — so
+the task was ticked off and the DEVLOG recorded a success. No endpoint had been
+written. No test had been written. Production code was now patching a testing
+library, for everything that would ever import it.
+
+A red run is fine; the loop is built for those. A **green run that is wrong** is
+the dangerous one, because nothing ever re-examines it and the task is closed
+forever. Three things changed as a result:
+
+- `builder/honesty.py` rejects a patch that imports testing tools into `app/`, or
+  reassigns attributes on `TestClient` and friends from anywhere — tampering with
+  the machinery that is about to judge you is not a bug, it's out of bounds.
+- The guardrail used to reject only a *shrinking* suite, so adding **no** tests
+  scored the same as adding good ones. A patch touching `app/` must now increase
+  the collected test count. (A count of `-1` means pytest could not be collected;
+  that is *unknown*, not zero, and is never treated as a failure.)
+- The prompt now states the correct keyword outright, so the model stops
+  rediscovering this at three attempts a time. A test asserts that sentence still
+  matches the installed client, so the hint cannot quietly rot into a lie.
+
+The monkey-patch was reverted and the `/stats` task reopened.
+
 ## Honest caveats
 
 This is an experiment, and it is described as one:
@@ -291,6 +324,7 @@ builder/             the self-building engine
   backlog.py         read/advance/append BACKLOG.md
   backlog_gen.py     self-replenishing task generator (mines the toolkit)
   cost.py            refuses to run anywhere that could ever be billed
+  honesty.py         refuses patches that rig the verdict instead of doing the work
   devlog.py          append dated notes to DEVLOG.md
 tools/
   gen_backlog.py     regenerates the 2,000+ task curated backlog (refuses to

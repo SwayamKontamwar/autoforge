@@ -108,6 +108,16 @@ class Patch:
 _FILE_MARKER = "=== FILE:"
 _END_MARKER = "=== END ==="
 
+# The installed httpx takes `follow_redirects`; the older `allow_redirects` raises
+# TypeError. The model reached for the old spelling repeatedly, burned three attempts
+# across two tasks, and then "fixed" it by monkey-patching TestClient from production
+# code. Stating the fact up front is cheaper than letting it rediscover this. A test
+# checks this sentence still matches the installed client, so it cannot rot into a lie.
+_TESTCLIENT_REDIRECT_HINT = (
+    "fastapi.testclient.TestClient uses follow_redirects=False to stop a redirect "
+    "being followed. The old requests-style allow_redirects= raises TypeError."
+)
+
 _SYSTEM_PROMPT = (
     "You are autoforge, an autonomous contributor to a small Python project (a FastAPI "
     "service plus a standard-library-style utility toolkit). You implement exactly one "
@@ -117,7 +127,14 @@ _SYSTEM_PROMPT = (
     "- Add or update a pytest test that proves the feature you built.\n"
     "- Keep the code lint-clean for ruff (rules E, F, I; line length 100).\n"
     "- Preserve existing behaviour unless the task says otherwise.\n"
-    "- Output the WHOLE contents of every file you touch, not diffs.\n\n"
+    "- Output the WHOLE contents of every file you touch, not diffs.\n"
+    "- Never import pytest, unittest, or TestClient inside app/, and never reassign "
+    "attributes on TestClient or any other testing tool. If a test fails, the code or "
+    "the test is wrong — do not change what passing means.\n\n"
+    "Facts about this repository's installed environment:\n"
+    f"- {_TESTCLIENT_REDIRECT_HINT}\n"
+    "- Only the standard library plus fastapi, starlette, httpx and pytest are "
+    "available. Do not add dependencies.\n\n"
     "Respond in EXACTLY this plain-text format, and nothing else — no prose, no "
     "markdown fences, no JSON:\n\n"
     "SUMMARY: <<=72 character imperative summary>\n"

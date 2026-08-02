@@ -23,7 +23,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from builder import backlog, backlog_gen, cost, devlog
+from builder import backlog, backlog_gen, cost, devlog, honesty
 from builder.guardrail import GuardrailResult, count_tests
 from builder.guardrail import run as run_guardrail
 from builder.llm import DoesNotFit, Patch, ProviderError, get_provider
@@ -279,7 +279,8 @@ def _reject_reason(patch: Patch) -> str | None:
         # attempt is recorded -- the same task, forever.
         if any(part.endswith(".py") for part in norm.split("/")[:-1]):
             return f"path nests inside a module file: {file.path}"
-    return None
+    # A patch may not rewrite the machinery that is about to judge it.
+    return honesty.rigged_verdict_reason(patch.files)
 
 
 def _apply(repo_root: Path, patch: Patch) -> None:
@@ -823,6 +824,16 @@ def main(argv: list[str] | None = None) -> int:
                     "existing tests.\n"
                 ),
             )
+        else:
+            # A green suite that grew by nothing has proven nothing about new code.
+            untested = honesty.untested_production_reason(
+                patch.files, tests_before, tests_after
+            )
+            if untested:
+                result = GuardrailResult(
+                    ok=False,
+                    log=f"{result.log}\n$ test-suite check\nRejected: {untested}\n",
+                )
 
     if result.ok:
         _close_task_state(state, task.text)

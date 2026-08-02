@@ -20,7 +20,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.  _(skipped after 3 failed attempts)_
 - [x] Validate custom aliases: allow only URL-safe characters and a length between 3 and 32, returning 422 otherwise.
 - [x] Add optional link expiry: accept an expires_in_seconds field and return 410 Gone when an expired link is visited.
-- [x] Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+- [ ] Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
 - [ ] Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
 - [ ] Add GET /healthz/details reporting uptime in seconds and the number of stored links.
 - [ ] Introduce a Storage protocol in app/storage.py so the in-memory store and future backends share one interface.
