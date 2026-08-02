@@ -385,3 +385,51 @@ FAILED tests/test_stats.py::test_stats_endpoint - TypeError: TestClient.get() go
 1 failed, 259 passed, 1 warning in 20.94s
 
 ```
+
+## 2026-08-02T23:46Z — skipped: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+............ [ 27%]
+........................................................................ [ 54%]
+........................................................................ [ 81%]
+...............................................F..                       [100%]
+=================================== FAILURES ===================================
+_____________________________ test_stats_endpoint ______________________________
+
+    def test_stats_endpoint() -> None:
+        client = TestClient(app)
+    
+        resp1 = client.post("/links", json={"url": "https://example.com", "alias": "abc"})
+        assert resp1.status_code == 201
+    
+        resp2 = client.post("/links", json={"url": "https://example.org", "alias": "def"})
+        assert resp2.status_code == 201
+    
+        for _ in range(2):
+            r = client.get("/abc", follow_redirects=False)
+            assert r.status_code == 307
+    
+        r = client.get("/def", follow_redirects=False)
+        assert r.status_code == 307
+    
+        stats_resp = client.get("/stats")
+>       assert stats_resp.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/test_stats.py:23: AssertionError
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_stats.py::test_stats_endpoint - assert 404 == 200
+ +  where 404 = <Response [404 Not Found]>.status_code
+1 failed, 265 passed, 1 warning in 16.08s
+
+```
