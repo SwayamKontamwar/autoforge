@@ -135,6 +135,13 @@ This is an experiment, and it is described as one:
   a day, four hours apart" is the intent, not a guarantee.
 - **Sixty-day auto-disable.** GitHub disables scheduled workflows after 60 days
   with no repository activity; the daily commits themselves keep it alive.
+- **Some pins have expiry dates.** `actions/checkout@v4`, `actions/setup-python@v5`
+  and Python 3.11 will all be retired eventually — sooner than "runs for years"
+  implies. That is a deliberate trade: a pinned version fails on a known date,
+  while an unpinned one fails on a random one. When it happens the run does not
+  quietly eat the backlog; a checkout that cannot pass its own tests is detected
+  as a broken environment, and the run aborts without consuming a task or marking
+  anything done. It needs a human, and it will say so rather than pretend.
 - **The model sees a slice of the repo, not all of it.** The prompt is capped at a
   fixed size no matter how large the tree grows, and files are chosen by relevance
   to the task rather than alphabetically. That keeps runs affordable after years of
