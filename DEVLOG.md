@@ -92,3 +92,9 @@ Guardrail: ruff + import + pytest passed.
 Add GET /links endpoint returning all stored links with details
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T16:40Z — success: Add pagination to GET /links using limit and offset query parameters with sensible defaults and bounds.
+
+Add pagination to GET /links with limit and offset query parameters and tests
+
+Guardrail: ruff + import + pytest passed.

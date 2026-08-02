@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import RedirectResponse
 
 from app.models import LinkCreate, LinkInfoOut, LinkOut
@@ -44,8 +44,21 @@ def create_app() -> FastAPI:
         return LinkOut(code=link.code, url=str(link.url))
 
     @app.get("/links", response_model=list[LinkInfoOut])
-    def list_links() -> list[LinkInfoOut]:
-        """Return a list of all stored links with their details."""
+    def list_links(
+        limit: int = Query(100, ge=1, le=1000),
+        offset: int = Query(0, ge=0),
+    ) -> list[LinkInfoOut]:
+        """Return a paginated list of stored links with their details.
+
+        Args:
+            limit: Maximum number of items to return (default 100, max 1000).
+            offset: Number of items to skip before starting to collect the result set.
+
+        Returns:
+            A list of ``LinkInfoOut`` objects respecting the pagination parameters.
+        """
+        all_links = store.list_all()
+        sliced = all_links[offset : offset + limit]
         return [
             LinkInfoOut(
                 code=link.code,
@@ -53,7 +66,7 @@ def create_app() -> FastAPI:
                 created_at=link.created_at,
                 hits=link.hits,
             )
-            for link in store.list_all()
+            for link in sliced
         ]
 
     @app.get("/{code}")

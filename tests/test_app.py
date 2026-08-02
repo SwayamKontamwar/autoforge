@@ -121,3 +121,22 @@ def test_get_links_returns_all_links() -> None:
         assert "hits" in item
         assert item["hits"] == 0
         assert "created_at" in item
+
+
+def test_get_links_pagination() -> None:
+    api = client()
+    urls = [f"https://example.com/{i}" for i in range(5)]
+    codes = []
+    for u in urls:
+        resp = api.post("/links", json={"url": u})
+        assert resp.status_code == 201
+        codes.append(resp.json()["code"])
+
+    # Request a slice: limit=2, offset=1
+    resp = api.get("/links", params={"limit": 2, "offset": 1})
+    assert resp.status_code == 200
+    data = resp.json()
+    assert isinstance(data, list)
+    assert len(data) == 2
+    expected_codes = codes[1:3]
+    assert [item["code"] for item in data] == expected_codes
