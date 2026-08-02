@@ -39,9 +39,22 @@ def _archive_paths(backlog_path: Path) -> list[Path]:
 
 
 def _next_archive_path(backlog_path: Path) -> Path:
+    """Return an archive path that does not already exist.
+
+    Numbering off a file *count* looks equivalent but is not: one gap in the sequence
+    (``completed-001`` beside ``completed-003``) makes the count point back at a file
+    that is already there, and archiving would overwrite it. That destroys finished
+    history and shrinks the set of task texts used to reject duplicates, so the bot
+    would start regenerating work it had already done.
+    """
     directory = _archive_dir(backlog_path)
     directory.mkdir(parents=True, exist_ok=True)
-    return directory / f"completed-{len(_archive_paths(backlog_path)) + 1:03d}.md"
+    n = len(_archive_paths(backlog_path)) + 1
+    candidate = directory / f"completed-{n:03d}.md"
+    while candidate.exists():
+        n += 1
+        candidate = directory / f"completed-{n:03d}.md"
+    return candidate
 
 
 def archive_completed(backlog_path: Path) -> Path | None:
@@ -85,13 +98,38 @@ def next_task(backlog_path: Path) -> Task | None:
     for index, line in enumerate(lines):
         stripped = line.strip()
         if stripped.startswith(_OPEN):
-            return Task(index=index, text=stripped[len(_OPEN):].strip())
+            return Task(index=index, text=stripped[len(_OPEN) :].strip())
     return None
 
 
-def mark_done(backlog_path: Path, index: int, note: str | None = None) -> None:
-    """Flip the task at ``index`` from open to done, optionally appending a note."""
+def _relocate(lines: list[str], expect: str | None) -> int:
+    """Find the open task whose text is ``expect``, or refuse to guess."""
+    if expect is not None:
+        wanted = expect.strip()
+        for i, line in enumerate(lines):
+            stripped = line.strip()
+            if stripped.startswith(_OPEN) and stripped[len(_OPEN) :].strip() == wanted:
+                return i
+    raise ValueError("backlog index is stale: the file changed after the task was chosen")
+
+
+def mark_done(
+    backlog_path: Path, index: int, note: str | None = None, expect: str | None = None
+) -> None:
+    """Flip the task at ``index`` from open to done, optionally appending a note.
+
+    ``index`` is read from the file earlier in the run, so it can go stale if anything
+    rewrites the backlog in between. Writing to a stale index is worse than failing:
+    ``partition`` on a line that is not a task returns the line unchanged, so ``- [x]``
+    is welded onto the end of some unrelated line while the real task stays open and is
+    handed out again forever. When ``expect`` is given the task is re-located by text,
+    and a genuine mismatch raises instead of corrupting the file.
+    """
     lines = backlog_path.read_text(encoding="utf-8").splitlines()
+    if not 0 <= index < len(lines) or not lines[index].strip().startswith(_OPEN):
+        index = _relocate(lines, expect)
+    elif expect is not None and lines[index].strip()[len(_OPEN) :].strip() != expect.strip():
+        index = _relocate(lines, expect)
     line = lines[index]
     prefix, _, rest = line.partition(_OPEN)
     updated = f"{prefix}{_DONE}{rest.strip()}"
@@ -121,7 +159,7 @@ def all_task_texts(backlog_path: Path) -> set[str]:
         stripped = line.strip()
         for marker in (_OPEN, _DONE):
             if stripped.startswith(marker):
-                body = stripped[len(marker):]
+                body = stripped[len(marker) :]
                 body = body.split("  _(", 1)[0].strip()
                 texts.add(body)
                 break
@@ -135,4 +173,3 @@ def append_tasks(backlog_path: Path, tasks: list[str], heading: str) -> None:
     block.extend(f"- [ ] {task}" for task in tasks)
     body = existing.rstrip("\n") + "\n" + "\n".join(block) + "\n"
     backlog_path.write_text(body, encoding="utf-8")
-

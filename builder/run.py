@@ -276,6 +276,14 @@ def _revert(repo_root: Path) -> None:
         _git(repo_root, "clean", "-fd", prefix, check=False)
 
 
+_IDENTITY = (
+    "-c",
+    "user.name=autoforge-bot",
+    "-c",
+    "user.email=autoforge-bot@users.noreply.github.com",
+)
+
+
 def _push(repo_root: Path, attempts: int = 3) -> bool:
     """Push, rebasing onto the remote if it moved under us.
 
@@ -294,33 +302,40 @@ def _push(repo_root: Path, attempts: int = 3) -> bool:
         if attempt == attempts - 1:
             break
         print("push rejected; remote moved, rebasing and retrying")
-        pull = _git(repo_root, "pull", "--rebase", "origin", branch, check=False)
+        pull = _git(repo_root, *_IDENTITY, "pull", "--rebase", "origin", branch, check=False)
         if pull.returncode != 0:
+            conflicted = any(
+                (repo_root / ".git" / d).exists() for d in ("rebase-merge", "rebase-apply")
+            )
             _git(repo_root, "rebase", "--abort", check=False)
-            print("rebase onto the remote conflicted; not force-pushing", file=sys.stderr)
+            why = "conflicted" if conflicted else "could not run"
+            print(
+                f"rebase onto the remote {why}; not force-pushing\n{pull.stderr.strip()}",
+                file=sys.stderr,
+            )
             return False
     print("could not push after retrying", file=sys.stderr)
     return False
 
 
-def _commit(repo_root: Path, message: str, push: bool) -> None:
+def _commit(repo_root: Path, message: str, push: bool) -> bool:
+    """Commit and publish. False means the work exists locally but not on the remote.
+
+    A runner is thrown away when the job ends, so a commit that is not pushed is a
+    commit that never happened. Worse, an unpushed run leaves no repository activity,
+    and GitHub disables a schedule after sixty days without any -- so a push that
+    silently fails does not just lose one run, it eventually stops the loop entirely.
+    The caller turns this into a non-zero exit so the failure is visible.
+    """
     _git(repo_root, "add", "-A")
     if _git(repo_root, "diff", "--cached", "--quiet", check=False).returncode == 0:
         print("nothing to commit")
-        return
-    _git(
-        repo_root,
-        "-c",
-        "user.name=autoforge-bot",
-        "-c",
-        "user.email=autoforge-bot@users.noreply.github.com",
-        "commit",
-        "-m",
-        message,
-    )
+        return True
+    _git(repo_root, *_IDENTITY, "commit", "-m", message)
     print(f"committed: {message}")
     if push:
-        _push(repo_root)
+        return _push(repo_root)
+    return True
 
 
 def _outage_already_logged(repo_root: Path, provider: str) -> bool:
@@ -356,6 +371,47 @@ def _outage_already_logged(repo_root: Path, provider: str) -> bool:
     return False
 
 
+def _mark_done(backlog_path: Path, task: backlog.Task, note: str | None = None) -> None:
+    """Tick a task off, tolerating a backlog that no longer holds it open.
+
+    ``mark_done`` refuses a stale index rather than corrupting a line. Reaching that
+    point means the task is not open any more, so there is nothing left to record and
+    the run should finish normally instead of stranding itself.
+    """
+    try:
+        backlog.mark_done(backlog_path, task.index, note=note, expect=task.text)
+    except ValueError as exc:
+        print(f"could not tick the task off: {exc}", file=sys.stderr)
+
+
+def _restore_outside_patch_area(repo_root: Path) -> None:
+    """Undo whatever a check wrote outside ``app/`` and ``tests/``.
+
+    The guardrail does not merely inspect generated code, it *executes* it: ruff, an
+    import of the app, and pytest all run with the repository as their working
+    directory. A patch confined to ``tests/`` can therefore still write to
+    ``BACKLOG.md``, ``DEVLOG.md``, ``.forge/state.json`` or the repository root --
+    paths that the revert does not restore and that ``git add -A`` does commit.
+
+    Reproduced before this existed: a test that rewrote ``BACKLOG.md`` and passed
+    took the backlog from 1032 open tasks to none, committed it, and shifted the line
+    numbering so the wrong task was marked done. There is no way back from that once
+    it reaches the remote, so it is undone after every check rather than trusted not
+    to happen.
+    """
+    _git(repo_root, "checkout", "--", ".", ":(exclude)app", ":(exclude)tests", check=False)
+    listed = _git(repo_root, "ls-files", "--others", "--exclude-standard", check=False)
+    if listed.returncode != 0:
+        return
+    for line in listed.stdout.splitlines():
+        rel = line.strip()
+        if not rel or rel.startswith(("app/", "tests/")):
+            continue
+        target = repo_root / rel
+        if target.is_file():
+            target.unlink()
+
+
 def _patch_changed_anything(repo_root: Path, patch: Patch) -> bool:
     """True when the patch's own files differ from HEAD.
 
@@ -379,6 +435,9 @@ def _safe_count_tests(repo_root: Path) -> int:
         return count_tests(repo_root)
     except Exception:
         return -1
+    finally:
+        # Collection imports every test module, so it runs repository code too.
+        _restore_outside_patch_area(repo_root)
 
 
 def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
@@ -426,6 +485,8 @@ def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
                 "plain file that does not collide with an existing directory.\n"
             ),
         )
+    finally:
+        _restore_outside_patch_area(repo_root)
 
 
 def _baseline(repo_root: Path) -> GuardrailResult:
@@ -433,9 +494,9 @@ def _baseline(repo_root: Path) -> GuardrailResult:
     try:
         return run_guardrail(repo_root)
     except Exception as exc:
-        return GuardrailResult(
-            ok=False, log=f"$ baseline guardrail\n{type(exc).__name__}: {exc}\n"
-        )
+        return GuardrailResult(ok=False, log=f"$ baseline guardrail\n{type(exc).__name__}: {exc}\n")
+    finally:
+        _restore_outside_patch_area(repo_root)
 
 
 def _tail(log: str, limit: int = 2000) -> str:
@@ -521,17 +582,17 @@ def main(argv: list[str] | None = None) -> int:
             f"Model provider '{args.provider}' was unavailable: {exc}. "
             "No code changed; will retry next run.",
         )
-        _commit(repo_root, f"forge: log blocked task ({args.provider} unavailable)", push)
-        return 0
+        published = _commit(
+            repo_root, f"forge: log blocked task ({args.provider} unavailable)", push
+        )
+        return 0 if published else 1
 
     reason = _reject_reason(patch)
     if reason is not None:
         attempts += 1
         state[task.text] = attempts
         if attempts >= args.max_attempts:
-            backlog.mark_done(
-                backlog_path, task.index, note=f"skipped after {attempts} out-of-bounds patches"
-            )
+            _mark_done(backlog_path, task, f"skipped after {attempts} out-of-bounds patches")
             status = "skipped"
             message = "forge: skip task after repeated out-of-bounds patches"
             detail = (
@@ -545,8 +606,7 @@ def main(argv: list[str] | None = None) -> int:
             detail = f"Patch rejected: {reason}"
         _save_state(state_path, state)
         devlog.append(devlog_path, status, task.text, detail)
-        _commit(repo_root, message, push)
-        return 0
+        return 0 if _commit(repo_root, message, push) else 1
 
     tests_before = _safe_count_tests(repo_root)
     result = _judge(repo_root, patch)
@@ -572,15 +632,14 @@ def main(argv: list[str] | None = None) -> int:
     if result.ok:
         _close_task_state(state, task.text)
         _save_state(state_path, state)
-        backlog.mark_done(backlog_path, task.index)
+        _mark_done(backlog_path, task)
         devlog.append(
             devlog_path,
             "success",
             task.text,
             f"{patch.summary}\n\nGuardrail: ruff + import + pytest passed.",
         )
-        _commit(repo_root, f"forge: {patch.summary}", push)
-        return 0
+        return 0 if _commit(repo_root, f"forge: {patch.summary}", push) else 1
 
     _revert(repo_root)
 
@@ -603,7 +662,10 @@ def main(argv: list[str] | None = None) -> int:
                 "task is left untouched and no attempt was counted.\n\n"
                 f"{_tail(baseline.log)}",
             )
-            _commit(repo_root, "forge: log blocked task (environment unavailable)", push)
+            published = _commit(
+                repo_root, "forge: log blocked task (environment unavailable)", push
+            )
+            return 0 if published else 1
         return 0
 
     attempts += 1
@@ -611,9 +673,7 @@ def main(argv: list[str] | None = None) -> int:
     _remember_failure(state, task.text, result.log)
 
     if attempts >= args.max_attempts:
-        backlog.mark_done(
-            backlog_path, task.index, note=f"skipped after {attempts} failed attempts"
-        )
+        _mark_done(backlog_path, task, f"skipped after {attempts} failed attempts")
         status, message = "skipped", "forge: skip task after repeated guardrail failures"
         _close_task_state(state, task.text)
     else:
@@ -627,8 +687,7 @@ def main(argv: list[str] | None = None) -> int:
         task.text,
         f"Guardrail failed on attempt {attempts}; code reverted.\n\n```\n{_tail(result.log)}\n```",
     )
-    _commit(repo_root, message, push)
-    return 0
+    return 0 if _commit(repo_root, message, push) else 1
 
 
 if __name__ == "__main__":

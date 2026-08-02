@@ -81,6 +81,22 @@ cron (3×/day) ──► builder/run.py
   done with nothing written. Both are counted as failed attempts instead. So is a
   path like `app/router.py/user.py`, which would commit a *directory* named
   `router.py` and then crash prompt building on every later run.
+- **The checks cannot damage the repository.** The guardrail does not read generated
+  code, it *runs* it — ruff, an import of the app and pytest all execute with the repo
+  as their working directory. So a patch confined to `tests/` can still reach
+  `BACKLOG.md`, `DEVLOG.md` and the repo root while it is being checked, outside what
+  the revert restores and inside what the commit stages. Reproduced before it was
+  fixed: a passing test that rewrote `BACKLOG.md` took the backlog from 1,032 open
+  tasks to none and committed the wreckage. Everything outside `app/` and `tests/` is
+  now restored after every check, and a backlog index that has gone stale is refused
+  rather than written to — otherwise the tick lands on an unrelated line while the
+  real task stays open forever.
+- **Work that cannot be published fails loudly.** A runner is deleted when the job
+  ends, so a commit that never pushes is a commit that never happened — and a repo
+  with no activity has its schedule disabled by GitHub after sixty days, which would
+  stop the loop for good. The rebase retry carries the bot's git identity (runners
+  have none of their own, and without it the rebase fatals and gets misreported as a
+  conflict), and a failed push now exits non-zero instead of reporting a green run.
 - **The state file cannot brick the repository.** `.forge/state.json` is committed,
   so a damaged one would come back on every checkout and stop the run before any
   work began. It is written atomically, and anything unreadable is treated as "no
