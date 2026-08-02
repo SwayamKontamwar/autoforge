@@ -235,3 +235,9 @@ FAILED tests/test_link_expiry.py::test_link_expires_and_returns_410 - TypeError:
 1 failed, 155 passed, 1 warning in 16.08s
 
 ```
+
+## 2026-08-02T18:56Z — success: Add optional link expiry: accept an expires_in_seconds field and return 410 Gone when an expired link is visited.
+
+Add optional link expiry handling and update tests for correct redirect behavior
+
+Guardrail: ruff + import + pytest passed.

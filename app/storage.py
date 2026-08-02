@@ -10,7 +10,8 @@ from __future__ import annotations
 import secrets
 import string
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import Optional
 
 _ALPHABET = string.ascii_letters + string.digits
 
@@ -23,6 +24,7 @@ class Link:
     url: str
     created_at: datetime
     hits: int = 0
+    expires_at: Optional[datetime] = None
 
 
 class InMemoryStore:
@@ -37,7 +39,12 @@ class InMemoryStore:
             if code not in self._links:
                 return code
 
-    def create(self, url: str, alias: str | None = None) -> Link:
+    def create(
+        self,
+        url: str,
+        alias: str | None = None,
+        expires_in_seconds: int | None = None,
+    ) -> Link:
         """Create and store a link for ``url`` using ``alias`` if provided.
 
         Returns the created ``Link`` instance.
@@ -49,7 +56,15 @@ class InMemoryStore:
             code = alias
         else:
             code = self._new_code()
-        link = Link(code=code, url=url, created_at=datetime.utcnow())
+        expires_at: Optional[datetime] = None
+        if expires_in_seconds is not None:
+            expires_at = datetime.utcnow() + timedelta(seconds=expires_in_seconds)
+        link = Link(
+            code=code,
+            url=url,
+            created_at=datetime.utcnow(),
+            expires_at=expires_at,
+        )
         self._links[code] = link
         return link
 

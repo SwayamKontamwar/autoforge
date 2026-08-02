@@ -17,6 +17,11 @@ class LinkCreate(BaseModel):
             "Optional custom alias for the short link. Must be URL‑safe, 3‑32 characters long."
         ),
     )
+    expires_in_seconds: int | None = Field(
+        None,
+        ge=0,
+        description="Optional number of seconds after which the link expires.",
+    )
 
 
 class LinkOut(BaseModel):

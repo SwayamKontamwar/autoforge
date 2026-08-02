@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Query
@@ -55,7 +56,7 @@ def create_app() -> FastAPI:
         _validate_url(payload.url)
         if payload.alias is not None:
             _validate_alias(payload.alias)
-        link = store.create(payload.url, payload.alias)
+        link = store.create(payload.url, payload.alias, payload.expires_in_seconds)
         # Ensure the URL is a plain string for Pydantic validation.
         return LinkOut(code=link.code, url=str(link.url))
 
@@ -91,6 +92,9 @@ def create_app() -> FastAPI:
         link = store.get(code)
         if link is None:
             raise HTTPException(status_code=404, detail="Unknown short code")
+        # Expiry handling
+        if link.expires_at is not None and datetime.utcnow() > link.expires_at:
+            raise HTTPException(status_code=410, detail="Link expired")
         store.record_hit(code)
         return RedirectResponse(url=link.url, status_code=307)
 
