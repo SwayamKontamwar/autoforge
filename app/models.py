@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 
 
@@ -16,3 +18,11 @@ class LinkOut(BaseModel):
 
     code: str = Field(..., description="The short code identifying the link.")
     url: str = Field(..., description="The destination URL.")
+
+
+class LinkInfoOut(BaseModel):
+    """Detailed information about a short link."""
+
+    code: str = Field(..., description="The short code identifying the link.")
+    url: str = Field(..., description="The destination URL.")
+    created_at: datetime = Field(..., description="Timestamp when the link was created.")

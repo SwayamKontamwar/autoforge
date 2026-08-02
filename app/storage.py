@@ -10,6 +10,7 @@ from __future__ import annotations
 import secrets
 import string
 from dataclasses import dataclass
+from datetime import datetime
 
 _ALPHABET = string.ascii_letters + string.digits
 
@@ -20,6 +21,7 @@ class Link:
 
     code: str
     url: str
+    created_at: datetime
 
 
 class InMemoryStore:
@@ -37,7 +39,7 @@ class InMemoryStore:
     def create(self, url: str) -> Link:
         """Create and store a link for ``url``, returning it."""
         code = self._new_code()
-        link = Link(code=code, url=url)
+        link = Link(code=code, url=url, created_at=datetime.utcnow())
         self._links[code] = link
         return link
 

@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 
-from app.models import LinkCreate, LinkOut
+from app.models import LinkCreate, LinkInfoOut, LinkOut
 from app.storage import InMemoryStore
 
 
@@ -50,6 +50,14 @@ def create_app() -> FastAPI:
         if link is None:
             raise HTTPException(status_code=404, detail="Unknown short code")
         return RedirectResponse(url=link.url, status_code=307)
+
+    @app.get("/links/{code}/info", response_model=LinkInfoOut)
+    def link_info(code: str) -> LinkInfoOut:
+        """Return detailed information about a short link without redirect."""
+        link = store.get(code)
+        if link is None:
+            raise HTTPException(status_code=404, detail="Unknown short code")
+        return LinkInfoOut(code=link.code, url=link.url, created_at=link.created_at)
 
     return app
 

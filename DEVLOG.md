@@ -68,3 +68,9 @@ url
 Reject invalid URLs on POST /links and ensure URL is string in response
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T09:17Z — success: Add GET /links/{code}/info returning the code, target URL, and creation time as JSON without redirecting.
+
+Add GET /links/{code}/info endpoint with creation timestamp
+
+Guardrail: ruff + import + pytest passed.

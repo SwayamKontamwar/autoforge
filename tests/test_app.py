@@ -40,3 +40,21 @@ def test_redirect_sends_to_destination() -> None:
 def test_unknown_code_is_404() -> None:
     response = client().get("/does-not-exist")
     assert response.status_code == 404
+
+
+def test_link_info_returns_details() -> None:
+    api = client()
+    payload = {"url": "https://example.com/info"}
+    create_resp = api.post("/links", json=payload)
+    assert create_resp.status_code == 201
+    code = create_resp.json()["code"]
+    info_resp = api.get(f"/links/{code}/info")
+    assert info_resp.status_code == 200
+    info = info_resp.json()
+    assert info["code"] == code
+    assert info["url"] == payload["url"]
+    assert "created_at" in info
+    # Ensure the timestamp is parseable ISO format
+    from datetime import datetime
+
+    datetime.fromisoformat(info["created_at"])
