@@ -32,18 +32,29 @@ class Patch:
     summary: str
 
 
+_FILE_MARKER = "=== FILE:"
+_END_MARKER = "=== END ==="
+
 _SYSTEM_PROMPT = (
-    "You are autoforge, an autonomous contributor to a small FastAPI URL-shortener "
-    "written in Python. You implement exactly one backlog item per turn.\n\n"
+    "You are autoforge, an autonomous contributor to a small Python project (a FastAPI "
+    "service plus a standard-library-style utility toolkit). You implement exactly one "
+    "backlog item per turn.\n\n"
     "Hard rules:\n"
     "- Only create or modify files under app/ and tests/.\n"
     "- Add or update a pytest test that proves the feature you built.\n"
     "- Keep the code lint-clean for ruff (rules E, F, I; line length 100).\n"
-    "- Preserve existing endpoints and their behaviour unless the task says otherwise.\n"
-    "- Return whole-file contents for every file you touch, not diffs.\n\n"
-    "Respond with ONLY a JSON object, no prose and no markdown fences, shaped like:\n"
-    '{"summary": "<= 72 char imperative summary", '
-    '"files": [{"path": "app/...", "content": "<full file text>"}]}'
+    "- Preserve existing behaviour unless the task says otherwise.\n"
+    "- Output the WHOLE contents of every file you touch, not diffs.\n\n"
+    "Respond in EXACTLY this plain-text format, and nothing else — no prose, no "
+    "markdown fences, no JSON:\n\n"
+    "SUMMARY: <<=72 character imperative summary>\n"
+    f"{_FILE_MARKER} app/relative/path.py ===\n"
+    "<the complete raw file content, written verbatim>\n"
+    f"{_FILE_MARKER} tests/relative/path.py ===\n"
+    "<the complete raw file content, written verbatim>\n"
+    f"{_END_MARKER}\n\n"
+    "Write file contents exactly as they should appear on disk. Do NOT escape quotes, "
+    "backslashes, or newlines — just write the real characters."
 )
 
 
@@ -51,13 +62,67 @@ def _user_prompt(task: str, context: str) -> str:
     return (
         f"Backlog item to implement:\n{task}\n\n"
         f"Current repository contents:\n{context}\n\n"
-        "Return the JSON patch now."
+        "Return the patch now, in the SUMMARY / === FILE: === / === END === format."
     )
 
 
-def parse_patch(raw: str) -> Patch:
-    """Parse a model response into a :class:`Patch`, tolerating code fences."""
-    text = raw.strip()
+_VALID_ESCAPES = set('"\\/bfnrtu')
+
+
+def _repair_json(text: str) -> str:
+    """Repair the two mistakes small models make most when emitting JSON payloads.
+
+    1. Unescaped backslashes inside string values — code full of regex (``\\s``,
+       ``\\d``) or escape sequences produces JSON that ``json.loads`` rejects with
+       "Invalid \\escape". Any backslash that does not begin a valid JSON escape is
+       doubled.
+    2. Literal newlines/carriage returns/tabs inside string values — models often
+       paste real file contents with real line breaks, which are illegal control
+       characters inside a JSON string. These are converted to ``\\n``/``\\r``/``\\t``.
+
+    Only characters *inside* string literals are touched, so structural JSON is left
+    intact. This never makes correctness claims: repaired code still faces the full
+    guardrail.
+    """
+    out: list[str] = []
+    in_string = False
+    i = 0
+    n = len(text)
+    while i < n:
+        char = text[i]
+        if not in_string:
+            out.append(char)
+            if char == '"':
+                in_string = True
+            i += 1
+            continue
+        if char == "\\":
+            nxt = text[i + 1] if i + 1 < n else ""
+            if nxt in _VALID_ESCAPES:
+                out.append(char)
+                out.append(nxt)
+                i += 2
+            else:
+                out.append("\\\\")
+                i += 1
+            continue
+        if char == '"':
+            in_string = False
+            out.append(char)
+        elif char == "\n":
+            out.append("\\n")
+        elif char == "\r":
+            out.append("\\r")
+        elif char == "\t":
+            out.append("\\t")
+        else:
+            out.append(char)
+        i += 1
+    return "".join(out)
+
+
+def _strip_fences(text: str) -> str:
+    text = text.strip()
     if text.startswith("```"):
         lines = text.splitlines()
         lines = lines[1:] if lines else lines
@@ -66,10 +131,60 @@ def parse_patch(raw: str) -> Patch:
         text = "\n".join(lines).strip()
         if text.lower().startswith("json"):
             text = text[4:].strip()
+    return text
+
+
+def _parse_markers(text: str) -> Patch:
+    """Parse the escaping-free ``=== FILE: path ===`` format.
+
+    Raw file contents sit verbatim between markers, so the model never has to escape
+    quotes, backslashes, or newlines — the single biggest source of unusable output
+    from smaller models. This makes the loop productive on free, local models.
+    """
+    files: list[File] = []
+    summary = ""
+    current_path: str | None = None
+    current: list[str] = []
+
+    def flush() -> None:
+        if current_path is not None:
+            content = "\n".join(current).strip("\n")
+            files.append(File(path=current_path.strip(), content=content))
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if current_path is None and stripped.upper().startswith("SUMMARY:"):
+            summary = stripped[len("SUMMARY:"):].strip()
+        elif stripped.startswith(_FILE_MARKER):
+            flush()
+            header = stripped[len(_FILE_MARKER):].strip()
+            if header.endswith("==="):
+                header = header[:-3].strip()
+            current_path = header
+            current = []
+        elif stripped == _END_MARKER:
+            flush()
+            current_path = None
+            current = []
+            break
+        elif current_path is not None:
+            current.append(line)
+    else:
+        flush()
+
+    if not files:
+        raise ProviderError("no files found in marker response")
+    return Patch(files=files, summary=summary or "implement backlog item")
+
+
+def _parse_json(text: str) -> Patch:
     try:
         data = json.loads(text)
-    except json.JSONDecodeError as exc:
-        raise ProviderError(f"model did not return valid JSON: {exc}") from exc
+    except json.JSONDecodeError:
+        try:
+            data = json.loads(_repair_json(text))
+        except json.JSONDecodeError as exc:
+            raise ProviderError(f"model did not return valid JSON: {exc}") from exc
     files_raw = data.get("files")
     if not isinstance(files_raw, list) or not files_raw:
         raise ProviderError("patch contained no files")
@@ -82,6 +197,18 @@ def parse_patch(raw: str) -> Patch:
         files.append(File(path=path.strip(), content=content))
     summary = str(data.get("summary") or "").strip() or "implement backlog item"
     return Patch(files=files, summary=summary)
+
+
+def parse_patch(raw: str) -> Patch:
+    """Parse a model response into a :class:`Patch`.
+
+    Prefers the escaping-free ``=== FILE: ===`` marker format (robust for small
+    models); falls back to a tolerant JSON parse for models that answer in JSON.
+    """
+    text = _strip_fences(raw)
+    if _FILE_MARKER in text:
+        return _parse_markers(text)
+    return _parse_json(text)
 
 
 class MockProvider:

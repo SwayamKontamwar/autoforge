@@ -115,3 +115,13 @@ def test_dirty_tree_aborts(tmp_path, monkeypatch) -> None:
     (root / "app" / "stray.py").write_text("z = 3\n", encoding="utf-8")
     good = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
     assert _run(monkeypatch, root, good, guardrail_ok=True) == 1
+
+
+def test_autofix_repairs_fixable_lint(tmp_path) -> None:
+    root = _init_repo(tmp_path, ["do the thing"])
+    # `os` is imported but unused (F401) and imports are unsorted (I001) — both safe autofixes.
+    messy = "import sys\nimport os\n\n\ndef version() -> str:\n    return sys.version\n"
+    (root / "app" / "messy.py").write_text(messy, encoding="utf-8")
+    run._autofix(root, Patch(files=[File("app/messy.py", messy)], summary="x"))
+    fixed = (root / "app" / "messy.py").read_text(encoding="utf-8")
+    assert "import os" not in fixed  # unused import stripped by `ruff check --fix`

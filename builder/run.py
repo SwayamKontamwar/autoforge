@@ -106,6 +106,28 @@ def _apply(repo_root: Path, patch: Patch) -> None:
         target.write_text(content, encoding="utf-8")
 
 
+def _autofix(repo_root: Path, patch: Patch) -> None:
+    """Auto-repair safe, trivial lint issues in the generated files before judging.
+
+    Operates only on the exact files the model wrote (already proven in-bounds), so
+    nothing else in the tree is touched. Logic mistakes still fail the guardrail's
+    tests; this only fixes style the model got slightly wrong (import order, unused
+    imports, whitespace), turning otherwise-good work into a clean commit instead of
+    a needless revert.
+    """
+    paths = [file.path for file in patch.files if (repo_root / file.path).exists()]
+    if not paths:
+        return
+    for tool in (["check", "--fix", "--quiet"], ["format", "--quiet"]):
+        subprocess.run(
+            [sys.executable, "-m", "ruff", *tool, *paths],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+
 def _revert(repo_root: Path) -> None:
     for prefix in ALLOWED_PREFIXES:
         _git(repo_root, "checkout", "--", prefix, check=False)
@@ -217,6 +239,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     _apply(repo_root, patch)
+    _autofix(repo_root, patch)
     result = run_guardrail(repo_root)
 
     if result.ok:

@@ -133,7 +133,7 @@ tests/               its test suite (every feature adds one)
   toolkit/           tests for each toolkit module
 builder/             the self-building engine
   run.py             orchestrator (replenish → pick → generate → guard → commit/revert)
-  llm.py             provider-agnostic model client + strict JSON patch contract
+  llm.py             provider-agnostic model client + robust patch parser
   guardrail.py       ruff + import + pytest
   backlog.py         read/advance/append BACKLOG.md
   backlog_gen.py     self-replenishing task generator (mines the toolkit)
