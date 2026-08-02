@@ -110,6 +110,31 @@ def test_provider_error_is_logged_without_touching_code(tmp_path, monkeypatch) -
     assert "blocked" in (root / "DEVLOG.md").read_text(encoding="utf-8")
 
 
+def test_repeated_provider_outage_is_logged_only_once(tmp_path, monkeypatch) -> None:
+    """A months-long outage must not bury the log under identical blocked commits."""
+    root = _init_repo(tmp_path, ["do the thing"])
+
+    class _Boom:
+        def generate(self, task: str, context: str) -> Patch:
+            raise run.ProviderError("down")
+
+    monkeypatch.setattr(run, "get_provider", lambda name: _Boom())
+
+    def _count() -> int:
+        out = subprocess.run(
+            ["git", "log", "--pretty=%s"], cwd=root, capture_output=True, text=True, check=True
+        ).stdout
+        return out.count("forge: log blocked task")
+
+    for _ in range(4):
+        assert run.main(["--repo-root", str(root), "--provider", "x", "--no-push"]) == 0
+
+    assert _count() == 1
+    assert _is_clean(root)
+    # The task is untouched and still queued for when the provider recovers.
+    assert "- [ ] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
+
+
 def test_dirty_tree_aborts(tmp_path, monkeypatch) -> None:
     root = _init_repo(tmp_path, ["do the thing"])
     (root / "app" / "stray.py").write_text("z = 3\n", encoding="utf-8")

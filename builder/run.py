@@ -155,6 +155,25 @@ def _commit(repo_root: Path, message: str, push: bool) -> None:
         print("pushed")
 
 
+def _outage_already_logged(repo_root: Path, provider: str) -> bool:
+    """True when the newest meaningful commit is an unresolved outage for ``provider``.
+
+    Backlog replenishment is bookkeeping, not progress, so it is skipped when looking
+    back. This lets the loop log a provider outage once and then stay silent while it
+    lasts, instead of appending an identical "blocked" commit on every scheduled run.
+    """
+    result = _git(repo_root, "log", "--pretty=%s", check=False)
+    if result.returncode != 0:
+        return False
+    marker = f"forge: log blocked task ({provider} unavailable)"
+    for subject in result.stdout.splitlines():
+        subject = subject.strip()
+        if not subject or subject.startswith("forge: replenish backlog"):
+            continue
+        return subject == marker
+    return False
+
+
 def _tail(log: str, limit: int = 2000) -> str:
     return log if len(log) <= limit else "... (truncated)\n" + log[-limit:]
 
@@ -205,6 +224,12 @@ def main(argv: list[str] | None = None) -> int:
         provider = get_provider(args.provider)
         patch = provider.generate(task.text, _build_context(repo_root, task.text))
     except ProviderError as exc:
+        # A provider outage is infrastructure trouble, not project progress. Record it
+        # once, then stay quiet until it recovers: an outage lasting months must not
+        # bury the dev log under thousands of identical "blocked" commits.
+        if _outage_already_logged(repo_root, args.provider):
+            print(f"provider '{args.provider}' still unavailable ({exc}); already logged")
+            return 0
         devlog.append(
             devlog_path,
             "blocked",
