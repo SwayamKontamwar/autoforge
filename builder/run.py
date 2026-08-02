@@ -19,6 +19,7 @@ import json
 import os
 import subprocess
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from builder import backlog, backlog_gen, devlog
@@ -29,6 +30,9 @@ ALLOWED_PREFIXES = ("app/", "tests/")
 CONTEXT_BUDGET = 16000
 REPLENISH_THRESHOLD = 40
 REPLENISH_BATCH = 80
+# Re-log an ongoing outage this often. Comfortably inside GitHub's 60-day
+# inactivity window, which is when it disables scheduled workflows.
+HEARTBEAT_DAYS = 14
 
 
 def _git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -156,21 +160,35 @@ def _commit(repo_root: Path, message: str, push: bool) -> None:
 
 
 def _outage_already_logged(repo_root: Path, provider: str) -> bool:
-    """True when the newest meaningful commit is an unresolved outage for ``provider``.
+    """True when an outage for ``provider`` is already recorded and still fresh.
 
     Backlog replenishment is bookkeeping, not progress, so it is skipped when looking
     back. This lets the loop log a provider outage once and then stay silent while it
     lasts, instead of appending an identical "blocked" commit on every scheduled run.
+
+    Silence is deliberately not permanent: GitHub disables scheduled workflows after
+    60 days without repository activity, so a long outage that produced no commits at
+    all would quietly kill the schedule and end the experiment for good. After
+    ``HEARTBEAT_DAYS`` the outage is re-logged, which keeps the repository active and
+    the cron alive while still cutting three notes a day down to roughly two a month.
     """
-    result = _git(repo_root, "log", "--pretty=%s", check=False)
+    result = _git(repo_root, "log", "--pretty=%cI%x09%s", check=False)
     if result.returncode != 0:
         return False
     marker = f"forge: log blocked task ({provider} unavailable)"
-    for subject in result.stdout.splitlines():
+    for line in result.stdout.splitlines():
+        stamp, _, subject = line.partition("\t")
         subject = subject.strip()
         if not subject or subject.startswith("forge: replenish backlog"):
             continue
-        return subject == marker
+        if subject != marker:
+            return False
+        try:
+            logged_at = datetime.fromisoformat(stamp.strip())
+        except ValueError:
+            return True
+        age = datetime.now(timezone.utc) - logged_at
+        return age < timedelta(days=HEARTBEAT_DAYS)
     return False
 
 

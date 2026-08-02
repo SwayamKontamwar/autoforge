@@ -135,6 +135,36 @@ def test_repeated_provider_outage_is_logged_only_once(tmp_path, monkeypatch) -> 
     assert "- [ ] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
 
 
+def test_stale_outage_is_relogged_to_keep_the_schedule_alive(tmp_path, monkeypatch) -> None:
+    """GitHub disables cron after 60 days idle, so a long outage must still heartbeat."""
+    root = _init_repo(tmp_path, ["do the thing"])
+
+    class _Boom:
+        def generate(self, task: str, context: str) -> Patch:
+            raise run.ProviderError("down")
+
+    monkeypatch.setattr(run, "get_provider", lambda name: _Boom())
+
+    def _blocked_count() -> int:
+        out = subprocess.run(
+            ["git", "log", "--pretty=%s"], cwd=root, capture_output=True, text=True, check=True
+        ).stdout
+        return out.count("forge: log blocked task")
+
+    run.main(["--repo-root", str(root), "--provider", "x", "--no-push"])
+    assert _blocked_count() == 1
+
+    # Still inside the heartbeat window: stay quiet.
+    run.main(["--repo-root", str(root), "--provider", "x", "--no-push"])
+    assert _blocked_count() == 1
+
+    # Pretend the outage note is older than the heartbeat window.
+    monkeypatch.setattr(run, "HEARTBEAT_DAYS", 0)
+    run.main(["--repo-root", str(root), "--provider", "x", "--no-push"])
+    assert _blocked_count() == 2
+    assert _is_clean(root)
+
+
 def test_dirty_tree_aborts(tmp_path, monkeypatch) -> None:
     root = _init_repo(tmp_path, ["do the thing"])
     (root / "app" / "stray.py").write_text("z = 3\n", encoding="utf-8")

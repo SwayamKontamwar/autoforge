@@ -95,8 +95,11 @@ LLM_API_KEY=<your free groq key>
 
 Add those four as repository **Actions secrets** (Settings → Secrets and
 variables → Actions) and the scheduled workflow picks them up automatically. If
-no provider is reachable, a run does **not** break: it commits a "blocked" note
-and retries next time.
+no provider is reachable, a run does **not** break: it records the outage once
+and then stays quiet until the provider comes back, re-logging roughly every two
+weeks. That heartbeat is deliberate — GitHub disables scheduled workflows after
+60 days without repository activity, so total silence would quietly end the
+experiment.
 
 ## Honest caveats
 
