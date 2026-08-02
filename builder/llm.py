@@ -24,8 +24,22 @@ _RATE_LIMIT_ATTEMPTS = 3
 _MAX_BACKOFF_SECONDS = 75.0
 
 
+_MAX_COMPLETION_TOKENS = int(os.getenv("MAX_COMPLETION_TOKENS", "16384"))
+
+
 class ProviderError(RuntimeError):
     """Raised when a provider cannot produce a usable patch."""
+
+
+class TruncatedResponse(RuntimeError):
+    """Raised when the provider stopped mid-answer at its completion limit.
+
+    Deliberately not a :class:`ProviderError`. An outage is retried forever without
+    counting an attempt, which is right for a provider that is down and wrong here:
+    a task whose answer does not fit will never fit, so treating it as an outage
+    would stall the loop silently. It is a failed attempt with actionable feedback
+    instead, and the task is skipped after the usual three.
+    """
 
 
 @dataclass
@@ -322,6 +336,19 @@ def _post_with_rate_limit_retry(request) -> dict:
             raise ProviderError(f"provider HTTP {exc.code}: {detail}") from exc
         except urllib.error.URLError as exc:
             raise ProviderError(f"provider unreachable: {exc.reason}") from exc
+        except TimeoutError as exc:
+            # urllib raises this straight through rather than wrapping it in a
+            # URLError, so it used to escape main() -- after the task was chosen and
+            # before the attempt was recorded, which wedges the loop on that task.
+            # A provider that stops answering is an outage like any other.
+            if attempt < _RATE_LIMIT_ATTEMPTS - 1:
+                print(f"provider timed out; waiting {delay:.0f}s and retrying")
+                time.sleep(delay)
+                delay = min(delay * 2, _MAX_BACKOFF_SECONDS)
+                continue
+            raise ProviderError(f"provider timed out: {exc}") from exc
+        except OSError as exc:
+            raise ProviderError(f"provider connection failed: {exc}") from exc
     raise ProviderError("provider rate limit did not clear")
 
 
@@ -437,6 +464,12 @@ def _single_completion(
         {
             "model": model,
             "temperature": 0.2,
+            # Without an explicit budget the provider picks its own, and a file
+            # rewrite that runs past it comes back cut off mid-line. Observed live:
+            # a patch whose last string literal was never closed, reported as the
+            # model writing bad code. As the files it must rewrite grow over the
+            # years, that gets more likely, not less.
+            "max_tokens": _MAX_COMPLETION_TOKENS,
             "messages": [
                 {"role": "system", "content": _SYSTEM_PROMPT},
                 {"role": "user", "content": _user_prompt(task, context)},
@@ -459,11 +492,26 @@ def _single_completion(
         },
         method="POST",
     )
-    body = _post_with_rate_limit_retry(request)
+    return _extract_completion(_post_with_rate_limit_retry(request))
+
+
+def _extract_completion(body: object) -> str:
+    """Pull the assistant's text out of a chat completion, or say why we cannot."""
     try:
-        content = body["choices"][0]["message"]["content"]
+        choice = body["choices"][0]  # type: ignore[index]
+        content = choice["message"]["content"]
     except (KeyError, IndexError, TypeError) as exc:
         raise ProviderError(f"unexpected provider response shape: {body}") from exc
+    if isinstance(choice, dict) and choice.get("finish_reason") == "length":
+        # The answer is not wrong, it is unfinished. Observed live: a rewrite of a
+        # growing test file came back with its last string literal never closed, and
+        # was reported as the model writing bad syntax. Saying what actually happened
+        # turns that into feedback the model can act on, and stops a good task being
+        # skipped after three cut-off attempts.
+        raise TruncatedResponse(
+            "the provider stopped mid-answer at the completion limit. Return fewer "
+            "files, and keep each file small; split large work across runs."
+        )
     if not content or not content.strip():
         # Reasoning models spend part of the completion budget thinking, and can
         # return an empty message when that budget runs out. Say so plainly rather

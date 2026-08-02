@@ -7,9 +7,12 @@ design, but it never contains a state that fails to lint, import, or test.
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
+import tempfile
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,6 +23,13 @@ from pathlib import Path
 # same task is retried and hangs again on every future run, permanently.
 CHECK_TIMEOUT_SECONDS = 600
 
+# Enough to hold any honest pytest failure report, far short of what it takes to
+# exhaust a runner. Only the tail is kept, since that is where failures are.
+OUTPUT_LIMIT_BYTES = 8 * 1024 * 1024
+_TAIL_BYTES = 256 * 1024
+_POLL_SECONDS = 0.05
+_GRACE_SECONDS = 5
+
 
 @dataclass
 class GuardrailResult:
@@ -29,16 +39,58 @@ class GuardrailResult:
     log: str
 
 
+def _drain(label: str, args: list[str], cwd: Path) -> tuple[int | None, str, bool]:
+    """Run a command, capped in both time and output size.
+
+    ``capture_output=True`` buffers everything the child writes, in memory, with no
+    limit. A generated test that prints inside a loop reaches gigabytes long before
+    the timeout: measured, 400 MB of child output cost 1.8 GB of resident memory, so
+    a runner's 16 GB is gone in minutes. The orchestrator is then killed by the OOM
+    reaper -- not caught, *killed* -- before it can revert or record the attempt, and
+    since the attempt count is committed, the next run picks the same task and does it
+    again. Forever. Output therefore goes to a spill file that is polled for size, and
+    a flood is stopped the same way a hang is.
+    """
+    with tempfile.TemporaryFile() as sink:
+        try:
+            proc = subprocess.Popen(args, cwd=cwd, stdout=sink, stderr=subprocess.STDOUT)
+        except OSError as exc:
+            return None, f"could not start the command: {exc}", False
+        deadline = time.monotonic() + CHECK_TIMEOUT_SECONDS
+        flooded = False
+        while proc.poll() is None:
+            if os.fstat(sink.fileno()).st_size > OUTPUT_LIMIT_BYTES:
+                flooded = True
+                break
+            if time.monotonic() > deadline:
+                break
+            time.sleep(_POLL_SECONDS)
+        code = proc.poll()
+        if code is None:
+            proc.terminate()
+            try:
+                proc.wait(timeout=_GRACE_SECONDS)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+        size = os.fstat(sink.fileno()).st_size
+        sink.seek(max(0, size - _TAIL_BYTES))
+        text = sink.read().decode("utf-8", "replace").strip()
+        if size > _TAIL_BYTES:
+            text = f"... ({size} bytes of output, showing the last {_TAIL_BYTES})\n{text}"
+        return code, text, flooded
+
+
 def _run(label: str, args: list[str], cwd: Path) -> tuple[bool, str]:
-    try:
-        proc = subprocess.run(
-            args,
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            timeout=CHECK_TIMEOUT_SECONDS,
+    code, output, flooded = _drain(label, args, cwd)
+    if flooded:
+        return False, (
+            f"$ {label}\n(stopped after writing more than {OUTPUT_LIMIT_BYTES} bytes)\n"
+            "The command flooded its output. Generated code must not print inside an "
+            "unbounded loop.\n"
+            f"{output}\n"
         )
-    except subprocess.TimeoutExpired:
+    if code is None:
         # A hang is a failed patch like any other: revert it, count the attempt, and
         # tell the model what happened. Letting the exception escape instead would
         # wedge the loop on this task forever.
@@ -46,10 +98,9 @@ def _run(label: str, args: list[str], cwd: Path) -> tuple[bool, str]:
             f"$ {label}\n(timed out after {CHECK_TIMEOUT_SECONDS}s)\n"
             "The command never finished. Generated code must not sleep, wait on "
             "network or user input, or loop without a termination condition.\n"
+            f"{output}\n"
         )
-    ok = proc.returncode == 0
-    output = (proc.stdout + proc.stderr).strip()
-    return ok, f"$ {label}\n(exit {proc.returncode})\n{output}\n"
+    return code == 0, f"$ {label}\n(exit {code})\n{output}\n"
 
 
 def parse_collected(output: str) -> int:
@@ -80,21 +131,17 @@ def count_tests(repo_root: Path) -> int:
     the safety net every other guarantee here depends on, while each run keeps
     reporting success.
     """
-    try:
-        proc = subprocess.run(
-            [sys.executable, "-m", "pytest", "--collect-only", "-q"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            timeout=CHECK_TIMEOUT_SECONDS,
-        )
-    except subprocess.TimeoutExpired:
-        # Collection alone can hang on import-time side effects. Unknown, not zero:
-        # the caller treats -1 as "no comparison possible" rather than "no tests".
+    # Collection alone can hang, or flood, on import-time side effects. Either way the
+    # answer is unknown, not zero: the caller treats -1 as "no comparison possible"
+    # rather than "the suite is empty", which would read as a catastrophic shrink.
+    code, output, flooded = _drain(
+        "pytest --collect-only",
+        [sys.executable, "-m", "pytest", "--collect-only", "-q"],
+        repo_root,
+    )
+    if flooded or code != 0:
         return -1
-    if proc.returncode != 0:
-        return -1
-    return parse_collected(proc.stdout)
+    return parse_collected(output)
 
 
 def run(repo_root: Path) -> GuardrailResult:

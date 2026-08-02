@@ -26,7 +26,7 @@ from pathlib import Path
 from builder import backlog, backlog_gen, devlog
 from builder.guardrail import GuardrailResult, count_tests
 from builder.guardrail import run as run_guardrail
-from builder.llm import Patch, ProviderError, get_provider
+from builder.llm import Patch, ProviderError, TruncatedResponse, get_provider
 
 ALLOWED_PREFIXES = ("app/", "tests/")
 CONTEXT_BUDGET = 16000
@@ -38,6 +38,11 @@ REPLENISH_BATCH = 80
 # Re-log an ongoing outage this often. Comfortably inside GitHub's 60-day
 # inactivity window, which is when it disables scheduled workflows.
 HEARTBEAT_DAYS = 14
+
+# How long a provider may stay down before the run starts failing red. Short outages
+# are normal on a free tier and must not cry wolf; a revoked key is forever, and the
+# only thing standing between that and years of silence is a workflow that goes red.
+OUTAGE_GRACE_DAYS = 3
 
 
 def _git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -90,6 +95,7 @@ def _save_state(state_path: Path, state: dict) -> None:
 # Attempt counts live in the state dict keyed by task text; failures hang off this
 # reserved key so both survive in one committed file.
 _FAILURES_KEY = "__last_failures__"
+_OUTAGE_KEY = "__outage_since__"
 
 
 def _remember_failure(state: dict, task: str, log: str) -> None:
@@ -338,6 +344,51 @@ def _commit(repo_root: Path, message: str, push: bool) -> bool:
     return True
 
 
+def _ask(provider_name: str, repo_root: Path, state: dict, task: str) -> Patch:
+    """Get a patch from the provider, turning the unknown into a known outage.
+
+    Everything downstream of this call is crash-proof; this call was not. It reaches
+    the network through urllib, ssl and http.client, and those raise things not
+    listed anywhere here -- a socket timeout comes straight out of urllib rather than
+    wrapped in a URLError, which is how this was found. An exception escaping here
+    lands in the one window the loop cannot absorb: after the task is chosen and
+    before the attempt is recorded, so the tree stays dirty, the count never rises,
+    and the same task is chosen and crashes again on every future run, forever.
+
+    Calling the unknown an outage is only honest because an outage is no longer
+    quiet: if it keeps happening, the run starts failing red after OUTAGE_GRACE_DAYS.
+    """
+    try:
+        provider = get_provider(provider_name)
+        context = _build_context(repo_root, task)
+        prior_failure = _previous_failure(state, task)
+        if prior_failure:
+            print("retrying with the previous guardrail failure as feedback")
+            context = _with_failure_note(context, prior_failure)
+        return provider.generate(task, context)
+    except (ProviderError, TruncatedResponse):
+        raise
+    except Exception as exc:
+        raise ProviderError(f"{type(exc).__name__}: {exc}") from exc
+
+
+def _outage_started(state: dict) -> datetime:
+    """When the current provider outage began, recorded across runs.
+
+    Taken from the committed state rather than the git log because the workflow
+    checks out at depth one: only the newest commit is visible, so history cannot
+    say how long this has been going on. The stamp is written with the "blocked"
+    commit and read for free on every quiet run after it.
+    """
+    raw = state.get(_OUTAGE_KEY)
+    if isinstance(raw, str):
+        try:
+            return datetime.fromisoformat(raw)
+        except ValueError:
+            pass
+    return datetime.now(timezone.utc)
+
+
 def _outage_already_logged(repo_root: Path, provider: str) -> bool:
     """True when an outage for ``provider`` is already recorded and still fresh.
 
@@ -561,20 +612,33 @@ def main(argv: list[str] | None = None) -> int:
     attempts = int(state.get(task.text, 0))
 
     try:
-        provider = get_provider(args.provider)
-        context = _build_context(repo_root, task.text)
-        prior_failure = _previous_failure(state, task.text)
-        if prior_failure:
-            print("retrying with the previous guardrail failure as feedback")
-            context = _with_failure_note(context, prior_failure)
-        patch = provider.generate(task.text, context)
+        patch = _ask(args.provider, repo_root, state, task.text)
+    except TruncatedResponse as exc:
+        patch, truncated = Patch(files=[], summary=""), str(exc)
     except ProviderError as exc:
         # A provider outage is infrastructure trouble, not project progress. Record it
         # once, then stay quiet until it recovers: an outage lasting months must not
         # bury the dev log under thousands of identical "blocked" commits.
+        #
+        # Quiet is not the same as fine, though. Every one of these runs used to exit
+        # 0, so a revoked key looked exactly like a healthy project: green ticks three
+        # times a day, forever, building nothing. Nobody is watching the logs -- a red
+        # run is the only signal that reaches the owner, so after a few days of the
+        # same outage the run starts failing on purpose. The heartbeat commit still
+        # goes out, because a repository with no activity has its schedule disabled
+        # after sixty days and that would end the experiment for good.
+        started = _outage_started(state)
+        state[_OUTAGE_KEY] = started.isoformat()
+        stalled = datetime.now(timezone.utc) - started >= timedelta(days=OUTAGE_GRACE_DAYS)
+        if stalled:
+            print(
+                f"provider '{args.provider}' has been unavailable since "
+                f"{started.date()}; no work is getting done",
+                file=sys.stderr,
+            )
         if _outage_already_logged(repo_root, args.provider):
             print(f"provider '{args.provider}' still unavailable ({exc}); already logged")
-            return 0
+            return 1 if stalled else 0
         devlog.append(
             devlog_path,
             "blocked",
@@ -582,12 +646,22 @@ def main(argv: list[str] | None = None) -> int:
             f"Model provider '{args.provider}' was unavailable: {exc}. "
             "No code changed; will retry next run.",
         )
+        _save_state(state_path, state)
         published = _commit(
             repo_root, f"forge: log blocked task ({args.provider} unavailable)", push
         )
-        return 0 if published else 1
+        if not published:
+            return 1
+        return 1 if stalled else 0
+    else:
+        truncated = None
 
-    reason = _reject_reason(patch)
+    # Every path through the outage branch returns, so reaching here means the
+    # provider answered -- a cut-off answer is still an answer. Whatever outage was
+    # running is over, and the clock must not carry over into the next one.
+    state.pop(_OUTAGE_KEY, None)
+
+    reason = truncated or _reject_reason(patch)
     if reason is not None:
         attempts += 1
         state[task.text] = attempts

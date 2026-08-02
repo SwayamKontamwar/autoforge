@@ -102,6 +102,33 @@ cron (3×/day) ──► builder/run.py
   work began. It is written atomically, and anything unreadable is treated as "no
   state yet" — losing attempt counts costs a few retries, refusing to start costs
   the experiment.
+- **A check cannot eat the runner.** Subprocess output used to be captured with no
+  limit at all. Measured: a generated test printing in a loop put **3.46 GB into
+  memory in one second**, so a runner's 16 GB is gone in about five — long before the
+  600s timeout can fire. The process is then OOM-killed rather than raising, so it
+  never reverts and never records the attempt, and because the attempt count is
+  committed the next run picks the same task and does it again. Output now goes to a
+  spill file with a hard size cap; a flood is stopped like a hang, and only the tail
+  is kept, which is where the errors are.
+- **Nothing the provider does escapes either.** The one window this loop cannot
+  absorb is between choosing a task and recording the attempt. Everything downstream
+  was already crash-proof; the network call itself was not, and a socket timeout comes
+  straight out of `urllib` rather than wrapped in a `URLError`. Any unexpected failure
+  from the provider is now treated as an outage.
+- **An outage that never ends stops looking healthy.** Every blocked run used to exit
+  zero, so a revoked API key looked exactly like a working project: green ticks three
+  times a day, forever, building nothing. Nobody reads the logs, so a red run is the
+  only signal that actually reaches a human. Short outages stay quiet — free tiers
+  wobble, and crying wolf teaches you to ignore the alarm — but after
+  `OUTAGE_GRACE_DAYS` the run starts failing on purpose. The heartbeat commit still
+  goes out, because a repository with no activity has its schedule disabled after
+  sixty days.
+- **A cut-off answer says so.** The completion budget is now explicit, and a reply the
+  provider truncated is reported as truncated. Seen live before this: a rewrite of a
+  growing test file came back with its last string literal never closed and was
+  recorded as the model writing bad syntax, which would have burned all three attempts
+  and skipped a perfectly good task. As the files it must rewrite grow over the years,
+  that gets more likely, not less.
 - **Failures are still commits.** A failed run commits a `DEVLOG.md` note, so the
   daily cadence and the audit trail continue even on a bad day.
 
