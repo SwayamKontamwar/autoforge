@@ -34,9 +34,7 @@ def test_a_hanging_check_fails_instead_of_raising(tmp_path: Path, monkeypatch) -
     assert "timed out" in log
 
 
-def test_the_timeout_log_tells_the_model_what_went_wrong(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_the_timeout_log_tells_the_model_what_went_wrong(tmp_path: Path, monkeypatch) -> None:
     """The log is fed back into the next attempt, so it has to be actionable."""
     _shrink_timeout(monkeypatch)
 
@@ -48,9 +46,7 @@ def test_the_timeout_log_tells_the_model_what_went_wrong(
     assert "sleep" in log
 
 
-def test_a_hanging_check_stops_the_guardrail_at_that_check(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_a_hanging_check_stops_the_guardrail_at_that_check(tmp_path: Path, monkeypatch) -> None:
     """A timeout is a first-class failure: no later check runs, and ok is False."""
     _shrink_timeout(monkeypatch)
     calls: list[str] = []
@@ -71,9 +67,7 @@ def test_a_hanging_check_stops_the_guardrail_at_that_check(
     assert calls == ["ruff check"]
 
 
-def test_a_hanging_collection_reports_unknown_not_zero(
-    tmp_path: Path, monkeypatch
-) -> None:
+def test_a_hanging_collection_reports_unknown_not_zero(tmp_path: Path, monkeypatch) -> None:
     """-1 means "could not measure"; 0 would mean "the suite is empty".
 
     The caller only rejects a patch when the count actually drops, so conflating

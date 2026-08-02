@@ -54,7 +54,7 @@ def test_parse_patch_marker_format_handles_quotes_and_backslashes() -> None:
         "SUMMARY: split on whitespace\n"
         "=== FILE: app/toolkit/x.py ===\n"
         "import re\n"
-        'def f(t):\n'
+        "def f(t):\n"
         '    return re.split(r"\\s+", t)\n'
         "=== END ==="
     )
@@ -140,7 +140,8 @@ def test_rate_limit_is_waited_out_not_treated_as_an_outage(monkeypatch) -> None:
 
 def test_rate_limit_eventually_gives_up_as_a_provider_error(monkeypatch) -> None:
     monkeypatch.setattr(
-        llm.urllib.request, "urlopen",
+        llm.urllib.request,
+        "urlopen",
         lambda request, timeout=None: (_ for _ in ()).throw(_FakeHTTPError(429)),
     )
     monkeypatch.setattr(llm.time, "sleep", lambda s: None)

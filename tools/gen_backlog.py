@@ -61,7 +61,10 @@ Item = tuple[str, str]
 STRINGS: list[Item] = [
     ("truncate", "shorten a string to a max length, appending an ellipsis only when it was cut"),
     ("word_wrap", "wrap text to a column width without breaking words"),
-    ("title_case", "capitalise the first letter of each word, leaving small words like 'of' lowercase unless first"),
+    (
+        "title_case",
+        "capitalise the first letter of each word, leaving small words like 'of' lowercase unless first",
+    ),
     ("snake_case", "convert any string to snake_case"),
     ("camel_case", "convert any string to camelCase"),
     ("pascal_case", "convert any string to PascalCase"),

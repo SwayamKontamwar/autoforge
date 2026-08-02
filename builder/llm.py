@@ -162,10 +162,10 @@ def _parse_markers(text: str) -> Patch:
     for line in text.splitlines():
         stripped = line.strip()
         if current_path is None and stripped.upper().startswith("SUMMARY:"):
-            summary = stripped[len("SUMMARY:"):].strip()
+            summary = stripped[len("SUMMARY:") :].strip()
         elif stripped.startswith(_FILE_MARKER):
             flush()
-            header = stripped[len(_FILE_MARKER):].strip()
+            header = stripped[len(_FILE_MARKER) :].strip()
             if header.endswith("==="):
                 header = header[:-3].strip()
             current_path = header
@@ -244,7 +244,7 @@ class MockProvider:
         version_module = (
             '"""Expose the running application version."""\n\n'
             "from __future__ import annotations\n\n"
-            "__version__ = \"0.1.0\"\n\n\n"
+            '__version__ = "0.1.0"\n\n\n'
             "def get_version() -> str:\n"
             '    """Return the current autoforge app version string."""\n'
             "    return __version__\n"
@@ -252,7 +252,7 @@ class MockProvider:
         version_test = (
             "from app.version import get_version\n\n\n"
             "def test_get_version_is_semver_like():\n"
-            "    parts = get_version().split(\".\")\n"
+            '    parts = get_version().split(".")\n'
             "    assert len(parts) == 3\n"
             "    assert all(part.isdigit() for part in parts)\n"
         )
@@ -363,11 +363,7 @@ def _discover_chat_models(base_url: str, api_key: str) -> list[str]:
             body = _decode_json_body(response.read(), "model listing")
     except (urllib.error.URLError, json.JSONDecodeError, TimeoutError):
         return []
-    ids = [
-        str(entry.get("id", ""))
-        for entry in body.get("data", [])
-        if isinstance(entry, dict)
-    ]
+    ids = [str(entry.get("id", "")) for entry in body.get("data", []) if isinstance(entry, dict)]
     return [
         model_id
         for model_id in ids
@@ -423,9 +419,7 @@ def _chat_completion(
         for candidate in candidates[:_MAX_FALLBACK_MODELS]:
             print(f"MODEL FALLBACK: retrying with {candidate!r}")
             try:
-                return _single_completion(
-                    base_url, path, candidate, api_key, task, context
-                )
+                return _single_completion(base_url, path, candidate, api_key, task, context)
             except ProviderError as inner:
                 if _looks_model_unavailable(str(inner)):
                     continue

@@ -130,9 +130,7 @@ def list_units(repo_root: Path) -> list[tuple[str, str]]:
     return units
 
 
-def deterministic_tasks(
-    units: list[tuple[str, str]], existing: set[str], count: int
-) -> list[str]:
+def deterministic_tasks(units: list[tuple[str, str]], existing: set[str], count: int) -> list[str]:
     """Produce up to ``count`` renewable tasks not already present in ``existing``."""
     produced: list[str] = []
     seen = set(existing)

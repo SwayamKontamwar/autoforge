@@ -111,9 +111,12 @@ def test_ignore_rules_do_not_hide_work_inside_app_or_tests(tmp_path: Path) -> No
 
     candidates = ("app/build/x.py", "app/dist/y.py", "tests/build/z.py", "app/pkg.egg-info/a.py")
     for candidate in candidates:
-        ignored = subprocess.run(
-            ["git", "check-ignore", "-q", candidate], cwd=root, capture_output=True
-        ).returncode == 0
+        ignored = (
+            subprocess.run(
+                ["git", "check-ignore", "-q", candidate], cwd=root, capture_output=True
+            ).returncode
+            == 0
+        )
         assert not ignored, f"{candidate} is hidden from git status"
 
 
@@ -127,7 +130,10 @@ def test_root_build_artefacts_are_still_ignored(tmp_path: Path) -> None:
 
     candidates = ("build/x.py", "dist/y.py", "autoforge.egg-info/a.py", "app/__pycache__/m.pyc")
     for candidate in candidates:
-        ignored = subprocess.run(
-            ["git", "check-ignore", "-q", candidate], cwd=root, capture_output=True
-        ).returncode == 0
+        ignored = (
+            subprocess.run(
+                ["git", "check-ignore", "-q", candidate], cwd=root, capture_output=True
+            ).returncode
+            == 0
+        )
         assert ignored, f"{candidate} should still be ignored"
