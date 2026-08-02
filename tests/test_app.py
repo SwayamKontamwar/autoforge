@@ -97,3 +97,27 @@ def test_redirect_hits_are_counted_in_info() -> None:
     # Info should now reflect three hits
     info1 = api.get(f"/links/{code}/info").json()
     assert info1["hits"] == 3
+
+
+def test_get_links_returns_all_links() -> None:
+    api = client()
+    payload1 = {"url": "https://example.com/one"}
+    payload2 = {"url": "https://example.com/two"}
+    resp1 = api.post("/links", json=payload1)
+    resp2 = api.post("/links", json=payload2)
+    assert resp1.status_code == 201
+    assert resp2.status_code == 201
+    code1 = resp1.json()["code"]
+    code2 = resp2.json()["code"]
+
+    list_resp = api.get("/links")
+    assert list_resp.status_code == 200
+    data = list_resp.json()
+    assert isinstance(data, list)
+    codes = {item["code"] for item in data}
+    assert {code1, code2} == codes
+    for item in data:
+        assert "url" in item
+        assert "hits" in item
+        assert item["hits"] == 0
+        assert "created_at" in item

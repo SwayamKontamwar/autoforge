@@ -86,3 +86,9 @@ Guardrail: ruff + import + pytest passed.
 Add redirect hit counter and expose via link info endpoint with tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T16:11Z — success: Add GET /links returning a JSON list of all links with their codes, targets, and hit counts.
+
+Add GET /links endpoint returning all stored links with details
+
+Guardrail: ruff + import + pytest passed.

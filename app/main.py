@@ -43,6 +43,19 @@ def create_app() -> FastAPI:
         # Ensure the URL is a plain string for Pydantic validation.
         return LinkOut(code=link.code, url=str(link.url))
 
+    @app.get("/links", response_model=list[LinkInfoOut])
+    def list_links() -> list[LinkInfoOut]:
+        """Return a list of all stored links with their details."""
+        return [
+            LinkInfoOut(
+                code=link.code,
+                url=link.url,
+                created_at=link.created_at,
+                hits=link.hits,
+            )
+            for link in store.list_all()
+        ]
+
     @app.get("/{code}")
     def redirect(code: str) -> RedirectResponse:
         """Redirect a short code to its destination URL."""

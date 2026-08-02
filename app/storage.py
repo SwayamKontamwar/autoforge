@@ -63,3 +63,7 @@ class InMemoryStore:
         link = self._links.get(code)
         if link is not None:
             link.hits += 1
+
+    def list_all(self) -> list[Link]:
+        """Return a list of all stored links."""
+        return list(self._links.values())
