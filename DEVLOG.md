@@ -147,3 +147,8 @@ invalid-syntax: unexpected EOF while parsing
 Found 2 errors.
 
 ```
+
+## 2026-08-02T17:40Z — blocked: Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.
+
+Model provider 'openai' was unavailable: provider HTTP 413: {"error":{"message":"Request too large for model `openai/gpt-oss-120b` in organization `org_01kkw1z7eyfa4t61pk7drxx340` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 20976, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","type":"tokens","code":"rate_limit_exceeded"}}
+. No code changed; will retry next run.
