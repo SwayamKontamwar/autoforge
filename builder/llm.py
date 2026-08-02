@@ -11,11 +11,17 @@ from __future__ import annotations
 
 import json
 import os
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
 _USER_AGENT = "autoforge/1.0 (+https://github.com/SwayamKontamwar/autoforge)"
+
+# A free-tier key is metered per minute, so a rate limit is a short wait rather
+# than an outage. Kept small enough that a stuck provider still ends the job.
+_RATE_LIMIT_ATTEMPTS = 3
+_MAX_BACKOFF_SECONDS = 75.0
 
 
 class ProviderError(RuntimeError):
@@ -252,6 +258,50 @@ class MockProvider:
         )
 
 
+def _retry_after_seconds(headers, default: float) -> float:
+    """Read a provider's requested wait, clamped to something a CI run can afford."""
+    for key in ("retry-after", "x-ratelimit-reset-tokens", "x-ratelimit-reset-requests"):
+        raw = headers.get(key) if headers else None
+        if not raw:
+            continue
+        text = str(raw).strip().rstrip("s")
+        try:
+            wait = float(text)
+        except ValueError:
+            continue
+        return max(1.0, min(wait + 1.0, _MAX_BACKOFF_SECONDS))
+    return default
+
+
+def _post_with_rate_limit_retry(request) -> dict:
+    """POST, waiting out rate limits instead of treating them as an outage.
+
+    A free-tier key is measured per minute, and one code-generation call can use
+    most of that budget once the model's reasoning tokens are counted. Treating the
+    resulting 429 as a provider outage would skip the run entirely and leave the
+    task untouched until the next schedule. Waiting a few seconds costs nothing in
+    a job that runs three times a day.
+    """
+    delay = 5.0
+    for attempt in range(_RATE_LIMIT_ATTEMPTS):
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", "replace")[:500]
+            retryable = exc.code == 429 or 500 <= exc.code < 600
+            if retryable and attempt < _RATE_LIMIT_ATTEMPTS - 1:
+                wait = _retry_after_seconds(exc.headers, delay)
+                print(f"provider HTTP {exc.code}; waiting {wait:.0f}s and retrying")
+                time.sleep(wait)
+                delay = min(delay * 2, _MAX_BACKOFF_SECONDS)
+                continue
+            raise ProviderError(f"provider HTTP {exc.code}: {detail}") from exc
+        except urllib.error.URLError as exc:
+            raise ProviderError(f"provider unreachable: {exc.reason}") from exc
+    raise ProviderError("provider rate limit did not clear")
+
+
 def _chat_completion(
     base_url: str, path: str, model: str, api_key: str, task: str, context: str
 ) -> str:
@@ -281,18 +331,17 @@ def _chat_completion(
         },
         method="POST",
     )
+    body = _post_with_rate_limit_retry(request)
     try:
-        with urllib.request.urlopen(request, timeout=120) as response:
-            body = json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", "replace")[:500]
-        raise ProviderError(f"provider HTTP {exc.code}: {detail}") from exc
-    except urllib.error.URLError as exc:
-        raise ProviderError(f"provider unreachable: {exc.reason}") from exc
-    try:
-        return body["choices"][0]["message"]["content"]
+        content = body["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError) as exc:
         raise ProviderError(f"unexpected provider response shape: {body}") from exc
+    if not content or not content.strip():
+        # Reasoning models spend part of the completion budget thinking, and can
+        # return an empty message when that budget runs out. Say so plainly rather
+        # than failing later with an unhelpful "no files found" parse error.
+        raise ProviderError("provider returned an empty message")
+    return content
 
 
 class GitHubModelsProvider:
