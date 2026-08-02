@@ -11,3 +11,7 @@ venv/
 # Atomic state writes land here briefly; a killed run can leave one behind, and it
 # must never be committed nor counted as a working-tree change.
 .forge/*.tmp
+
+# A run killed while judging a patch leaves this behind; the next run uses it to
+# clean up, and it must never be committed nor counted as a working-tree change.
+.forge/inflight

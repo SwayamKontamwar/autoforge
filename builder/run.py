@@ -64,6 +64,37 @@ def _is_clean(repo_root: Path) -> bool:
     return _git(repo_root, "status", "--porcelain").stdout.strip() == ""
 
 
+def _sanitize_state(loaded: dict) -> dict:
+    """Force a committed state file into the shape the rest of the run assumes.
+
+    Guarding the top-level type is not enough. Every value in here is read back
+    later -- attempt counts get ``int()`` called on them and incremented, stored
+    failures get ``.pop()`` called on them -- and a value of the wrong type raises
+    somewhere deep in the run rather than here. Because this file is committed,
+    that is not a one-off crash: the same bad file is restored on every future
+    checkout, so the loop crashes identically forever with nobody watching.
+
+    Anything that is not the expected shape is dropped rather than repaired. A
+    dropped attempt count costs a few extra retries of one task. A wedged loop
+    costs the whole experiment.
+    """
+    clean: dict = {}
+    for key, value in loaded.items():
+        if key == _FAILURES_KEY:
+            if isinstance(value, dict):
+                clean[key] = {k: v for k, v in value.items() if isinstance(k, str)}
+        elif key == _OUTAGE_KEY:
+            if isinstance(value, str):
+                clean[key] = value
+        elif isinstance(value, bool):
+            continue  # bool is an int in Python, but an attempt count is not a flag
+        elif isinstance(value, int):
+            clean[key] = value
+        elif isinstance(value, float) and value.is_integer():
+            clean[key] = int(value)
+    return clean
+
+
 def _load_state(state_path: Path) -> dict:
     """Read attempt state, treating anything unreadable as "no state yet".
 
@@ -80,7 +111,7 @@ def _load_state(state_path: Path) -> dict:
         loaded = json.loads(state_path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, UnicodeDecodeError, OSError):
         return {}
-    return loaded if isinstance(loaded, dict) else {}
+    return _sanitize_state(loaded) if isinstance(loaded, dict) else {}
 
 
 def _save_state(state_path: Path, state: dict) -> None:
@@ -287,6 +318,52 @@ def _revert(repo_root: Path) -> None:
         _git(repo_root, "clean", "-fd", prefix, check=False)
 
 
+# Written immediately before a patch touches the disk and removed once the patch
+# has been judged. Its presence means a run died in between.
+_INFLIGHT_NAME = "inflight"
+
+
+def _inflight_path(repo_root: Path) -> Path:
+    return repo_root / ".forge" / _INFLIGHT_NAME
+
+
+def _begin_inflight(repo_root: Path) -> None:
+    path = _inflight_path(repo_root)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("a patch is being applied and judged\n", encoding="utf-8")
+    except OSError:
+        pass  # Losing the marker costs cleanup later; failing here costs the run.
+
+
+def _end_inflight(repo_root: Path) -> None:
+    try:
+        _inflight_path(repo_root).unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def _recover_interrupted_run(repo_root: Path) -> bool:
+    """Undo a patch left on disk by a run that was killed while judging it.
+
+    On a GitHub runner this never fires -- the machine is destroyed and the next
+    run checks out fresh. It matters for the local ``cron``/``launchd`` setup the
+    README suggests, where the checkout persists. There, a run killed between
+    writing the patch and judging it leaves modified files behind, every later run
+    sees a dirty tree and aborts, and the loop is wedged until a human notices.
+    Silence is exactly how that gets missed.
+
+    Only the marker authorises this. Without it a dirty tree is somebody's work in
+    progress and is still refused, because cleaning that up would be worse than
+    stopping.
+    """
+    if not _inflight_path(repo_root).exists():
+        return False
+    _revert(repo_root)
+    _end_inflight(repo_root)
+    return True
+
+
 _IDENTITY = (
     "-c",
     "user.name=autoforge-bot",
@@ -338,6 +415,7 @@ def _commit(repo_root: Path, message: str, push: bool) -> bool:
     silently fails does not just lose one run, it eventually stops the loop entirely.
     The caller turns this into a non-zero exit so the failure is visible.
     """
+    _end_inflight(repo_root)
     _git(repo_root, "add", "-A")
     if _git(repo_root, "diff", "--cached", "--quiet", check=False).returncode == 0:
         print("nothing to commit")
@@ -510,6 +588,7 @@ def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
     reverted, the attempt counts toward the skip threshold, and the error text goes
     back to the model as feedback for its next try.
     """
+    _begin_inflight(repo_root)
     try:
         _apply(repo_root, patch)
         # Judged before _autofix, not after: reformatting a verbatim copy of an
@@ -559,6 +638,27 @@ def _tail(log: str, limit: int = 2000) -> str:
     return log if len(log) <= limit else "... (truncated)\n" + log[-limit:]
 
 
+def _unusable_layout(repo_root: Path, backlog_path: Path, devlog_path: Path) -> str:
+    """Explain why the repository cannot be worked on, or return "" if it can.
+
+    Every one of these used to surface as a bare traceback -- FileNotFoundError,
+    IsADirectoryError, FileExistsError -- from somewhere in the middle of the run.
+    A traceback in a log nobody reads is the same as silence. These are all states
+    the loop genuinely cannot fix by itself, so the right answer is to stop and say
+    which file is wrong, not to crash describing the line that tripped over it.
+    """
+    if not backlog_path.exists():
+        return f"{backlog_path.name} is missing; there is no work to read"
+    if not backlog_path.is_file():
+        return f"{backlog_path.name} is not a regular file"
+    forge_dir = repo_root / ".forge"
+    if forge_dir.exists() and not forge_dir.is_dir():
+        return ".forge exists but is not a directory, so run state cannot be stored"
+    if devlog_path.exists() and not devlog_path.is_file():
+        return f"{devlog_path.name} is not a regular file"
+    return ""
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Build the next backlog item.")
     parser.add_argument("--provider", default=os.getenv("LLM_PROVIDER", "github"))
@@ -582,6 +682,14 @@ def main(argv: list[str] | None = None) -> int:
     except cost.WouldCostMoney as exc:
         print(f"refusing to run: {exc}", file=sys.stderr)
         return 1
+
+    unusable = _unusable_layout(repo_root, backlog_path, devlog_path)
+    if unusable:
+        print(f"cannot run here: {unusable}", file=sys.stderr)
+        return 1
+
+    if _recover_interrupted_run(repo_root):
+        print("cleaned up a patch left behind by an interrupted run")
 
     if not _is_clean(repo_root):
         print("working tree is not clean; aborting", file=sys.stderr)
