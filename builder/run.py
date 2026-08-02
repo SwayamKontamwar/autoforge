@@ -342,6 +342,21 @@ def main(argv: list[str] | None = None) -> int:
         print("working tree is not clean; aborting", file=sys.stderr)
         return 1
 
+    # Before anything reads task positions, since archiving renumbers the file.
+    archived = backlog.archive_completed(backlog_path)
+    if archived:
+        rel = archived.relative_to(repo_root)
+        devlog.append(
+            devlog_path,
+            "archived",
+            f"moved completed backlog items to {rel}",
+            "BACKLOG.md had grown past the size GitHub renders comfortably. Finished "
+            "items now live in an archive that still counts against de-duplication, "
+            "so nothing is lost and no task can come back a second time.",
+        )
+        print(f"archived completed backlog items to {rel}")
+        _commit(repo_root, f"forge: archive completed backlog items to {rel}", push)
+
     if backlog.open_count(backlog_path) < REPLENISH_THRESHOLD:
         new_tasks = backlog_gen.replenish(repo_root, backlog_path, REPLENISH_BATCH)
         backlog.append_tasks(backlog_path, new_tasks, heading="Auto-generated follow-up work")
