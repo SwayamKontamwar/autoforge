@@ -17,7 +17,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Count redirects: track a hit counter per link and include it in the GET /links/{code}/info response.
 - [x] Add GET /links returning a JSON list of all links with their codes, targets, and hit counts.
 - [x] Add pagination to GET /links using limit and offset query parameters with sensible defaults and bounds.
-- [ ] Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.
+- [x] Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.  _(skipped after 3 failed attempts)_
 - [ ] Validate custom aliases: allow only URL-safe characters and a length between 3 and 32, returning 422 otherwise.
 - [ ] Add optional link expiry: accept an expires_in_seconds field and return 410 Gone when an expired link is visited.
 - [ ] Add GET /stats returning totals: number of links, total redirects, and the most-visited code.

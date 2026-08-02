@@ -1,7 +1,3 @@
 {
-  "Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.": 2,
-  "__last_failures__": {
-    "Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.": "$ ruff check\n(exit 1)\ninvalid-syntax: missing closing quote in string literal\n  --> tests/test_app.py:92:23\n   |\n90 | def test_delete_link_removes_and_returns_204() -> None:\n91 |     api = client()\n92 |     payload = {\"url\": \"https://example.com\n   |                       ^^^^^^^^^^^^^^^^^^^^\n\ninvalid-syntax: unexpected EOF while parsing\n  --> tests/test_app.py:92:44\n   |\n91 |     api = client()\n92 |     payload = {\"url\": \"https://example.com\n   |                                           ^\n\nFound 2 errors.\n"
-  },
-  "__outage_since__": "2026-08-02T17:40:52.566510+00:00"
+  "__last_failures__": {}
 }
