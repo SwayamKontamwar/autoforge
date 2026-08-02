@@ -135,6 +135,10 @@ This is an experiment, and it is described as one:
   a day, four hours apart" is the intent, not a guarantee.
 - **Sixty-day auto-disable.** GitHub disables scheduled workflows after 60 days
   with no repository activity; the daily commits themselves keep it alive.
+- **The model sees a slice of the repo, not all of it.** The prompt is capped at a
+  fixed size no matter how large the tree grows, and files are chosen by relevance
+  to the task rather than alphabetically. That keeps runs affordable after years of
+  daily commits, but it means the model can duplicate something it was never shown.
 - **The guardrail proves correctness, not taste.** Passing tests means the code
   runs and does what its tests say — not that a senior engineer would have
   designed it the same way. The backlog is written to keep each step small enough

@@ -458,3 +458,60 @@ def test_patch_that_adds_tests_is_accepted(tmp_path, monkeypatch) -> None:
     assert rc == 0
     assert (root / "tests" / "test_extra.py").exists()
     assert "- [x] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
+
+
+def _grow_repo(root: Path, count: int) -> None:
+    for i in range(count):
+        (root / "app" / f"module_{i:05d}.py").write_text(f"V{i} = {i}\n" * 10, encoding="utf-8")
+        (root / "tests" / f"test_module_{i:05d}.py").write_text(
+            f"def test_{i}() -> None:\n    assert True\n", encoding="utf-8"
+        )
+
+
+def test_prompt_context_stays_bounded_as_the_repo_grows(tmp_path) -> None:
+    """The prompt must not grow with the repository.
+
+    Three commits a day for a year is roughly a thousand new modules. The file
+    listing alone reached ~141k characters at 6k files, which on its own exceeds
+    both the model's context and the free tier's per-minute token allowance — every
+    run would then fail on size and the project would stop building itself for good.
+    """
+    root = _init_repo(tmp_path, ["do the thing"])
+    _grow_repo(root, 500)
+    year_one = len(run._build_context(root, "add a widget"))
+
+    _grow_repo(root, 2500)
+    year_five = len(run._build_context(root, "add a widget"))
+
+    assert year_five < run.CONTEXT_BUDGET + run.LISTING_BUDGET + 1000
+    # Five times the files must not mean a materially larger prompt.
+    assert year_five <= year_one * 1.05
+
+
+def test_context_shows_files_the_task_is_about_not_the_alphabetically_first(tmp_path) -> None:
+    """Relevance beats alphabetical order once the tree is bigger than the budget."""
+    root = _init_repo(tmp_path, ["do the thing"])
+    _grow_repo(root, 600)
+    (root / "app" / "ratelimit.py").write_text("BUCKET: dict = {}\n", encoding="utf-8")
+
+    context = run._build_context(root, "Add a sliding window to the ratelimit bucket")
+
+    assert "--- app/ratelimit.py ---" in context
+    # The named file must come first, ahead of whatever sorts earliest, so it
+    # survives truncation however large the tree gets.
+    assert context.index("--- app/ratelimit.py ---") < context.index("--- app/module_00000.py ---")
+    assert context.index("app/ratelimit.py") < context.index("app/module_00000.py")
+
+
+def test_context_includes_test_files_not_only_app_files(tmp_path) -> None:
+    """``app/`` sorts before ``tests/``, so alphabetical order hid every test.
+
+    A model that has never seen a test file has no way to follow the conventions of
+    the suite it is asked to extend.
+    """
+    root = _init_repo(tmp_path, ["do the thing"])
+    _grow_repo(root, 400)
+
+    context = run._build_context(root, "extend test_module_00007 coverage")
+
+    assert "--- tests/" in context

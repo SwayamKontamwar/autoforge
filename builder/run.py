@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
@@ -29,6 +30,9 @@ from builder.llm import Patch, ProviderError, get_provider
 
 ALLOWED_PREFIXES = ("app/", "tests/")
 CONTEXT_BUDGET = 16000
+# The file listing is capped separately: it grows with every task forever, while
+# file bodies are bounded by whatever fits after it.
+LISTING_BUDGET = 3000
 REPLENISH_THRESHOLD = 40
 REPLENISH_BATCH = 80
 # Re-log an ongoing outage this often. Comfortably inside GitHub's 60-day
@@ -113,23 +117,69 @@ def _with_failure_note(context: str, failure: str) -> str:
     )
 
 
-def _build_context(repo_root: Path, task_text: str = "") -> str:
-    sections: list[str] = []
-    budget = CONTEXT_BUDGET
+# Words that appear in nearly every backlog item and so carry no signal about
+# which files a task touches.
+_STOPWORDS = frozenset(
+    """a an and the to for of in on with add adds added support use using make
+    ensure that this it its into from when where new create creates return returns
+    handle handles allow allows so is are be given then also each any all app
+    tests test py module code function class method value values""".split()
+)
+
+
+def _words(text: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if w not in _STOPWORDS}
+
+
+def _ranked_files(repo_root: Path, task_text: str) -> list[Path]:
+    """Order source files by how likely they are to matter to this task.
+
+    Alphabetical order is fine for ten files and useless for a thousand: the same
+    handful of files that happen to sort first would be sent every single time,
+    the task's actual subject would never be visible, and no test file would ever
+    be included at all because ``app/`` sorts before ``tests/``. This repository is
+    supposed to keep working after years of daily commits, so file selection has to
+    stay useful as the tree grows rather than degrade into an alphabetical prefix.
+    """
     tracked = sorted(
         p
         for prefix in ALLOWED_PREFIXES
         for p in (repo_root / prefix.rstrip("/")).rglob("*.py")
     )
-    listing = "\n".join(str(p.relative_to(repo_root)) for p in tracked)
-    sections.append(f"Files:\n{listing}\n")
+    task_words = _words(task_text)
 
-    def _priority(path: Path) -> tuple[int, str]:
+    def rank(path: Path) -> tuple[int, int, str]:
         rel = str(path.relative_to(repo_root))
-        # Files named in the task must survive truncation, however large the repo.
-        return (0 if rel in task_text else 1, rel)
+        named = 0 if rel and rel in task_text else 1
+        overlap = len(_words(rel.replace("/", " ").replace("_", " ")) & task_words)
+        return (named, -overlap, rel)
 
-    for path in sorted(tracked, key=_priority):
+    return sorted(tracked, key=rank)
+
+
+def _build_context(repo_root: Path, task_text: str = "") -> str:
+    ranked = _ranked_files(repo_root, task_text)
+
+    # The listing has to be capped too. Left unbounded it outgrows the model's
+    # context and the free tier's per-minute token allowance on its own — measured
+    # at ~141k characters for 6k files — at which point every future run fails on
+    # size alone and the repository stops building itself for good.
+    shown: list[str] = []
+    listing_used = 0
+    for path in ranked:
+        rel = str(path.relative_to(repo_root))
+        if listing_used + len(rel) + 1 > LISTING_BUDGET:
+            break
+        shown.append(rel)
+        listing_used += len(rel) + 1
+    hidden = len(ranked) - len(shown)
+    listing = "\n".join(shown)
+    if hidden > 0:
+        listing += f"\n... and {hidden} more files (most relevant to this task shown first)"
+    sections = [f"Files:\n{listing}\n"]
+
+    budget = CONTEXT_BUDGET
+    for path in ranked:
         rel = path.relative_to(repo_root)
         content = path.read_text(encoding="utf-8")
         block = f"\n--- {rel} ---\n{content}"
