@@ -58,3 +58,22 @@ def test_link_info_returns_details() -> None:
     from datetime import datetime
 
     datetime.fromisoformat(info["created_at"])
+
+
+def test_delete_link_removes_and_returns_204() -> None:
+    api = client()
+    payload = {"url": "https://example.com/delete"}
+    create_resp = api.post("/links", json=payload)
+    assert create_resp.status_code == 201
+    code = create_resp.json()["code"]
+
+    delete_resp = api.delete(f"/links/{code}")
+    assert delete_resp.status_code == 204
+
+    # Subsequent redirect should be 404
+    get_resp = api.get(f"/{code}")
+    assert get_resp.status_code == 404
+
+    # Info endpoint should also be 404
+    info_resp = api.get(f"/links/{code}/info")
+    assert info_resp.status_code == 404

@@ -74,3 +74,9 @@ Guardrail: ruff + import + pytest passed.
 Add GET /links/{code}/info endpoint with creation timestamp
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T09:53Z — success: Add DELETE /links/{code} that removes a link and returns 204, and make GET /{code} return 404 afterwards.
+
+Add DELETE /links/{code} endpoint and storage delete method with tests
+
+Guardrail: ruff + import + pytest passed.

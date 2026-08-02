@@ -46,3 +46,13 @@ class InMemoryStore:
     def get(self, code: str) -> Link | None:
         """Return the link for ``code`` or ``None`` if it does not exist."""
         return self._links.get(code)
+
+    def delete(self, code: str) -> bool:
+        """Remove the link identified by ``code``.
+
+        Returns True if the link existed and was removed, False otherwise.
+        """
+        if code in self._links:
+            del self._links[code]
+            return True
+        return False

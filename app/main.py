@@ -59,6 +59,13 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=404, detail="Unknown short code")
         return LinkInfoOut(code=link.code, url=link.url, created_at=link.created_at)
 
+    @app.delete("/links/{code}", status_code=204)
+    def delete_link(code: str) -> None:
+        """Delete a short link identified by ``code``."""
+        if not store.delete(code):
+            raise HTTPException(status_code=404, detail="Unknown short code")
+        # FastAPI will return a 204 No Content response automatically.
+
     return app
 
 
