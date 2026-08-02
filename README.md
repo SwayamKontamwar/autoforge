@@ -76,6 +76,11 @@ cron (3×/day) ──► builder/run.py
   and a file written where a package directory already exists. Applying and judging
   a patch is now crash-proof as a whole, so any failure becomes an ordinary counted
   attempt with the error text fed back to the model.
+- **A task is only ticked off by work that exists.** A patch carrying no files, or
+  one that returns existing files verbatim, would pass every check and mark its task
+  done with nothing written. Both are counted as failed attempts instead. So is a
+  path like `app/router.py/user.py`, which would commit a *directory* named
+  `router.py` and then crash prompt building on every later run.
 - **The state file cannot brick the repository.** `.forge/state.json` is committed,
   so a damaged one would come back on every checkout and stop the run before any
   work began. It is written atomically, and anything unreadable is treated as "no

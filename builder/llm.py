@@ -193,13 +193,20 @@ def _parse_json(text: str) -> Patch:
             data = json.loads(_repair_json(text))
         except json.JSONDecodeError as exc:
             raise ProviderError(f"model did not return valid JSON: {exc}") from exc
+    if not isinstance(data, dict):
+        # A bare array of file objects is a shape models emit for this prompt often
+        # enough to matter. Reaching .get() on it raises AttributeError, which is not
+        # a ProviderError, so it escapes the run instead of being retried.
+        raise ProviderError("model returned JSON that is not an object")
     files_raw = data.get("files")
     if not isinstance(files_raw, list) or not files_raw:
         raise ProviderError("patch contained no files")
     files: list[File] = []
     for item in files_raw:
-        path = (item or {}).get("path")
-        content = (item or {}).get("content")
+        if not isinstance(item, dict):
+            raise ProviderError("each file needs a string path and content")
+        path = item.get("path")
+        content = item.get("content")
         if not isinstance(path, str) or not isinstance(content, str):
             raise ProviderError("each file needs a string path and content")
         files.append(File(path=path.strip(), content=content))

@@ -68,8 +68,15 @@ def _run(monkeypatch, root: Path, patch: Patch, guardrail_ok: bool, max_attempts
 
     monkeypatch.setattr(run, "run_guardrail", _stub)
     return run.main(
-        ["--repo-root", str(root), "--provider", "scripted", "--no-push",
-         "--max-attempts", str(max_attempts)]
+        [
+            "--repo-root",
+            str(root),
+            "--provider",
+            "scripted",
+            "--no-push",
+            "--max-attempts",
+            str(max_attempts),
+        ]
     )
 
 
@@ -255,8 +262,15 @@ def _run_recording(monkeypatch, root: Path, provider, guardrail_ok: bool, max_at
 
     monkeypatch.setattr(run, "run_guardrail", _stub)
     return run.main(
-        ["--repo-root", str(root), "--provider", "scripted", "--no-push",
-         "--max-attempts", str(max_attempts)]
+        [
+            "--repo-root",
+            str(root),
+            "--provider",
+            "scripted",
+            "--no-push",
+            "--max-attempts",
+            str(max_attempts),
+        ]
     )
 
 
@@ -302,9 +316,12 @@ def test_feedback_is_dropped_when_the_task_is_skipped(tmp_path, monkeypatch) -> 
     root = _init_repo(tmp_path, ["do the thing"])
     bad = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
     for _ in range(2):
-        assert _run_recording(
-            monkeypatch, root, _RecordingProvider(bad), guardrail_ok=False, max_attempts=2
-        ) == 0
+        assert (
+            _run_recording(
+                monkeypatch, root, _RecordingProvider(bad), guardrail_ok=False, max_attempts=2
+            )
+            == 0
+        )
     assert "- [x] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
     state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
     assert not state.get("__last_failures__")
@@ -315,7 +332,9 @@ def _remote_log(remote: Path) -> str:
     """Read a bare repo's history without cd-ing into it (safe.bareRepository)."""
     return subprocess.run(
         ["git", f"--git-dir={remote}", "log", "--oneline", "--all"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
     ).stdout
 
 

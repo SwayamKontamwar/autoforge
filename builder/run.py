@@ -164,6 +164,8 @@ def _ranked_files(repo_root: Path, task_text: str) -> list[Path]:
         p
         for prefix in ALLOWED_PREFIXES
         for p in (repo_root / prefix.rstrip("/")).rglob("*.py")
+        # A directory can be named "*.py"; reading one raises and kills the run.
+        if p.is_file()
     )
     task_words = _words(task_text)
 
@@ -200,7 +202,11 @@ def _build_context(repo_root: Path, task_text: str = "") -> str:
     budget = CONTEXT_BUDGET
     for path in ranked:
         rel = path.relative_to(repo_root)
-        content = path.read_text(encoding="utf-8")
+        try:
+            content = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            # Context is a convenience; an unreadable file must not end the run.
+            continue
         block = f"\n--- {rel} ---\n{content}"
         if len(block) > budget:
             block = block[:budget] + "\n... (truncated)"
@@ -225,6 +231,12 @@ def _reject_reason(patch: Patch) -> str | None:
             return f"path escapes the repository: {file.path}"
         if not norm.startswith(ALLOWED_PREFIXES):
             return f"path outside app/ or tests/: {file.path}"
+        # "app/router.py/user.py" creates a *directory* named router.py. It passes
+        # every check and commits, and from then on every prompt build walks the tree
+        # and tries to read that directory as a file, which crashes the run before any
+        # attempt is recorded -- the same task, forever.
+        if any(part.endswith(".py") for part in norm.split("/")[:-1]):
+            return f"path nests inside a module file: {file.path}"
     return None
 
 
@@ -344,9 +356,18 @@ def _outage_already_logged(repo_root: Path, provider: str) -> bool:
     return False
 
 
-def _worktree_changed(repo_root: Path) -> bool:
-    """True when the working tree differs from HEAD."""
-    result = _git(repo_root, "status", "--porcelain", check=False)
+def _patch_changed_anything(repo_root: Path, patch: Patch) -> bool:
+    """True when the patch's own files differ from HEAD.
+
+    Scoped to the patch rather than the whole tree on purpose: asking "is anything
+    dirty?" would answer yes for unrelated dirt and quietly stop detecting a patch
+    that did nothing. Git is the judge rather than a content comparison so that
+    whitespace and line-ending normalisation are counted the way a commit would.
+    """
+    paths = [file.path for file in patch.files]
+    if not paths:
+        return False
+    result = _git(repo_root, "status", "--porcelain", "--", *paths, check=False)
     if result.returncode != 0:
         return True
     return bool(result.stdout.strip())
@@ -376,8 +397,10 @@ def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
     """
     try:
         _apply(repo_root, patch)
-        _autofix(repo_root, patch)
-        if not _worktree_changed(repo_root):
+        # Judged before _autofix, not after: reformatting a verbatim copy of an
+        # existing file is itself a change, so autofixing first would disguise a
+        # patch that did nothing as a patch that did something.
+        if not _patch_changed_anything(repo_root, patch):
             # The tree was clean before the patch, so writing it and changing nothing
             # means the model returned content identical to what is already on disk.
             # The guardrail would pass on an unchanged repository and the task would
@@ -390,6 +413,7 @@ def _judge(repo_root: Path, patch: Patch) -> GuardrailResult:
                     "what is missing -- do not return existing files verbatim.\n"
                 ),
             )
+        _autofix(repo_root, patch)
         return run_guardrail(repo_root)
     except Exception as exc:
         paths = ", ".join(file.path for file in patch.files) or "(none)"
