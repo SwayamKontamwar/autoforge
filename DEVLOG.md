@@ -433,3 +433,9 @@ FAILED tests/test_stats.py::test_stats_endpoint - assert 404 == 200
 1 failed, 265 passed, 1 warning in 16.08s
 
 ```
+
+## 2026-08-02T23:56Z — success: Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.
+
+Implement alias conflict handling with 409 response and add test
+
+Guardrail: ruff + import + pytest passed.

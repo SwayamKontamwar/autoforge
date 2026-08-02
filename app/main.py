@@ -56,7 +56,11 @@ def create_app() -> FastAPI:
         _validate_url(payload.url)
         if payload.alias is not None:
             _validate_alias(payload.alias)
-        link = store.create(payload.url, payload.alias, payload.expires_in_seconds)
+        try:
+            link = store.create(payload.url, payload.alias, payload.expires_in_seconds)
+        except ValueError as exc:
+            # Alias already exists – treat as a conflict.
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         # Ensure the URL is a plain string for Pydantic validation.
         return LinkOut(code=link.code, url=str(link.url))
 
