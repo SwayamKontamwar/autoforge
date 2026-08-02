@@ -15,6 +15,7 @@ Run ``python -m builder.run --provider mock --no-push`` to exercise it offline.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import inspect
 import json
 import os
@@ -87,6 +88,9 @@ def _sanitize_state(loaded: dict) -> dict:
         elif key == _OUTAGE_KEY:
             if isinstance(value, str):
                 clean[key] = value
+        elif key == _BUILDER_KEY:
+            if isinstance(value, str):
+                clean[key] = value
         elif isinstance(value, bool):
             continue  # bool is an int in Python, but an attempt count is not a flag
         elif isinstance(value, int):
@@ -133,6 +137,64 @@ def _save_state(state_path: Path, state: dict) -> None:
 # reserved key so both survive in one committed file.
 _FAILURES_KEY = "__last_failures__"
 _OUTAGE_KEY = "__outage_since__"
+_BUILDER_KEY = "__builder_fingerprint__"
+
+
+def _builder_fingerprint(repo_root: Path) -> str:
+    """Hash the builder's own source, so a change to it is detectable.
+
+    Only the machinery is hashed, not the product being built. ``app/`` and
+    ``tests/`` change on almost every run, and treating those as a builder change
+    would reset attempt counts constantly and defeat the skip threshold entirely.
+    """
+    digest = hashlib.sha256()
+    found = False
+    builder_dir = repo_root / "builder"
+    try:
+        sources = sorted(builder_dir.glob("*.py"), key=lambda p: p.name)
+    except OSError:
+        return ""
+    for path in sources:
+        try:
+            digest.update(path.name.encode("utf-8"))
+            digest.update(path.read_bytes())
+        except OSError:
+            continue
+        found = True
+    # No readable sources means "cannot tell", which must not be mistaken for a
+    # real fingerprint -- the empty hash is a stable value and would otherwise look
+    # like a genuine builder that then "changed" the moment sources appeared.
+    return digest.hexdigest()[:16] if found else ""
+
+
+def _refresh_stale_evidence(repo_root: Path, backlog_path: Path, state: dict) -> list[str]:
+    """Clear failures and reopen retirements once the builder itself has changed.
+
+    Three failures normally mean the task is the problem. But when the builder
+    changes, that count stops being evidence about the task -- it may only ever
+    have been evidence about a bug that is now gone. Both tasks retired in this
+    repository were killed by a keyword bug in the builder, not by anything about
+    the tasks, and both were solvable throughout.
+
+    Tying revival to a fingerprint rather than a timer is what keeps this from
+    becoming an infinite retry loop: a genuinely impossible task is retried only
+    when a human has actually changed the machinery, which is rare and is exactly
+    the moment its previous verdict became untrustworthy.
+    """
+    current = _builder_fingerprint(repo_root)
+    if not current:
+        return []
+    previous = state.get(_BUILDER_KEY)
+    state[_BUILDER_KEY] = current
+    if previous is None or previous == current:
+        return []
+    state[_FAILURES_KEY] = {}
+    for key in [k for k in state if not k.startswith("__")]:
+        state.pop(key, None)
+    try:
+        return backlog.revive_skipped(backlog_path)
+    except OSError:
+        return []
 
 
 def _remember_failure(state: dict, task: str, log: str) -> None:
@@ -782,13 +844,29 @@ def main(argv: list[str] | None = None) -> int:
         print(f"replenished backlog with {len(new_tasks)} tasks")
         _commit(repo_root, f"forge: replenish backlog (+{len(new_tasks)} tasks)", push)
 
+    state = _load_state(state_path)
+    # Do this before a task is chosen, so a revived task can be the one picked.
+    revived = _refresh_stale_evidence(repo_root, backlog_path, state)
+    if revived:
+        _save_state(state_path, state)
+        print(f"builder changed; reopened {len(revived)} previously retired task(s)")
+        devlog.append(
+            devlog_path,
+            "revived",
+            f"builder code changed; reopened {len(revived)} retired task(s)",
+            "Tasks are retired after three failed attempts. When the builder itself "
+            "changes, that count stops being evidence about the task, so retirement "
+            "is revisited:\n\n"
+            + "\n".join(f"- {t}" for t in revived),
+        )
+        _commit(repo_root, f"forge: reopen {len(revived)} task(s) after builder change", push)
+
     task = backlog.next_task(backlog_path)
     if task is None:
         print("backlog is empty; nothing to do")
         return 0
     print(f"next task: {task.text}")
 
-    state = _load_state(state_path)
     attempts = int(state.get(task.text, 0))
 
     try:

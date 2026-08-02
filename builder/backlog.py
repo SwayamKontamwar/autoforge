@@ -173,3 +173,57 @@ def append_tasks(backlog_path: Path, tasks: list[str], heading: str) -> None:
     block.extend(f"- [ ] {task}" for task in tasks)
     body = existing.rstrip("\n") + "\n" + "\n".join(block) + "\n"
     backlog_path.write_text(body, encoding="utf-8")
+
+
+_SKIP_NOTE = "_(skipped after "
+# One builder change should not re-grind a huge backlog of genuinely impossible
+# work. Reviving the oldest few is enough to recover from a real bug without ever
+# turning into a long stall.
+REVIVE_LIMIT = 25
+
+
+def skipped_tasks(backlog_path: Path) -> list[str]:
+    """Return the text of every task retired by repeated guardrail failure."""
+    lines = backlog_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    out = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith(_DONE) and _SKIP_NOTE in stripped:
+            body = stripped[len(_DONE) :]
+            out.append(body.split("  _(skipped after")[0].strip())
+    return out
+
+
+def revive_skipped(backlog_path: Path, limit: int = REVIVE_LIMIT) -> list[str]:
+    """Reopen tasks that were retired, dropping the note that retired them.
+
+    A task is retired after three failed attempts, which is the right call while
+    the machinery is fixed: it stops one impossible item blocking everything
+    behind it. But it is the wrong call when the attempts were burnt by a bug in
+    the builder itself, because then the count is evidence about the builder, not
+    about the task.
+
+    That is not hypothetical either. Two tasks here were retired entirely because
+    the model kept writing a keyword the installed httpx had removed -- a defect
+    that has since been fixed mechanically. Both were solvable the whole time.
+    Left alone they were lost permanently, and at the observed rate that is a
+    sixth of the backlog quietly abandoned over the years this is meant to run.
+
+    So retirement is treated as provisional, and revisited exactly when the
+    evidence goes stale: when the builder's own code changes.
+    """
+    lines = backlog_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    revived: list[str] = []
+    for i, line in enumerate(lines):
+        if len(revived) >= limit:
+            break
+        stripped = line.strip()
+        if not (stripped.startswith(_DONE) and _SKIP_NOTE in stripped):
+            continue
+        prefix = line[: len(line) - len(line.lstrip())]
+        body = stripped[len(_DONE) :].split("  _(skipped after")[0].strip()
+        lines[i] = f"{prefix}{_OPEN}{body}"
+        revived.append(body)
+    if revived:
+        backlog_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return revived

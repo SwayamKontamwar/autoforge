@@ -262,6 +262,28 @@ forever. Three things changed as a result:
 
 The monkey-patch was reverted and the `/stats` task reopened.
 
+Two follow-ons came out of watching the next live runs:
+
+**Telling the model the right keyword did not work.** With the correct name in
+its prompt *and* the previous `TypeError` fed back as retry feedback, the very
+next run wrote `allow_redirects=` again. So it is repaired mechanically now,
+alongside the `ruff --fix` pass that already runs before judging. The swap is
+derived from the installed `TestClient` signature rather than hard-coded, so a
+future version that renames or restores the keyword stops the rewrite instead of
+silently corrupting working code, and it only touches files under `tests/`.
+
+**Retirement is provisional.** A task is dropped after three failed attempts,
+which is right when the task is the problem — one impossible item shouldn't block
+everything behind it. It is wrong when the attempts were burnt by a bug in the
+builder, because then the count is evidence about the builder. Two tasks here had
+been retired entirely by the keyword bug; both were solvable the whole time. At
+the observed rate that is a sixth of a 2,000-task backlog quietly abandoned over
+the years this is meant to run. So `builder/` is fingerprinted, and when that
+fingerprint changes the attempt counts are cleared and retired tasks are reopened
+(capped, oldest first). Tying it to a fingerprint rather than a timer is what
+keeps it from becoming an infinite retry loop: an impossible task gets another
+look only when someone has actually changed the machinery that judged it.
+
 ## Honest caveats
 
 This is an experiment, and it is described as one:

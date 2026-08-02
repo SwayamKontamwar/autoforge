@@ -415,9 +415,18 @@ def test_finished_tasks_leave_nothing_behind_in_state(tmp_path, monkeypatch) -> 
     assert _run(monkeypatch, root, good, guardrail_ok=True) == 0
 
     state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
-    leftovers = {k: v for k, v in state.items() if k != "__last_failures__"}
+    # Reserved "__" keys are fixed-size bookkeeping (stored failures, outage
+    # timestamp, builder fingerprint). What must never accumulate is per-task
+    # entries, one for every item in a backlog of thousands.
+    leftovers = {k: v for k, v in state.items() if not k.startswith("__")}
     assert leftovers == {}, f"finished tasks left state behind: {leftovers}"
     assert not state.get("__last_failures__")
+    reserved = {k for k in state if k.startswith("__")}
+    assert reserved <= {
+        "__last_failures__",
+        "__outage_since__",
+        "__builder_fingerprint__",
+    }, f"unexpected reserved state keys: {reserved}"
 
 
 def _seed_tests(root: Path, count: int) -> str:
