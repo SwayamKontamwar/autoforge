@@ -98,3 +98,26 @@ Guardrail: ruff + import + pytest passed.
 Add pagination to GET /links with limit and offset query parameters and tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T17:17Z — failed: Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: Expected `(`, found newline
+   --> tests/test_app.py:127:27
+    |
+127 | def test_get_links_returns
+    |                           ^
+
+invalid-syntax: Expected `)`, found end of file
+   --> tests/test_app.py:127:28
+    |
+127 | def test_get_links_returns
+    |                           ^
+
+Found 2 errors.
+
+```

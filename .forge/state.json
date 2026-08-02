@@ -1,3 +1,6 @@
 {
-  "__last_failures__": {}
+  "Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.": 1,
+  "__last_failures__": {
+    "Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.": "$ ruff check\n(exit 1)\ninvalid-syntax: Expected `(`, found newline\n   --> tests/test_app.py:127:27\n    |\n127 | def test_get_links_returns\n    |                           ^\n\ninvalid-syntax: Expected `)`, found end of file\n   --> tests/test_app.py:127:28\n    |\n127 | def test_get_links_returns\n    |                           ^\n\nFound 2 errors.\n"
+  }
 }
