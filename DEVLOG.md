@@ -20,3 +20,8 @@ Model provider 'github' was unavailable: provider HTTP 410: {"error":{"code":"gi
 
 Model provider 'github' was unavailable: provider HTTP 410: {"error":{"code":"github_models_retirement_brownout","message":"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout."}}
 . No code changed; will retry next run.
+
+## 2026-08-02T08:59Z — blocked: Reject invalid URLs on POST /links: require an http or https scheme and a host, returning 422 otherwise, with a test for a bad URL.
+
+Model provider 'github' was unavailable: provider HTTP 410: {"error":{"code":"github_models_retirement_brownout","message":"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout."}}
+. No code changed; will retry next run.
