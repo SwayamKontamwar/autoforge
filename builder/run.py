@@ -21,12 +21,14 @@ import subprocess
 import sys
 from pathlib import Path
 
-from builder import backlog, devlog
+from builder import backlog, backlog_gen, devlog
 from builder.guardrail import run as run_guardrail
 from builder.llm import Patch, ProviderError, get_provider
 
 ALLOWED_PREFIXES = ("app/", "tests/")
 CONTEXT_BUDGET = 16000
+REPLENISH_THRESHOLD = 40
+REPLENISH_BATCH = 80
 
 
 def _git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -148,6 +150,19 @@ def main(argv: list[str] | None = None) -> int:
     if not _is_clean(repo_root):
         print("working tree is not clean; aborting", file=sys.stderr)
         return 1
+
+    if backlog.open_count(backlog_path) < REPLENISH_THRESHOLD:
+        new_tasks = backlog_gen.replenish(repo_root, backlog_path, REPLENISH_BATCH)
+        backlog.append_tasks(backlog_path, new_tasks, heading="Auto-generated follow-up work")
+        devlog.append(
+            devlog_path,
+            "replenished",
+            f"backlog running low; appended {len(new_tasks)} renewable tasks",
+            "The curated backlog is nearly done, so the runtime generated more work "
+            "from the toolkit it has already built. It never runs out.",
+        )
+        print(f"replenished backlog with {len(new_tasks)} tasks")
+        _commit(repo_root, f"forge: replenish backlog (+{len(new_tasks)} tasks)", push)
 
     task = backlog.next_task(backlog_path)
     if task is None:
