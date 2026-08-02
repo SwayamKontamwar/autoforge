@@ -186,3 +186,52 @@ Rejected: the suite shrank from 143 to 141 collected tests. Implement the task w
 Implement custom alias validation and support in link creation
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T18:28Z — failed: Add optional link expiry: accept an expires_in_seconds field and return 410 Gone when an expired link is visited.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 0)
+All checks passed!
+$ import app.main
+(exit 0)
+
+$ pytest
+(exit 1)
+.............................................................F.......... [ 46%]
+........................................................................ [ 92%]
+............                                                             [100%]
+=================================== FAILURES ===================================
+______________________ test_link_expires_and_returns_410 _______________________
+
+    def test_link_expires_and_returns_410():
+        client = TestClient(app)
+    
+        # Create a link that expires in 1 second
+        response = client.post(
+            "/links",
+            json={"url": "https://example.com", "expires_in_seconds": 1},
+        )
+        assert response.status_code == 201
+        data = response.json()
+        code = data["code"]
+    
+        # Immediate redirect should succeed (307)
+>       redirect_resp = client.get(f"/{code}", allow_redirects=False)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: TestClient.get() got an unexpected keyword argument 'allow_redirects'
+
+tests/test_link_expiry.py:21: TypeError
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_link_expiry.py::test_link_expires_and_returns_410 - TypeError: TestClient.get() got an unexpected keyword argument 'allow_redirects'
+1 failed, 155 passed, 1 warning in 16.08s
+
+```
