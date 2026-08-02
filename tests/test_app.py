@@ -77,3 +77,23 @@ def test_delete_link_removes_and_returns_204() -> None:
     # Info endpoint should also be 404
     info_resp = api.get(f"/links/{code}/info")
     assert info_resp.status_code == 404
+
+
+def test_redirect_hits_are_counted_in_info() -> None:
+    api = client()
+    payload = {"url": "https://example.com/hits"}
+    create_resp = api.post("/links", json=payload)
+    assert create_resp.status_code == 201
+    code = create_resp.json()["code"]
+
+    # Initial info should show 0 hits
+    info0 = api.get(f"/links/{code}/info").json()
+    assert info0["hits"] == 0
+
+    # Perform three redirects
+    for _ in range(3):
+        api.get(f"/{code}")
+
+    # Info should now reflect three hits
+    info1 = api.get(f"/links/{code}/info").json()
+    assert info1["hits"] == 3

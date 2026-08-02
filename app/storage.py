@@ -22,6 +22,7 @@ class Link:
     code: str
     url: str
     created_at: datetime
+    hits: int = 0
 
 
 class InMemoryStore:
@@ -56,3 +57,9 @@ class InMemoryStore:
             del self._links[code]
             return True
         return False
+
+    def record_hit(self, code: str) -> None:
+        """Increment the hit counter for ``code`` if it exists."""
+        link = self._links.get(code)
+        if link is not None:
+            link.hits += 1

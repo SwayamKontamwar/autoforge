@@ -80,3 +80,9 @@ Guardrail: ruff + import + pytest passed.
 Add DELETE /links/{code} endpoint and storage delete method with tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T10:02Z — success: Count redirects: track a hit counter per link and include it in the GET /links/{code}/info response.
+
+Add redirect hit counter and expose via link info endpoint with tests
+
+Guardrail: ruff + import + pytest passed.

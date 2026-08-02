@@ -26,3 +26,4 @@ class LinkInfoOut(BaseModel):
     code: str = Field(..., description="The short code identifying the link.")
     url: str = Field(..., description="The destination URL.")
     created_at: datetime = Field(..., description="Timestamp when the link was created.")
+    hits: int = Field(..., description="Number of times the link has been accessed via redirect.")

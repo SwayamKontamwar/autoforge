@@ -14,7 +14,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Reject invalid URLs on POST /links: require an http or https scheme and a host, returning 422 otherwise, with a test for a bad URL.
 - [x] Add GET /links/{code}/info returning the code, target URL, and creation time as JSON without redirecting.
 - [x] Add DELETE /links/{code} that removes a link and returns 204, and make GET /{code} return 404 afterwards.
-- [ ] Count redirects: track a hit counter per link and include it in the GET /links/{code}/info response.
+- [x] Count redirects: track a hit counter per link and include it in the GET /links/{code}/info response.
 - [ ] Add GET /links returning a JSON list of all links with their codes, targets, and hit counts.
 - [ ] Add pagination to GET /links using limit and offset query parameters with sensible defaults and bounds.
 - [ ] Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.

@@ -49,6 +49,7 @@ def create_app() -> FastAPI:
         link = store.get(code)
         if link is None:
             raise HTTPException(status_code=404, detail="Unknown short code")
+        store.record_hit(code)
         return RedirectResponse(url=link.url, status_code=307)
 
     @app.get("/links/{code}/info", response_model=LinkInfoOut)
@@ -57,7 +58,12 @@ def create_app() -> FastAPI:
         link = store.get(code)
         if link is None:
             raise HTTPException(status_code=404, detail="Unknown short code")
-        return LinkInfoOut(code=link.code, url=link.url, created_at=link.created_at)
+        return LinkInfoOut(
+            code=link.code,
+            url=link.url,
+            created_at=link.created_at,
+            hits=link.hits,
+        )
 
     @app.delete("/links/{code}", status_code=204)
     def delete_link(code: str) -> None:
