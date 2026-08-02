@@ -6,6 +6,8 @@ on:
     - cron: "0 13 * * *"
     - cron: "0 17 * * *"
     - cron: "0 21 * * *"
+    # TEMPORARY: proving the scheduled path actually fires. Removed straight after.
+    - cron: "35 9 * * *"
   workflow_dispatch:
     inputs:
       provider:
