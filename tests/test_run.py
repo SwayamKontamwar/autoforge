@@ -229,3 +229,83 @@ def test_autofix_repairs_fixable_lint(tmp_path) -> None:
     run._autofix(root, Patch(files=[File("app/messy.py", messy)], summary="x"))
     fixed = (root / "app" / "messy.py").read_text(encoding="utf-8")
     assert "import os" not in fixed  # unused import stripped by `ruff check --fix`
+
+
+class _RecordingProvider:
+    """Captures the context it was handed so we can assert on what the model sees."""
+
+    def __init__(self, patch: Patch) -> None:
+        self._patch = patch
+        self.contexts: list[str] = []
+
+    def generate(self, task: str, context: str) -> Patch:
+        self.contexts.append(context)
+        return self._patch
+
+
+def _run_recording(monkeypatch, root: Path, provider, guardrail_ok: bool, max_attempts: int = 3):
+    monkeypatch.setattr(run, "get_provider", lambda name: provider)
+
+    def _stub(repo_root: Path) -> GuardrailResult:
+        applied = any((repo_root / f.path).exists() for f in provider._patch.files)
+        return GuardrailResult(
+            ok=guardrail_ok if applied else True,
+            log="E   AssertionError: LinkOut.url expected str",
+        )
+
+    monkeypatch.setattr(run, "run_guardrail", _stub)
+    return run.main(
+        ["--repo-root", str(root), "--provider", "scripted", "--no-push",
+         "--max-attempts", str(max_attempts)]
+    )
+
+
+def test_guardrail_failure_is_fed_back_into_the_next_attempt(tmp_path, monkeypatch) -> None:
+    """A retry that cannot see the last failure is just the same roll of the dice.
+
+    Every attempt would otherwise get a byte-identical prompt, reproduce the same
+    mistake, and burn the task's attempts until it is skipped — abandoning work that
+    was one correction away. Proven against a live model: two blind attempts failed
+    identically, and the attempt that received the traceback shipped.
+    """
+    root = _init_repo(tmp_path, ["do the thing"])
+    bad = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
+
+    first = _RecordingProvider(bad)
+    assert _run_recording(monkeypatch, root, first, guardrail_ok=False) == 0
+    assert "previous attempt" not in first.contexts[0].lower(), "nothing to feed back yet"
+
+    second = _RecordingProvider(bad)
+    assert _run_recording(monkeypatch, root, second, guardrail_ok=False) == 0
+    prompt = second.contexts[0]
+    assert "previous attempt" in prompt.lower()
+    assert "LinkOut.url expected str" in prompt, "the actual failure must reach the model"
+    assert _is_clean(root)
+
+
+def test_feedback_is_dropped_once_the_task_succeeds(tmp_path, monkeypatch) -> None:
+    root = _init_repo(tmp_path, ["do the thing"])
+    patch = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
+
+    assert _run_recording(monkeypatch, root, _RecordingProvider(patch), guardrail_ok=False) == 0
+    state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
+    assert state.get("__last_failures__"), "a failure should have been remembered"
+
+    assert _run_recording(monkeypatch, root, _RecordingProvider(patch), guardrail_ok=True) == 0
+    state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
+    assert not state.get("__last_failures__"), "stale traceback outlived the task"
+    assert _is_clean(root)
+
+
+def test_feedback_is_dropped_when_the_task_is_skipped(tmp_path, monkeypatch) -> None:
+    """Skipped tasks never run again, so keeping their tracebacks only grows the file."""
+    root = _init_repo(tmp_path, ["do the thing"])
+    bad = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
+    for _ in range(2):
+        assert _run_recording(
+            monkeypatch, root, _RecordingProvider(bad), guardrail_ok=False, max_attempts=2
+        ) == 0
+    assert "- [x] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
+    state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
+    assert not state.get("__last_failures__")
+    assert _is_clean(root)

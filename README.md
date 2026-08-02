@@ -47,6 +47,11 @@ cron (3×/day) ──► builder/run.py
 - **The guardrail is the whole promise.** `builder/guardrail.py` runs `ruff`, an
   import smoke check, and `pytest`. A patch that fails any of them is reverted
   with `git checkout` + `git clean` and never reaches `main`.
+- **Failures are fed back, not repeated.** When a patch fails the guardrail, the
+  traceback is stored alongside the attempt count and handed to the model on the
+  next run. Without it every retry gets an identical prompt and reproduces the
+  same mistake until the task is skipped. In a live run this was the difference
+  between two failed attempts and a shipped feature.
 - **Blast radius is fenced.** Generated patches may only touch `app/` and
   `tests/`. Anything that tries to edit the builder, the workflow, or the backlog
   is rejected before it is applied.

@@ -15,6 +15,8 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
+_USER_AGENT = "autoforge/1.0 (+https://github.com/SwayamKontamwar/autoforge)"
+
 
 class ProviderError(RuntimeError):
     """Raised when a provider cannot produce a usable patch."""
@@ -270,6 +272,12 @@ def _chat_completion(
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
             "Accept": "application/json",
+            # urllib's default User-Agent is "Python-urllib/x.y", which sits on the
+            # bot blocklist of at least one major provider's CDN: Groq answers it
+            # with a Cloudflare 1010 "browser signature banned" 403 while the very
+            # same request from curl succeeds. Identifying honestly costs nothing
+            # and turns a permanent, silent provider outage into a working run.
+            "User-Agent": _USER_AGENT,
         },
         method="POST",
     )

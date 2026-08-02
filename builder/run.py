@@ -63,6 +63,43 @@ def _save_state(state_path: Path, state: dict) -> None:
     state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
+# Attempt counts live in the state dict keyed by task text; failures hang off this
+# reserved key so both survive in one committed file.
+_FAILURES_KEY = "__last_failures__"
+
+
+def _remember_failure(state: dict, task: str, log: str) -> None:
+    state.setdefault(_FAILURES_KEY, {})[task] = _tail(log)
+
+
+def _forget_failure(state: dict, task: str) -> None:
+    state.get(_FAILURES_KEY, {}).pop(task, None)
+
+
+def _previous_failure(state: dict, task: str) -> str:
+    failures = state.get(_FAILURES_KEY)
+    return failures.get(task, "") if isinstance(failures, dict) else ""
+
+
+def _with_failure_note(context: str, failure: str) -> str:
+    """Append the last guardrail failure so a retry is not a blind repeat.
+
+    Without this the model receives a byte-identical prompt on every attempt and
+    reliably makes the same mistake until the task is skipped — work abandoned one
+    small fix away from passing. Handing back the traceback is what turns three
+    wasted attempts into a correction.
+    """
+    return (
+        f"{context}\n\n"
+        "## Your previous attempt at this task failed\n\n"
+        "You have already tried this task once. The patch was reverted because the "
+        "guardrail failed with the output below. Read it carefully and fix the cause; "
+        "do not submit the same patch again. Note that a change to one model or "
+        "function often requires updating the others that use it.\n\n"
+        f"```\n{failure}\n```\n"
+    )
+
+
 def _build_context(repo_root: Path, task_text: str = "") -> str:
     sections: list[str] = []
     budget = CONTEXT_BUDGET
@@ -240,7 +277,12 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         provider = get_provider(args.provider)
-        patch = provider.generate(task.text, _build_context(repo_root, task.text))
+        context = _build_context(repo_root, task.text)
+        prior_failure = _previous_failure(state, task.text)
+        if prior_failure:
+            print("retrying with the previous guardrail failure as feedback")
+            context = _with_failure_note(context, prior_failure)
+        patch = provider.generate(task.text, context)
     except ProviderError as exc:
         # A provider outage is infrastructure trouble, not project progress. Record it
         # once, then stay quiet until it recovers: an outage lasting months must not
@@ -287,6 +329,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if result.ok:
         state.pop(task.text, None)
+        _forget_failure(state, task.text)
         _save_state(state_path, state)
         backlog.mark_done(backlog_path, task.index)
         devlog.append(
@@ -324,15 +367,20 @@ def main(argv: list[str] | None = None) -> int:
 
     attempts += 1
     state[task.text] = attempts
-    _save_state(state_path, state)
+    _remember_failure(state, task.text, result.log)
 
     if attempts >= args.max_attempts:
         backlog.mark_done(
             backlog_path, task.index, note=f"skipped after {attempts} failed attempts"
         )
         status, message = "skipped", "forge: skip task after repeated guardrail failures"
+        # The task is closed, so the stored traceback is dead weight in a file that
+        # lives for the life of the repository.
+        _forget_failure(state, task.text)
     else:
         status, message = "failed", "forge: log failed attempt (code reverted)"
+
+    _save_state(state_path, state)
 
     devlog.append(
         devlog_path,
