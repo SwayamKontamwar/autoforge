@@ -24,14 +24,63 @@ _RATE_LIMIT_ATTEMPTS = 3
 _MAX_BACKOFF_SECONDS = 75.0
 
 
-_MAX_COMPLETION_TOKENS = int(os.getenv("MAX_COMPLETION_TOKENS", "16384"))
+# Groq's free tier meters prompt *and* completion against one tokens-per-minute
+# allowance, and rejects the whole request when the sum is over it -- not when it is
+# used up, when it is *asked for*. So a fixed completion budget is wrong twice over:
+# too big and every request is refused outright (observed live: "Limit 8000,
+# Requested 20976" as an HTTP 413), too small and every answer is cut off. It has to
+# be whatever is left after the prompt.
+_TOKEN_BUDGET = int(os.getenv("TOKEN_BUDGET", "8000"))
+_MIN_COMPLETION_TOKENS = 1200
+_TOKENS_PER_CHAR = 0.28
+_BUDGET_MARGIN_TOKENS = 250
+
+
+def _completion_budget(*prompts: str) -> int:
+    """How many tokens are left for the answer once the prompt is paid for.
+
+    The free tier meters the question and the requested answer against a single
+    allowance and rejects the request outright if the pair exceeds it -- it charges
+    for the answer that was *asked for*, not the one that came back. A fixed
+    ``max_tokens`` therefore stops working the moment the prompt grows, which is
+    exactly what happened in production: HTTP 413, "Limit 8000, Requested 20976",
+    on every single run, with a perfectly good key.
+    """
+    spent = int(sum(len(part) for part in prompts) * _TOKENS_PER_CHAR)
+    room = _TOKEN_BUDGET - spent - _BUDGET_MARGIN_TOKENS
+    if room < _MIN_COMPLETION_TOKENS:
+        # Asking anyway earns an opaque 413 that looks like an outage, so the run
+        # would wait for a recovery that cannot come: the prompt is derived from the
+        # repository and the task, so it will be just as large next time. Fail the
+        # task instead, so it is retried a few times and then skipped.
+        raise PromptTooLarge(
+            f"the question needs about {spent} tokens and the allowance is "
+            f"{_TOKEN_BUDGET}, leaving no room for an answer; lower CONTEXT_BUDGET "
+            f"or raise TOKEN_BUDGET"
+        )
+    return room
 
 
 class ProviderError(RuntimeError):
     """Raised when a provider cannot produce a usable patch."""
 
 
-class TruncatedResponse(RuntimeError):
+class DoesNotFit(RuntimeError):
+    """Raised when a request cannot fit the token allowance, in either direction.
+
+    Deliberately not a :class:`ProviderError`. An outage is retried forever without
+    counting an attempt, which is right for a service that will come back -- but a
+    request that does not fit is a property of this repository and this task, so it
+    will not fit next time either. Counting it means the task is retried a few times
+    and then skipped, and the loop keeps moving.
+    """
+
+
+class PromptTooLarge(DoesNotFit):
+    """Raised when the question alone would exhaust the allowance."""
+
+
+class TruncatedResponse(DoesNotFit):
     """Raised when the provider stopped mid-answer at its completion limit.
 
     Deliberately not a :class:`ProviderError`. An outage is retried forever without
@@ -460,6 +509,7 @@ def _chat_completion(
 def _single_completion(
     base_url: str, path: str, model: str, api_key: str, task: str, context: str
 ) -> str:
+    user_prompt = _user_prompt(task, context)
     payload = json.dumps(
         {
             "model": model,
@@ -469,10 +519,10 @@ def _single_completion(
             # a patch whose last string literal was never closed, reported as the
             # model writing bad code. As the files it must rewrite grow over the
             # years, that gets more likely, not less.
-            "max_tokens": _MAX_COMPLETION_TOKENS,
+            "max_tokens": _completion_budget(_SYSTEM_PROMPT, user_prompt),
             "messages": [
                 {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": _user_prompt(task, context)},
+                {"role": "user", "content": user_prompt},
             ],
         }
     ).encode("utf-8")

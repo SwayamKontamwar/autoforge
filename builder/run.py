@@ -26,13 +26,18 @@ from pathlib import Path
 from builder import backlog, backlog_gen, devlog
 from builder.guardrail import GuardrailResult, count_tests
 from builder.guardrail import run as run_guardrail
-from builder.llm import Patch, ProviderError, TruncatedResponse, get_provider
+from builder.llm import DoesNotFit, Patch, ProviderError, get_provider
 
 ALLOWED_PREFIXES = ("app/", "tests/")
-CONTEXT_BUDGET = 16000
+# The prompt and the answer are metered against one shared allowance, so every
+# character spent describing the repository is a character the model cannot spend
+# writing code. At 16000 the context took 62% of the free tier's budget and left
+# barely enough to rewrite one medium file. Context is ranked by relevance, so the
+# lost tail is the least useful part of it.
+CONTEXT_BUDGET = 9000
 # The file listing is capped separately: it grows with every task forever, while
 # file bodies are bounded by whatever fits after it.
-LISTING_BUDGET = 3000
+LISTING_BUDGET = 2000
 REPLENISH_THRESHOLD = 40
 REPLENISH_BATCH = 80
 # Re-log an ongoing outage this often. Comfortably inside GitHub's 60-day
@@ -366,7 +371,7 @@ def _ask(provider_name: str, repo_root: Path, state: dict, task: str) -> Patch:
             print("retrying with the previous guardrail failure as feedback")
             context = _with_failure_note(context, prior_failure)
         return provider.generate(task, context)
-    except (ProviderError, TruncatedResponse):
+    except (ProviderError, DoesNotFit):
         raise
     except Exception as exc:
         raise ProviderError(f"{type(exc).__name__}: {exc}") from exc
@@ -613,7 +618,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         patch = _ask(args.provider, repo_root, state, task.text)
-    except TruncatedResponse as exc:
+    except DoesNotFit as exc:
         patch, truncated = Patch(files=[], summary=""), str(exc)
     except ProviderError as exc:
         # A provider outage is infrastructure trouble, not project progress. Record it
