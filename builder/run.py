@@ -15,6 +15,7 @@ Run ``python -m builder.run --provider mock --no-push`` to exercise it offline.
 from __future__ import annotations
 
 import argparse
+import inspect
 import json
 import os
 import re
@@ -291,6 +292,60 @@ def _apply(repo_root: Path, patch: Patch) -> None:
         target.write_text(content, encoding="utf-8")
 
 
+def _retired_kwarg_rewrite() -> tuple[str, str] | None:
+    """Return the keyword swap the installed client needs, or None if it needs none.
+
+    The model cannot stop writing ``allow_redirects=``. It is the ``requests``
+    spelling, it is all over the training data, and the installed ``httpx`` deleted
+    it. Stating the correct name in the prompt did not work: the model wrote the
+    dead keyword again on the very next run, with the previous ``TypeError`` quoted
+    back to it as feedback. Left alone this burns all three attempts and retires a
+    task permanently, over and over, for years.
+
+    So it is repaired mechanically instead of asked for politely. The swap is
+    derived from the installed signature rather than hard-coded, so if a future
+    version restores the old name -- or renames it again -- this stops rewriting
+    instead of silently corrupting working code.
+    """
+    try:
+        from fastapi.testclient import TestClient
+
+        params = inspect.signature(TestClient.get).parameters
+    except Exception:
+        return None
+    if "follow_redirects" in params and "allow_redirects" not in params:
+        return ("allow_redirects", "follow_redirects")
+    return None
+
+
+def _fix_retired_kwargs(repo_root: Path, patch: Patch) -> list[str]:
+    """Swap the dead keyword in generated tests. Returns the files changed."""
+    swap = _retired_kwarg_rewrite()
+    if swap is None:
+        return []
+    old, new = swap
+    pattern = re.compile(rf"\b{re.escape(old)}(\s*=)")
+    changed = []
+    for file in patch.files:
+        # Only tests call the client, and only tests may import it at all, so a
+        # rewrite can never reach production semantics.
+        if not file.path.replace("\\", "/").startswith("tests/"):
+            continue
+        target = repo_root / file.path
+        try:
+            text = target.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        fixed = pattern.sub(rf"{new}\1", text)
+        if fixed != text:
+            try:
+                target.write_text(fixed, encoding="utf-8")
+            except OSError:
+                continue
+            changed.append(file.path)
+    return changed
+
+
 def _autofix(repo_root: Path, patch: Patch) -> None:
     """Auto-repair safe, trivial lint issues in the generated files before judging.
 
@@ -300,6 +355,9 @@ def _autofix(repo_root: Path, patch: Patch) -> None:
     imports, whitespace), turning otherwise-good work into a clean commit instead of
     a needless revert.
     """
+    fixed = _fix_retired_kwargs(repo_root, patch)
+    if fixed:
+        print(f"rewrote a retired httpx keyword in: {', '.join(fixed)}")
     paths = [file.path for file in patch.files if (repo_root / file.path).exists()]
     if not paths:
         return

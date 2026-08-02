@@ -242,3 +242,59 @@ class TestHostileModelOutput:
 
     def test_non_python_files_are_not_parsed(self):
         assert _reject_reason(_patch(("app/data.txt", "\x00\udcff not python"))) is None
+
+
+class TestRetiredKwargIsRepaired:
+    """The prompt hint was not enough -- the model wrote the dead keyword anyway.
+
+    Live evidence: with the correct name stated in the prompt AND the previous
+    ``TypeError`` fed back as retry feedback, the very next run still emitted
+    ``allow_redirects=``. Asking does not work, so it is rewritten mechanically.
+    """
+
+    def test_the_swap_matches_the_installed_client(self):
+        from builder.run import _retired_kwarg_rewrite
+
+        assert _retired_kwarg_rewrite() == ("allow_redirects", "follow_redirects")
+
+    def test_rewrites_the_real_failing_line(self, tmp_path):
+        from builder.run import _fix_retired_kwargs
+
+        (tmp_path / "tests").mkdir()
+        body = 'r = client.get("/abc", allow_redirects=False)\n'
+        (tmp_path / "tests" / "test_stats.py").write_text(body)
+        patch = _patch(("tests/test_stats.py", body))
+        assert _fix_retired_kwargs(tmp_path, patch) == ["tests/test_stats.py"]
+        fixed = (tmp_path / "tests" / "test_stats.py").read_text()
+        assert "follow_redirects=False" in fixed
+        assert "allow_redirects" not in fixed
+
+    def test_rewritten_call_actually_works(self):
+        """The replacement must be accepted by the real client, not merely different."""
+        from fastapi.testclient import TestClient
+
+        from app.main import app
+
+        assert TestClient(app).get("/healthz", follow_redirects=False).status_code == 200
+
+    def test_production_files_are_never_rewritten(self, tmp_path):
+        from builder.run import _fix_retired_kwargs
+
+        (tmp_path / "app").mkdir()
+        body = "allow_redirects = True\n"
+        (tmp_path / "app" / "x.py").write_text(body)
+        assert _fix_retired_kwargs(tmp_path, _patch(("app/x.py", body))) == []
+        assert (tmp_path / "app" / "x.py").read_text() == body
+
+    def test_unrelated_code_is_untouched(self, tmp_path):
+        from builder.run import _fix_retired_kwargs
+
+        (tmp_path / "tests").mkdir()
+        body = "x = disallow_redirects_thing\n"
+        (tmp_path / "tests" / "test_a.py").write_text(body)
+        assert _fix_retired_kwargs(tmp_path, _patch(("tests/test_a.py", body))) == []
+
+    def test_missing_file_does_not_raise(self, tmp_path):
+        from builder.run import _fix_retired_kwargs
+
+        assert _fix_retired_kwargs(tmp_path, _patch(("tests/gone.py", "x = 1\n"))) == []
