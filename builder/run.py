@@ -59,7 +59,7 @@ def _save_state(state_path: Path, state: dict) -> None:
     state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def _build_context(repo_root: Path) -> str:
+def _build_context(repo_root: Path, task_text: str = "") -> str:
     sections: list[str] = []
     budget = CONTEXT_BUDGET
     tracked = sorted(
@@ -69,7 +69,13 @@ def _build_context(repo_root: Path) -> str:
     )
     listing = "\n".join(str(p.relative_to(repo_root)) for p in tracked)
     sections.append(f"Files:\n{listing}\n")
-    for path in tracked:
+
+    def _priority(path: Path) -> tuple[int, str]:
+        rel = str(path.relative_to(repo_root))
+        # Files named in the task must survive truncation, however large the repo.
+        return (0 if rel in task_text else 1, rel)
+
+    for path in sorted(tracked, key=_priority):
         rel = path.relative_to(repo_root)
         content = path.read_text(encoding="utf-8")
         block = f"\n--- {rel} ---\n{content}"
@@ -175,7 +181,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         provider = get_provider(args.provider)
-        patch = provider.generate(task.text, _build_context(repo_root))
+        patch = provider.generate(task.text, _build_context(repo_root, task.text))
     except ProviderError as exc:
         devlog.append(
             devlog_path,
@@ -192,8 +198,22 @@ def main(argv: list[str] | None = None) -> int:
         attempts += 1
         state[task.text] = attempts
         _save_state(state_path, state)
-        devlog.append(devlog_path, "rejected", task.text, f"Patch rejected: {reason}")
-        _commit(repo_root, "forge: reject out-of-bounds patch", push)
+        if attempts >= args.max_attempts:
+            backlog.mark_done(
+                backlog_path, task.index, note=f"skipped after {attempts} out-of-bounds patches"
+            )
+            status = "skipped"
+            message = "forge: skip task after repeated out-of-bounds patches"
+            detail = (
+                f"Patch rejected: {reason}\n\n"
+                f"Skipped after {attempts} out-of-bounds attempts so the backlog keeps moving."
+            )
+        else:
+            status = "rejected"
+            message = "forge: reject out-of-bounds patch"
+            detail = f"Patch rejected: {reason}"
+        devlog.append(devlog_path, status, task.text, detail)
+        _commit(repo_root, message, push)
         return 0
 
     _apply(repo_root, patch)
