@@ -1,0 +1,50 @@
+name: daily-build
+
+on:
+  schedule:
+    # Three times a day, roughly four hours apart (UTC). Cron is best-effort.
+    - cron: "0 13 * * *"
+    - cron: "0 17 * * *"
+    - cron: "0 21 * * *"
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: "Model provider to use (github, openai, mock)"
+        required: false
+        default: "github"
+
+concurrency:
+  group: daily-build
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Build the next backlog item
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LLM_PROVIDER: ${{ github.event.inputs.provider || 'github' }}
+          # Optional free fallback if GitHub Models is unavailable for this account:
+          # LLM_BASE_URL / MODEL_ID / LLM_API_KEY can be supplied as repo secrets.
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          MODEL_ID: ${{ secrets.MODEL_ID }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: python -m builder.run
