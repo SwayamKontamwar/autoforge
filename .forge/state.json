@@ -1,3 +1,6 @@
 {
-  "__last_failures__": {}
+  "Add GET /stats returning totals: number of links, total redirects, and the most-visited code.": 1,
+  "__last_failures__": {
+    "Add GET /stats returning totals: number of links, total redirects, and the most-visited code.": "$ ruff check\n(exit 1)\nE741 Ambiguous variable name: `l`\n   --> app/main.py:129:54\n    |\n127 |         most_visited_code: str | None = None\n128 |         if all_links:\n129 |             most_visited = max(all_links, key=lambda l: l.hits)\n    |                                                      ^\n130 |             most_visited_code = most_visited.code\n131 |         return StatsOut(\n    |\n\nFound 1 error.\n"
+  }
 }

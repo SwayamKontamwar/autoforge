@@ -241,3 +241,25 @@ FAILED tests/test_link_expiry.py::test_link_expires_and_returns_410 - TypeError:
 Add optional link expiry handling and update tests for correct redirect behavior
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T20:28Z — failed: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+E741 Ambiguous variable name: `l`
+   --> app/main.py:129:54
+    |
+127 |         most_visited_code: str | None = None
+128 |         if all_links:
+129 |             most_visited = max(all_links, key=lambda l: l.hits)
+    |                                                      ^
+130 |             most_visited_code = most_visited.code
+131 |         return StatsOut(
+    |
+
+Found 1 error.
+
+```
