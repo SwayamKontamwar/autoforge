@@ -102,9 +102,12 @@ Only `LLM_API_KEY` is actually required — the workflow defaults the base URL a
 model to Groq's free tier, and `LLM_BASE_URL` / `MODEL_ID` secrets override those
 if you'd rather use another provider.
 
-Hosted models get retired periodically. If the default model is ever shut down,
-runs will simply record the outage rather than break, and setting a `MODEL_ID`
-secret to any currently available model gets things moving again.
+Hosted models get retired periodically — the original default was decommissioned
+during development. When the configured model stops existing, the builder asks the
+provider which models it actually serves, filters out the ones that cannot write
+code (speech, embedding, moderation), prefers a peer of the retired model over the
+cheapest one on the menu, and carries on, logging the substitution. Setting a
+`MODEL_ID` secret still pins a specific model when you want one.
 
 Add the key as a repository **Actions secret** (Settings → Secrets and
 variables → Actions) and the scheduled workflow picks it up automatically. If
@@ -137,7 +140,12 @@ This is an experiment, and it is described as one:
   designed it the same way. The backlog is written to keep each step small enough
   that this trade-off stays reasonable.
 - **Model availability and rate limits vary.** Free inference tiers throttle; a
-  throttled run simply logs that it was blocked and waits for the next slot.
+  throttled run waits out the provider's stated `retry-after` and only gives up on
+  the slot if the limit will not clear.
+- **An automatic model substitution is a downgrade, not a repair.** If the
+  configured model is retired the builder keeps working with whatever is served,
+  which may be a weaker model producing patches the guardrail rejects more often.
+  It is a way to stay alive, not a reason to leave `MODEL_ID` unattended forever.
 
 ## Layout
 

@@ -167,3 +167,74 @@ def test_backoff_is_capped_so_a_job_cannot_hang(monkeypatch) -> None:
     assert llm._retry_after_seconds({"retry-after": "99999"}, 5.0) <= llm._MAX_BACKOFF_SECONDS
     assert llm._retry_after_seconds({}, 5.0) == 5.0
     assert llm._retry_after_seconds({"x-ratelimit-reset-tokens": "720ms"}, 5.0) >= 1.0
+
+
+def _completion_args() -> tuple:
+    return ("https://api.example/v1", "/chat/completions", "vendor/big", "k", "task", "ctx")
+
+
+def test_retired_model_falls_back_to_a_model_the_provider_still_serves(monkeypatch) -> None:
+    """A withdrawn model must not end the project.
+
+    Hosted models are retired far faster than this repo is meant to run, and a
+    retired model returns the same 4xx on every future run, so without a fallback
+    the loop stops permanently the day the vendor cleans house.
+    """
+    tried: list[str] = []
+
+    def fake_single(base_url, path, model, api_key, task, context):
+        tried.append(model)
+        if model == "vendor/big":
+            raise ProviderError('provider HTTP 404: {"code":"model_not_found"}')
+        return "ok from " + model
+
+    monkeypatch.setattr(llm, "_single_completion", fake_single)
+    monkeypatch.setattr(
+        llm, "_discover_chat_models", lambda b, k: ["tiny-8b-instant", "vendor/next"]
+    )
+
+    assert llm._chat_completion(*_completion_args()) == "ok from vendor/next"
+    assert tried == ["vendor/big", "vendor/next"]
+
+
+def test_a_real_failure_is_not_disguised_as_a_missing_model(monkeypatch) -> None:
+    """Only model-availability errors may trigger a fallback.
+
+    Retrying a bad key or a provider outage against every model on the menu would
+    burn the run and bury the actual cause under a pile of substitutions.
+    """
+    calls: list[str] = []
+
+    def fake_single(base_url, path, model, api_key, task, context):
+        calls.append(model)
+        raise ProviderError("provider HTTP 401: invalid api key")
+
+    monkeypatch.setattr(llm, "_single_completion", fake_single)
+    monkeypatch.setattr(llm, "_discover_chat_models", lambda b, k: ["vendor/next"])
+
+    with pytest.raises(ProviderError, match="401"):
+        llm._chat_completion(*_completion_args())
+    assert calls == ["vendor/big"]
+
+
+def test_discovery_skips_models_that_cannot_write_code(monkeypatch) -> None:
+    payload = {
+        "data": [
+            {"id": "whisper-large-v3"},
+            {"id": "vendor/llama-guard-4"},
+            {"id": "text-embedding-3"},
+            {"id": "vendor/chat-70b"},
+        ]
+    }
+    monkeypatch.setattr(
+        llm.urllib.request, "urlopen", lambda req, timeout=0: _FakeResponse(payload)
+    )
+    assert llm._discover_chat_models("https://api.example/v1", "k") == ["vendor/chat-70b"]
+
+
+def test_fallback_order_prefers_a_peer_over_the_cheapest_model() -> None:
+    ranked = llm._rank_fallbacks(
+        ["tiny-8b-instant", "other/mid", "vendor/sibling", "vendor/mini"], "vendor/big"
+    )
+    assert ranked[0] == "vendor/sibling"
+    assert ranked[-1] in {"tiny-8b-instant", "vendor/mini"}

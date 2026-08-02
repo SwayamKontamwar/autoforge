@@ -302,7 +302,118 @@ def _post_with_rate_limit_retry(request) -> dict:
     raise ProviderError("provider rate limit did not clear")
 
 
+_MODEL_UNAVAILABLE_HINTS = (
+    "model_not_found",
+    "model not found",
+    "does not exist",
+    "decommissioned",
+    "deprecated",
+    "no longer supported",
+    "has been retired",
+)
+
+# Providers list far more than chat models on the same endpoint. Anything matching
+# these is the wrong tool for writing code and must never be picked as a fallback.
+_NON_CHAT_HINTS = ("whisper", "tts", "embed", "guard", "moderation", "rerank", "-asr")
+
+_MAX_FALLBACK_MODELS = 3
+
+
+def _looks_model_unavailable(message: str) -> bool:
+    lowered = message.lower()
+    return any(hint in lowered for hint in _MODEL_UNAVAILABLE_HINTS)
+
+
+def _discover_chat_models(base_url: str, api_key: str) -> list[str]:
+    """Ask the provider which models it currently serves, newest listing order kept."""
+    request = urllib.request.Request(
+        base_url.rstrip("/") + "/models",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Accept": "application/json",
+            "User-Agent": _USER_AGENT,
+        },
+        method="GET",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=60) as response:
+            body = json.loads(response.read().decode("utf-8"))
+    except (urllib.error.URLError, json.JSONDecodeError, TimeoutError):
+        return []
+    ids = [
+        str(entry.get("id", ""))
+        for entry in body.get("data", [])
+        if isinstance(entry, dict)
+    ]
+    return [
+        model_id
+        for model_id in ids
+        if model_id and not any(hint in model_id.lower() for hint in _NON_CHAT_HINTS)
+    ]
+
+
+# Substrings that mark a model as the small/fast variant of its family. They are
+# usable, but they are the last thing to fall back to for writing code.
+_LIGHTWEIGHT_HINTS = ("mini", "nano", "small", "instant", "-8b", "-1b", "-3b", "lite")
+
+
+def _rank_fallbacks(candidates: list[str], configured: str) -> list[str]:
+    """Order replacements by how likely they are to match the configured model.
+
+    ``/models`` answers in arbitrary order, so an unranked fallback is a coin flip
+    between a peer of the retired model and the smallest model on the menu. Same
+    vendor first, lightweight variants last, alphabetical within a tier so the
+    choice is reproducible when someone is trying to explain a run months later.
+    """
+    vendor = configured.split("/")[0].lower() if "/" in configured else ""
+
+    def key(model_id: str) -> tuple[int, int, str]:
+        lowered = model_id.lower()
+        same_vendor = 0 if vendor and lowered.startswith(f"{vendor}/") else 1
+        lightweight = 1 if any(h in lowered for h in _LIGHTWEIGHT_HINTS) else 0
+        return (lightweight, same_vendor, lowered)
+
+    return sorted(candidates, key=key)
+
+
 def _chat_completion(
+    base_url: str, path: str, model: str, api_key: str, task: str, context: str
+) -> str:
+    """Run one completion, surviving the retirement of the configured model.
+
+    Hosted models are withdrawn on a timescale far shorter than this repository is
+    meant to run — the original default was decommissioned during development. A
+    retired model answers every future run with the same 4xx, so without this the
+    project stops building itself permanently and says only "provider error" while
+    doing it. Falling back to whatever the provider actually serves keeps the loop
+    alive; a bad substitute can still only produce a patch the guardrail rejects.
+    """
+    try:
+        return _single_completion(base_url, path, model, api_key, task, context)
+    except ProviderError as exc:
+        if not _looks_model_unavailable(str(exc)):
+            raise
+        print(f"configured model {model!r} is unavailable: {exc}")
+        candidates = _rank_fallbacks(
+            [m for m in _discover_chat_models(base_url, api_key) if m != model], model
+        )
+        for candidate in candidates[:_MAX_FALLBACK_MODELS]:
+            print(f"MODEL FALLBACK: retrying with {candidate!r}")
+            try:
+                return _single_completion(
+                    base_url, path, candidate, api_key, task, context
+                )
+            except ProviderError as inner:
+                if _looks_model_unavailable(str(inner)):
+                    continue
+                raise
+        raise ProviderError(
+            f"configured model {model!r} is unavailable and no served replacement "
+            f"worked (tried {candidates[:_MAX_FALLBACK_MODELS]}): {exc}"
+        ) from exc
+
+
+def _single_completion(
     base_url: str, path: str, model: str, api_key: str, task: str, context: str
 ) -> str:
     payload = json.dumps(
