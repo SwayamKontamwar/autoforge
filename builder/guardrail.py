@@ -7,6 +7,7 @@ design, but it never contains a state that fails to lint, import, or test.
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -32,6 +33,46 @@ def _run(label: str, args: list[str], cwd: Path) -> tuple[bool, str]:
     ok = proc.returncode == 0
     output = (proc.stdout + proc.stderr).strip()
     return ok, f"$ {label}\n(exit {proc.returncode})\n{output}\n"
+
+
+def parse_collected(output: str) -> int:
+    """Count collected tests from ``pytest --collect-only -q`` output.
+
+    Deliberately tolerant: pytest has printed this three different ways across
+    recent majors — a "N tests collected" summary, one "path: N" line per file,
+    and one node id per line. A parser that knows only the current format would
+    silently start returning "no tests" after a routine pytest upgrade, which here
+    means silently dropping a safety check rather than failing loudly.
+    """
+    summary = re.search(r"(\d+)\s+tests?\s+collected", output)
+    if summary:
+        return int(summary.group(1))
+    per_file = re.findall(r"^\S+:\s+(\d+)$", output, re.MULTILINE)
+    if per_file:
+        return sum(int(n) for n in per_file)
+    node_ids = [ln for ln in output.splitlines() if "::" in ln]
+    return len(node_ids)
+
+
+def count_tests(repo_root: Path) -> int:
+    """Return how many tests pytest can collect, or -1 if collection failed.
+
+    Generated patches may write anywhere under ``tests/``, so a model implementing
+    a task can overwrite an existing test file with a thinner one. Lint, import and
+    pytest would all still pass — on a smaller suite. Over a long run that erodes
+    the safety net every other guarantee here depends on, while each run keeps
+    reporting success.
+    """
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "--collect-only", "-q"],
+        cwd=repo_root,
+        capture_output=True,
+        text=True,
+        timeout=600,
+    )
+    if proc.returncode != 0:
+        return -1
+    return parse_collected(proc.stdout)
 
 
 def run(repo_root: Path) -> GuardrailResult:

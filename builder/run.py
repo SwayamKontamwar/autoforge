@@ -23,6 +23,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from builder import backlog, backlog_gen, devlog
+from builder.guardrail import GuardrailResult, count_tests
 from builder.guardrail import run as run_guardrail
 from builder.llm import Patch, ProviderError, get_provider
 
@@ -362,9 +363,28 @@ def main(argv: list[str] | None = None) -> int:
         _commit(repo_root, message, push)
         return 0
 
+    tests_before = count_tests(repo_root)
     _apply(repo_root, patch)
     _autofix(repo_root, patch)
     result = run_guardrail(repo_root)
+
+    if result.ok:
+        # A green suite is only meaningful if it is still the same suite. Patches may
+        # write anywhere under tests/, so a task can be "completed" by replacing a
+        # test file with a thinner one: ruff, import and pytest all pass, on less
+        # coverage. Left unchecked that quietly dismantles the one guarantee this
+        # repository makes about its own history.
+        tests_after = count_tests(repo_root)
+        if tests_before > 0 and 0 <= tests_after < tests_before:
+            result = GuardrailResult(
+                ok=False,
+                log=(
+                    f"{result.log}\n$ test-suite check\n"
+                    f"Rejected: the suite shrank from {tests_before} to {tests_after} "
+                    "collected tests. Implement the task without removing or replacing "
+                    "existing tests.\n"
+                ),
+            )
 
     if result.ok:
         _close_task_state(state, task.text)

@@ -399,3 +399,62 @@ def test_finished_tasks_leave_nothing_behind_in_state(tmp_path, monkeypatch) -> 
     leftovers = {k: v for k, v in state.items() if k != "__last_failures__"}
     assert leftovers == {}, f"finished tasks left state behind: {leftovers}"
     assert not state.get("__last_failures__")
+
+
+def _seed_tests(root: Path, count: int) -> str:
+    body = "\n".join(f"def test_seed_{i}() -> None:\n    assert True\n" for i in range(count))
+    (root / "tests" / "test_seed.py").write_text(body, encoding="utf-8")
+    return body
+
+
+def test_patch_that_shrinks_the_test_suite_is_rejected(tmp_path, monkeypatch) -> None:
+    """A green guardrail on a gutted suite must not count as success.
+
+    Patches may write anywhere under tests/, so the cheapest way to "pass" a hard
+    task is to delete the tests that make it hard. Lint, import and pytest all stay
+    green because they run on whatever is left.
+    """
+    root = _init_repo(tmp_path, ["do the thing"])
+    original = _seed_tests(root, 3)
+    _git(root, "add", "-A")
+    _git(root, "commit", "-qm", "seed tests")
+
+    gutted = Patch(
+        files=[File("tests/test_seed.py", "def test_seed_0() -> None:\n    assert True\n")],
+        summary="replace the suite",
+    )
+    monkeypatch.setattr(run, "get_provider", lambda name: _ScriptedProvider(gutted))
+    monkeypatch.setattr(run, "run_guardrail", lambda r: GuardrailResult(ok=True, log="stub"))
+
+    rc = run.main(
+        ["--repo-root", str(root), "--provider", "scripted", "--no-push", "--max-attempts", "1"]
+    )
+
+    assert rc == 0
+    assert _is_clean(root)
+    assert (root / "tests" / "test_seed.py").read_text(encoding="utf-8") == original
+    assert "- [ ] do the thing" not in (root / "BACKLOG.md").read_text(encoding="utf-8")
+    assert "shrank" in (root / "DEVLOG.md").read_text(encoding="utf-8")
+
+
+def test_patch_that_adds_tests_is_accepted(tmp_path, monkeypatch) -> None:
+    """The guard must only catch shrinkage — growing the suite is the normal case."""
+    root = _init_repo(tmp_path, ["do the thing"])
+    _seed_tests(root, 2)
+    _git(root, "add", "-A")
+    _git(root, "commit", "-qm", "seed tests")
+
+    grow = Patch(
+        files=[File("tests/test_extra.py", "def test_extra() -> None:\n    assert True\n")],
+        summary="add a test",
+    )
+    monkeypatch.setattr(run, "get_provider", lambda name: _ScriptedProvider(grow))
+    monkeypatch.setattr(run, "run_guardrail", lambda r: GuardrailResult(ok=True, log="stub"))
+
+    rc = run.main(
+        ["--repo-root", str(root), "--provider", "scripted", "--no-push", "--max-attempts", "1"]
+    )
+
+    assert rc == 0
+    assert (root / "tests" / "test_extra.py").exists()
+    assert "- [x] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
