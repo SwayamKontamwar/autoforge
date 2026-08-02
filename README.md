@@ -55,9 +55,16 @@ cron (3×/day) ──► builder/run.py
 - **Blast radius is fenced.** Generated patches may only touch `app/` and
   `tests/`. Anything that tries to edit the builder, the workflow, or the backlog
   is rejected before it is applied.
-- **The backlog never empties.** When open tasks fall below the threshold the run
-  appends a batch of renewable tasks derived from the existing toolkit, so there
-  is always something honest to build next.
+- **The safety net cannot be quietly cut.** Patches are allowed to write under
+  `tests/`, so the cheapest way to pass a hard task is to replace a test file with
+  a thinner one — lint, imports and pytest all stay green, on a smaller suite, and
+  the run still reports success. Collected tests are counted before and after, and
+  a patch that reduces the count is reverted and fed back as a failure.
+- **The backlog never empties, and never repeats.** When open tasks fall below the
+  threshold the run appends a batch of renewable tasks derived from the existing
+  toolkit. Finished items are archived out of `BACKLOG.md` once they would stop it
+  rendering, and the archive still counts against de-duplication, so no task can
+  come back a second time.
 - **Stalls are handled.** Attempts per task are tracked in `.forge/state.json`.
   After three failures a task is marked skipped so the loop keeps moving.
 - **Failures are still commits.** A failed run commits a `DEVLOG.md` note, so the
