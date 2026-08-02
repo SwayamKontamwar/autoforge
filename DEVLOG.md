@@ -121,3 +121,29 @@ invalid-syntax: Expected `)`, found end of file
 Found 2 errors.
 
 ```
+
+## 2026-08-02T17:22Z — failed: Support a custom alias on POST /links via an optional code field, returning 409 if the alias already exists.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: missing closing quote in string literal
+  --> tests/test_app.py:92:23
+   |
+90 | def test_delete_link_removes_and_returns_204() -> None:
+91 |     api = client()
+92 |     payload = {"url": "https://example.com
+   |                       ^^^^^^^^^^^^^^^^^^^^
+
+invalid-syntax: unexpected EOF while parsing
+  --> tests/test_app.py:92:44
+   |
+91 |     api = client()
+92 |     payload = {"url": "https://example.com
+   |                                           ^
+
+Found 2 errors.
+
+```
