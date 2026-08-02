@@ -299,6 +299,29 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     _revert(repo_root)
+
+    # Distinguish "the model wrote bad code" from "this checkout is broken". If the
+    # guardrail still fails with the patch reverted, the failure predates the model:
+    # a dependency released a new lint rule, a transitive break, a broken runner.
+    # Blaming the task there would burn three attempts, skip it, and then do the same
+    # to every remaining task — silently shredding the backlog while every run still
+    # reports success. Record it instead and change nothing.
+    baseline = run_guardrail(repo_root)
+    if not baseline.ok:
+        print("guardrail fails on a clean tree; environment is broken, not the patch")
+        if not _outage_already_logged(repo_root, "environment"):
+            devlog.append(
+                devlog_path,
+                "blocked",
+                task.text,
+                "The guardrail fails on a clean checkout, before any generated code is "
+                "applied, so the build environment is broken rather than the patch. The "
+                "task is left untouched and no attempt was counted.\n\n"
+                f"{_tail(baseline.log)}",
+            )
+            _commit(repo_root, "forge: log blocked task (environment unavailable)", push)
+        return 0
+
     attempts += 1
     state[task.text] = attempts
     _save_state(state_path, state)

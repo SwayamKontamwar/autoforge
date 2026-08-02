@@ -4,14 +4,19 @@ version = "0.1.0"
 description = "A public experiment: a repository that builds a real URL-shortener API on its own, three test-guarded commits a day."
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi>=0.110",
+    "fastapi>=0.110,<1.0",
 ]
 
 [project.optional-dependencies]
+# Upper bounds are deliberate. This project installs fresh dependencies on every
+# scheduled run, forever, with nobody watching. An unbounded `ruff` would one day
+# ship a new rule in the E/F/I sets, start failing lint on files the model never
+# touched, and make every future run revert — the repository would look like it
+# was running fine while silently never shipping again.
 dev = [
-    "pytest>=8.0",
-    "httpx>=0.27",
-    "ruff>=0.5",
+    "pytest>=8.0,<10.0",
+    "httpx>=0.27,<1.0",
+    "ruff>=0.5,<0.17",
 ]
 
 [build-system]

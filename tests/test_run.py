@@ -9,6 +9,7 @@ honest state for each outcome.
 
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 
@@ -57,9 +58,15 @@ class _ScriptedProvider:
 
 def _run(monkeypatch, root: Path, patch: Patch, guardrail_ok: bool, max_attempts: int = 3) -> int:
     monkeypatch.setattr(run, "get_provider", lambda name: _ScriptedProvider(patch))
-    monkeypatch.setattr(
-        run, "run_guardrail", lambda repo_root: GuardrailResult(ok=guardrail_ok, log="stub")
-    )
+
+    def _stub(repo_root: Path) -> GuardrailResult:
+        # Model reality: a clean checkout is always green, so only a tree that still
+        # has the generated files applied can fail. Without this the revert path would
+        # look identical to a broken build environment, which is a different bug.
+        applied = any((repo_root / f.path).exists() for f in patch.files)
+        return GuardrailResult(ok=guardrail_ok if applied else True, log="stub")
+
+    monkeypatch.setattr(run, "run_guardrail", _stub)
     return run.main(
         ["--repo-root", str(root), "--provider", "scripted", "--no-push",
          "--max-attempts", str(max_attempts)]
@@ -82,6 +89,18 @@ def test_broken_patch_is_reverted_and_task_stays_open(tmp_path, monkeypatch) -> 
     assert _is_clean(root)
     assert "- [ ] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
     assert not (root / "app" / "feature.py").exists()  # reverted
+
+
+def test_failing_patch_skips_after_max_attempts(tmp_path, monkeypatch) -> None:
+    """Bad model code must still burn attempts and free the backlog — unlike a bad env."""
+    root = _init_repo(tmp_path, ["do the thing"])
+    patch = Patch(files=[File("app/feature.py", "y = 2\n")], summary="attempt")
+    for _ in range(3):
+        assert _run(monkeypatch, root, patch, guardrail_ok=False, max_attempts=3) == 0
+        assert _is_clean(root)
+    text = (root / "BACKLOG.md").read_text(encoding="utf-8")
+    assert "- [x] do the thing" in text
+    assert "skipped after 3 failed attempts" in text
 
 
 def test_out_of_bounds_patch_skips_after_max_attempts(tmp_path, monkeypatch) -> None:
@@ -163,6 +182,36 @@ def test_stale_outage_is_relogged_to_keep_the_schedule_alive(tmp_path, monkeypat
     run.main(["--repo-root", str(root), "--provider", "x", "--no-push"])
     assert _blocked_count() == 2
     assert _is_clean(root)
+
+
+def test_broken_environment_does_not_consume_the_backlog(tmp_path, monkeypatch) -> None:
+    """A bad checkout must not burn attempts and skip every task in the backlog."""
+    root = _init_repo(tmp_path, ["do the thing"])
+    patch = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
+
+    class _Provider:
+        def generate(self, task: str, context: str) -> Patch:
+            return patch
+
+    monkeypatch.setattr(run, "get_provider", lambda name: _Provider())
+    # Fails both with the patch applied and on a clean tree: the environment is broken.
+    monkeypatch.setattr(run, "run_guardrail", lambda r: GuardrailResult(ok=False, log="boom"))
+
+    for _ in range(5):
+        assert run.main(["--repo-root", str(root), "--provider", "x", "--no-push"]) == 0
+
+    # The task survives: not skipped, no attempts recorded, nothing half-applied.
+    assert "- [ ] do the thing" in (root / "BACKLOG.md").read_text(encoding="utf-8")
+    assert not (root / "app" / "feature.py").exists()
+    assert _is_clean(root)
+    state_file = root / ".forge" / "state.json"
+    if state_file.exists():
+        assert json.loads(state_file.read_text(encoding="utf-8")).get("do the thing") in (None, 0)
+    # And the outage is recorded once, not five times.
+    subjects = subprocess.run(
+        ["git", "log", "--pretty=%s"], cwd=root, capture_output=True, text=True, check=True
+    ).stdout
+    assert subjects.count("environment unavailable") == 1
 
 
 def test_dirty_tree_aborts(tmp_path, monkeypatch) -> None:
