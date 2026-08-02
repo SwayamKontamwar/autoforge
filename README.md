@@ -89,13 +89,17 @@ A free key takes a minute to get. For example, with [Groq](https://console.groq.
 ```
 LLM_PROVIDER=openai
 LLM_BASE_URL=https://api.groq.com/openai/v1
-MODEL_ID=llama-3.3-70b-versatile
+MODEL_ID=openai/gpt-oss-120b
 LLM_API_KEY=<your free groq key>
 ```
 
 Only `LLM_API_KEY` is actually required — the workflow defaults the base URL and
 model to Groq's free tier, and `LLM_BASE_URL` / `MODEL_ID` secrets override those
 if you'd rather use another provider.
+
+Hosted models get retired periodically. If the default model is ever shut down,
+runs will simply record the outage rather than break, and setting a `MODEL_ID`
+secret to any currently available model gets things moving again.
 
 Add the key as a repository **Actions secret** (Settings → Secrets and
 variables → Actions) and the scheduled workflow picks it up automatically. If

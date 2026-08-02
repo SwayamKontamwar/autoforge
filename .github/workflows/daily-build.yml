@@ -49,6 +49,6 @@ jobs:
           # the outage and retries later.
           LLM_PROVIDER: ${{ github.event.inputs.provider || (secrets.LLM_API_KEY && 'openai') || 'github' }}
           LLM_BASE_URL: ${{ secrets.LLM_BASE_URL || 'https://api.groq.com/openai/v1' }}
-          MODEL_ID: ${{ secrets.MODEL_ID || 'llama-3.3-70b-versatile' }}
+          MODEL_ID: ${{ secrets.MODEL_ID || 'openai/gpt-oss-120b' }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
         run: python -m builder.run
