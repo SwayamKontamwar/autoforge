@@ -2,11 +2,24 @@
 
 from __future__ import annotations
 
+from urllib.parse import urlparse
+
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import RedirectResponse
 
 from app.models import LinkCreate, LinkOut
 from app.storage import InMemoryStore
+
+
+def _validate_url(url: str) -> None:
+    """Validate that ``url`` has http/https scheme and a non‑empty host.
+
+    Raises:
+        HTTPException: with status 422 if validation fails.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise HTTPException(status_code=422, detail="Invalid URL")
 
 
 def create_app() -> FastAPI:
@@ -25,8 +38,10 @@ def create_app() -> FastAPI:
     @app.post("/links", response_model=LinkOut, status_code=201)
     def create_link(payload: LinkCreate) -> LinkOut:
         """Create a short link for the supplied URL."""
+        _validate_url(payload.url)
         link = store.create(payload.url)
-        return LinkOut(code=link.code, url=link.url)
+        # Ensure the URL is a plain string for Pydantic validation.
+        return LinkOut(code=link.code, url=str(link.url))
 
     @app.get("/{code}")
     def redirect(code: str) -> RedirectResponse:

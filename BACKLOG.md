@@ -11,7 +11,7 @@ edit that script to change the seed roadmap in bulk.
 
 ## Foundation — the URL-shortener service
 
-- [ ] Reject invalid URLs on POST /links: require an http or https scheme and a host, returning 422 otherwise, with a test for a bad URL.
+- [x] Reject invalid URLs on POST /links: require an http or https scheme and a host, returning 422 otherwise, with a test for a bad URL.
 - [ ] Add GET /links/{code}/info returning the code, target URL, and creation time as JSON without redirecting.
 - [ ] Add DELETE /links/{code} that removes a link and returns 204, and make GET /{code} return 404 afterwards.
 - [ ] Count redirects: track a hit counter per link and include it in the GET /links/{code}/info response.

@@ -62,3 +62,9 @@ url
 2 failed, 34 passed, 1 warning in 2.54s
 
 ```
+
+## 2026-08-02T09:11Z — success: Reject invalid URLs on POST /links: require an http or https scheme and a host, returning 422 otherwise, with a test for a bad URL.
+
+Reject invalid URLs on POST /links and ensure URL is string in response
+
+Guardrail: ruff + import + pytest passed.
