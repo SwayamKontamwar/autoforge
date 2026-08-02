@@ -2,10 +2,20 @@ name: daily-build
 
 on:
   schedule:
-    # Three times a day, roughly four hours apart (UTC). Cron is best-effort:
-    # GitHub queues scheduled runs and drops them under load, and the top of the
-    # hour is when every other scheduled workflow on the platform wakes up too.
-    # These deliberately sit at odd minutes off the hour to stay out of that peak.
+    # Five slots a day, four to five hours apart (UTC), which in practice lands
+    # three to five builds: cron here is best-effort, and GitHub both delays and
+    # drops scheduled runs under load. One slot measured an hour and four minutes
+    # late. Asking for five is what makes three a bad day rather than a total miss.
+    #
+    # The top of the hour is when every other scheduled workflow on the platform
+    # wakes up, so these deliberately sit at odd minutes to stay out of that peak.
+    # The two overnight slots exist because the original three left a sixteen-hour
+    # hole in the UTC night where the project simply stopped.
+    #
+    # Cost of the increase is nil: the free tier allows 1000 requests a day and
+    # this uses five, and public repositories get unlimited Actions minutes.
+    - cron: "23 02 * * *"
+    - cron: "41 07 * * *"
     - cron: "17 13 * * *"
     - cron: "23 17 * * *"
     - cron: "19 21 * * *"
