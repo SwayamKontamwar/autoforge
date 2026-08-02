@@ -41,12 +41,14 @@ jobs:
       - name: Build the next backlog item
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Prefer the openai-compatible provider when a key is configured, since
-          # GitHub Models is being retired. Falls back to the manual dispatch
-          # input, then to 'github'. A run with no reachable provider just logs a
-          # "blocked" note and retries next time — it never fails the workflow.
+          # Prefer the openai-compatible provider whenever a key is configured, since
+          # GitHub Models has been retired. Adding a single LLM_API_KEY secret is
+          # enough: base URL and model default to Groq's free tier, and both can be
+          # overridden with secrets to point at any other compatible provider.
+          # A run with no reachable provider does not fail the workflow — it records
+          # the outage and retries later.
           LLM_PROVIDER: ${{ github.event.inputs.provider || (secrets.LLM_API_KEY && 'openai') || 'github' }}
-          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
-          MODEL_ID: ${{ secrets.MODEL_ID }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL || 'https://api.groq.com/openai/v1' }}
+          MODEL_ID: ${{ secrets.MODEL_ID || 'llama-3.3-70b-versatile' }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
         run: python -m builder.run

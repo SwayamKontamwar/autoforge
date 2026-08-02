@@ -93,8 +93,12 @@ MODEL_ID=llama-3.3-70b-versatile
 LLM_API_KEY=<your free groq key>
 ```
 
-Add those four as repository **Actions secrets** (Settings → Secrets and
-variables → Actions) and the scheduled workflow picks them up automatically. If
+Only `LLM_API_KEY` is actually required — the workflow defaults the base URL and
+model to Groq's free tier, and `LLM_BASE_URL` / `MODEL_ID` secrets override those
+if you'd rather use another provider.
+
+Add the key as a repository **Actions secret** (Settings → Secrets and
+variables → Actions) and the scheduled workflow picks it up automatically. If
 no provider is reachable, a run does **not** break: it records the outage once
 and then stays quiet until the provider comes back, re-logging roughly every two
 weeks. That heartbeat is deliberate — GitHub disables scheduled workflows after
