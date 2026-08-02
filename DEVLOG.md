@@ -315,3 +315,25 @@ FAILED tests/test_stats.py::test_stats_aggregates_correctly - TypeError: TestCli
 Add /stats endpoint with aggregation and monkey‑patch TestClient to accept allow_redirects; add tests for stats aggregation
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-02T23:31Z — failed: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+E741 Ambiguous variable name: `l`
+   --> app/main.py:136:42
+    |
+134 |         most_visited_code: str | None = None
+135 |         if links:
+136 |             most = max(links, key=lambda l: l.hits)
+    |                                          ^
+137 |             most_visited_code = most.code
+138 |         return {
+    |
+
+Found 1 error.
+
+```
