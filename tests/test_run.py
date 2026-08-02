@@ -309,3 +309,93 @@ def test_feedback_is_dropped_when_the_task_is_skipped(tmp_path, monkeypatch) -> 
     state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
     assert not state.get("__last_failures__")
     assert _is_clean(root)
+
+
+def _remote_log(remote: Path) -> str:
+    """Read a bare repo's history without cd-ing into it (safe.bareRepository)."""
+    return subprocess.run(
+        ["git", f"--git-dir={remote}", "log", "--oneline", "--all"],
+        capture_output=True, text=True, check=True,
+    ).stdout
+
+
+def test_push_rebases_when_the_remote_moved(tmp_path) -> None:
+    """A rejected push would throw away work that already passed the guardrail.
+
+    The bot only pushes after the guardrail is green, so a push that fails takes
+    finished, verified code with it and fails the run red. Anyone pushing between
+    this job's checkout and its push causes it, which over years is a matter of
+    time. Uses a real bare remote rather than a stubbed git.
+    """
+    remote = tmp_path / "remote.git"
+    subprocess.run(["git", "init", "--bare", "-q", str(remote)], check=True)
+
+    root = _init_repo(tmp_path, ["do the thing"])
+    _git(root, "remote", "add", "origin", str(remote))
+    _git(root, "push", "-q", "origin", "HEAD")
+
+    # Somebody else pushes while this run is working.
+    other = tmp_path / "other"
+    subprocess.run(["git", "clone", "-q", str(remote), str(other)], check=True)
+    _git(other, "config", "user.email", "o@example.com")
+    _git(other, "config", "user.name", "o")
+    (other / "HUMAN.md").write_text("a human was here\n", encoding="utf-8")
+    _git(other, "add", "-A")
+    _git(other, "commit", "-qm", "human change")
+    _git(other, "push", "-q", "origin", "HEAD")
+
+    (root / "app" / "feature.py").write_text("y = 2\n", encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-qm", "forge: add feature")
+
+    assert run._push(root) is True
+
+    log = _remote_log(remote)
+    assert "forge: add feature" in log, "the bot's work must reach the remote"
+    assert "human change" in log, "the human's commit must not be clobbered"
+
+
+def test_push_refuses_to_clobber_on_a_real_conflict(tmp_path) -> None:
+    """Losing one run's work is recoverable; force-pushing over a human is not."""
+    remote = tmp_path / "remote.git"
+    subprocess.run(["git", "init", "--bare", "-q", str(remote)], check=True)
+    root = _init_repo(tmp_path, ["do the thing"])
+    _git(root, "remote", "add", "origin", str(remote))
+    _git(root, "push", "-q", "origin", "HEAD")
+
+    other = tmp_path / "other"
+    subprocess.run(["git", "clone", "-q", str(remote), str(other)], check=True)
+    _git(other, "config", "user.email", "o@example.com")
+    _git(other, "config", "user.name", "o")
+    (other / "app" / "clash.py").write_text("human = 1\n", encoding="utf-8")
+    _git(other, "add", "-A")
+    _git(other, "commit", "-qm", "human edits clash")
+    _git(other, "push", "-q", "origin", "HEAD")
+
+    (root / "app" / "clash.py").write_text("bot = 2\n", encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-qm", "forge: bot edits clash")
+
+    assert run._push(root) is False
+    log = _remote_log(remote)
+    assert "human edits clash" in log
+    assert "forge: bot edits clash" not in log
+    assert _is_clean(root), "a failed push must not leave a half-rebased tree"
+
+
+def test_finished_tasks_leave_nothing_behind_in_state(tmp_path, monkeypatch) -> None:
+    """State is committed and lives as long as the repo, so it must not grow forever."""
+    root = _init_repo(tmp_path, ["alpha", "beta"])
+    bad = Patch(files=[File("app/feature.py", "y = 2\n")], summary="add feature")
+
+    for _ in range(2):
+        assert _run(monkeypatch, root, bad, guardrail_ok=False, max_attempts=2) == 0
+    assert "- [x] alpha" in (root / "BACKLOG.md").read_text(encoding="utf-8")
+
+    good = Patch(files=[File("app/other.py", "z = 3\n")], summary="add other")
+    assert _run(monkeypatch, root, good, guardrail_ok=True) == 0
+
+    state = json.loads((root / ".forge" / "state.json").read_text(encoding="utf-8"))
+    leftovers = {k: v for k, v in state.items() if k != "__last_failures__"}
+    assert leftovers == {}, f"finished tasks left state behind: {leftovers}"
+    assert not state.get("__last_failures__")

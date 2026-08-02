@@ -76,6 +76,18 @@ def _forget_failure(state: dict, task: str) -> None:
     state.get(_FAILURES_KEY, {}).pop(task, None)
 
 
+def _close_task_state(state: dict, task: str) -> None:
+    """Drop everything remembered about a task that will never be attempted again.
+
+    Both the attempt count and the stored traceback are only useful while a task is
+    still live. Left behind, they accumulate one entry per finished task for the
+    life of the repository — a file that grows forever in a project designed to run
+    for years.
+    """
+    state.pop(task, None)
+    _forget_failure(state, task)
+
+
 def _previous_failure(state: dict, task: str) -> str:
     failures = state.get(_FAILURES_KEY)
     return failures.get(task, "") if isinstance(failures, dict) else ""
@@ -175,6 +187,33 @@ def _revert(repo_root: Path) -> None:
         _git(repo_root, "clean", "-fd", prefix, check=False)
 
 
+def _push(repo_root: Path, attempts: int = 3) -> bool:
+    """Push, rebasing onto the remote if it moved under us.
+
+    The bot commits work that has already passed the guardrail, so losing it to a
+    rejected push is the worst outcome available: the run fails red, the task is
+    marked done locally, and the code is thrown away. A human pushing between this
+    job's checkout and its push is enough to trigger it. Rebase and retry instead,
+    and if the rebase genuinely conflicts, fail loudly rather than force-pushing
+    over someone else's commit.
+    """
+    branch = _git(repo_root, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+    for attempt in range(attempts):
+        if _git(repo_root, "push", "origin", "HEAD", check=False).returncode == 0:
+            print("pushed")
+            return True
+        if attempt == attempts - 1:
+            break
+        print("push rejected; remote moved, rebasing and retrying")
+        pull = _git(repo_root, "pull", "--rebase", "origin", branch, check=False)
+        if pull.returncode != 0:
+            _git(repo_root, "rebase", "--abort", check=False)
+            print("rebase onto the remote conflicted; not force-pushing", file=sys.stderr)
+            return False
+    print("could not push after retrying", file=sys.stderr)
+    return False
+
+
 def _commit(repo_root: Path, message: str, push: bool) -> None:
     _git(repo_root, "add", "-A")
     if _git(repo_root, "diff", "--cached", "--quiet", check=False).returncode == 0:
@@ -192,8 +231,7 @@ def _commit(repo_root: Path, message: str, push: bool) -> None:
     )
     print(f"committed: {message}")
     if push:
-        _git(repo_root, "push", "origin", "HEAD")
-        print("pushed")
+        _push(repo_root)
 
 
 def _outage_already_logged(repo_root: Path, provider: str) -> bool:
@@ -304,7 +342,6 @@ def main(argv: list[str] | None = None) -> int:
     if reason is not None:
         attempts += 1
         state[task.text] = attempts
-        _save_state(state_path, state)
         if attempts >= args.max_attempts:
             backlog.mark_done(
                 backlog_path, task.index, note=f"skipped after {attempts} out-of-bounds patches"
@@ -315,10 +352,12 @@ def main(argv: list[str] | None = None) -> int:
                 f"Patch rejected: {reason}\n\n"
                 f"Skipped after {attempts} out-of-bounds attempts so the backlog keeps moving."
             )
+            _close_task_state(state, task.text)
         else:
             status = "rejected"
             message = "forge: reject out-of-bounds patch"
             detail = f"Patch rejected: {reason}"
+        _save_state(state_path, state)
         devlog.append(devlog_path, status, task.text, detail)
         _commit(repo_root, message, push)
         return 0
@@ -328,8 +367,7 @@ def main(argv: list[str] | None = None) -> int:
     result = run_guardrail(repo_root)
 
     if result.ok:
-        state.pop(task.text, None)
-        _forget_failure(state, task.text)
+        _close_task_state(state, task.text)
         _save_state(state_path, state)
         backlog.mark_done(backlog_path, task.index)
         devlog.append(
@@ -374,9 +412,7 @@ def main(argv: list[str] | None = None) -> int:
             backlog_path, task.index, note=f"skipped after {attempts} failed attempts"
         )
         status, message = "skipped", "forge: skip task after repeated guardrail failures"
-        # The task is closed, so the stored traceback is dead weight in a file that
-        # lives for the life of the repository.
-        _forget_failure(state, task.text)
+        _close_task_state(state, task.text)
     else:
         status, message = "failed", "forge: log failed attempt (code reverted)"
 
