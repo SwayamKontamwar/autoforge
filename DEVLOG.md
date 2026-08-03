@@ -600,3 +600,34 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 313 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-03T04:11Z — failed: Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+$ ruff check
+(exit 0)
+All checks passed!
+$ import app.main
+(exit 0)
+
+$ pytest
+(exit 0)
+........................................................................ [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 69%]
+........................................................................ [ 92%]
+.........................                                                [100%]
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+313 passed, 1 warning in 36.31s
+
+$ test-suite check
+Rejected: the patch changed production code under app/ but the suite still collects 313 tests, so nothing new proves the work. Add a test that fails without this change.
+
+```
