@@ -471,3 +471,71 @@ class TestUndecodableFilesRefuseInsteadOfCrashing:
         texts = backlog.all_task_texts(p)
         assert "live task" in texts
         assert "old task" in texts
+
+
+class TestUnwritableFilesRefuseInsteadOfCrashing:
+    """Found by soaking: an unwritable file crashed after the work was already done.
+
+    Every run appends to DEVLOG.md and rewrites BACKLOG.md. When either could not
+    be written the run raised a bare PermissionError -- and it raised it *after*
+    calling the model and running the guardrail, so the work was thrown away with
+    no explanation. A full disk on a machine running for years produces the same
+    class of error.
+    """
+
+    @pytest.fixture
+    def repo(self, tmp_path):
+        backlog = tmp_path / "BACKLOG.md"
+        devlog = tmp_path / "DEVLOG.md"
+        backlog.write_text("# B\n\n- [ ] a task\n", encoding="utf-8")
+        devlog.write_text("# D\n", encoding="utf-8")
+        return tmp_path, backlog, devlog
+
+    @pytest.mark.parametrize("name", ["BACKLOG.md", "DEVLOG.md"])
+    def test_unwritable_file_is_named(self, repo, name):
+        from builder.run import _unusable_layout
+
+        root, backlog, devlog = repo
+        target = root / name
+        target.chmod(0o444)
+        try:
+            reason = _unusable_layout(root, backlog, devlog)
+        finally:
+            target.chmod(0o644)
+        assert name in reason
+        assert "writable" in reason
+
+    def test_unwritable_repo_root_is_named(self, repo):
+        from builder.run import _unusable_layout
+
+        root, backlog, devlog = repo
+        root.chmod(0o555)
+        try:
+            reason = _unusable_layout(root, backlog, devlog)
+        finally:
+            root.chmod(0o755)
+        assert "writable" in reason
+
+    def test_writable_repo_is_accepted(self, repo):
+        from builder.run import _unusable_layout
+
+        root, backlog, devlog = repo
+        assert _unusable_layout(root, backlog, devlog) == ""
+
+    def test_probe_leaves_nothing_behind(self, repo):
+        """A probe file is one SIGKILL away from being swept into a commit."""
+        from builder.run import _unusable_layout
+
+        root, backlog, devlog = repo
+        before = {p.name for p in root.iterdir()}
+        assert _unusable_layout(root, backlog, devlog) == ""
+        assert {p.name for p in root.iterdir()} == before
+
+    def test_probe_does_not_alter_contents(self, repo):
+        """Opening for append must not truncate or modify the files it checks."""
+        from builder.run import _unusable_layout
+
+        root, backlog, devlog = repo
+        before = (backlog.read_text(), devlog.read_text())
+        assert _unusable_layout(root, backlog, devlog) == ""
+        assert (backlog.read_text(), devlog.read_text()) == before

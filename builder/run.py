@@ -791,6 +791,28 @@ def _unusable_layout(repo_root: Path, backlog_path: Path, devlog_path: Path) -> 
             return f"{path.name} is not valid UTF-8 text, so its contents cannot be read"
         except OSError as exc:
             return f"{path.name} cannot be read ({exc.strerror or exc})"
+    # Reading is not enough: every run appends to DEVLOG.md, rewrites BACKLOG.md
+    # and writes .forge/state.json. A read-only file or a full disk surfaces as a
+    # bare PermissionError/OSError from whichever write happens first, after the
+    # model has already been called and the work done. Checking up front costs
+    # nothing and turns a traceback into a sentence.
+    #
+    # Existing files are probed by opening for append, which writes nothing and
+    # creates nothing. Directories are probed with os.access rather than by
+    # touching a file, because a probe file is one SIGKILL away from being left
+    # behind and swept into the next commit by "git add -A".
+    for path in (backlog_path, devlog_path, repo_root):
+        try:
+            if path.is_dir():
+                if not os.access(path, os.W_OK | os.X_OK):
+                    return f"{path.name} is not writable"
+            elif path.exists():
+                with path.open("a", encoding="utf-8"):
+                    pass
+            elif not os.access(path.parent, os.W_OK | os.X_OK):
+                return f"{path.name} cannot be created; its directory is not writable"
+        except OSError as exc:
+            return f"{path.name} is not writable ({exc.strerror or exc})"
     return ""
 
 
