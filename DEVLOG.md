@@ -631,3 +631,44 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 313 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-03T04:17Z — failed: Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+io/_backends/_asyncio.py:1033: in run
+      result = context.run(func, *args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+  
+  code = 'ny8yy6d'
+  
+      @app.get("/{code}")
+      def redirect(code: str) -> RedirectResponse:
+          """Redirect a short code to its destination URL."""
+          link = store.get(code)
+          if link is None:
+              raise HTTPException(status_code=404, detail="Unknown short code")
+          # Expiry handling
+  >       if link.expires_at is not None and datetime.now(timezone.utc) > link.expires_at:
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  E       TypeError: can't compare offset-naive and offset-aware datetimes
+  
+  app/main.py:127: TypeError
+  =============================== warnings summary ===============================
+  ../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+    /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+      from starlette.testclient import TestClient as TestClient  # noqa
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/test_link_expiry.py::test_link_expires_and_returns_410 - TypeError: can't compare offset-naive and offset-aware datetimes
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...offset-aware datetimes\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+2 failed, 313 passed, 1 warning in 21.65s
+
+```
