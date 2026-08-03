@@ -672,3 +672,27 @@ assert 1 == 0
 2 failed, 313 passed, 1 warning in 21.65s
 
 ```
+
+## 2026-08-03T05:36Z — failed: Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+ore' object has no attribute 'clear'
+ERROR tests/test_stall_and_flood.py::test_the_whole_request_stays_inside_the_tier_allowance - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_stall_and_flood.py::test_a_prompt_that_swallows_the_allowance_fails_the_task_not_the_loop - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_stall_and_flood.py::test_an_oversized_prompt_counts_an_attempt_rather_than_waiting_forever - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_stall_and_flood.py::test_the_real_prompt_and_answer_fit_the_allowance_together - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_state_durability.py::test_a_truncated_write_does_not_stop_the_run - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_state_durability.py::test_invalid_json_does_not_stop_the_run - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_state_durability.py::test_a_non_object_payload_does_not_stop_the_run - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_state_durability.py::test_a_missing_file_is_simply_empty - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_state_durability.py::test_saving_replaces_the_file_atomically - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_state_durability.py::test_a_saved_state_round_trips - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/toolkit/test_strings.py::test_slugify_basic - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+ERROR tests/toolkit/test_strings.py::test_slugify_strips_accents_and_edges - AttributeError: 'InMemoryStore' object has no attribute 'clear'
+1 warning, 325 errors in 0.93s
+
+```
