@@ -257,6 +257,60 @@ def _words(text: str) -> set[str]:
     return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if w not in _STOPWORDS}
 
 
+# Ranking reads file bodies, so it has to stay bounded: the whole tree is scored on
+# every run, forever. Only the head of each file is scored, which is where imports
+# and definitions live and so where the subject of a file is most visible.
+_RANK_READ_LIMIT = 8000
+
+
+def _relevance_text(path: Path) -> str:
+    """The head of a file, lowercased, or empty if it cannot be read.
+
+    Ranking is a convenience: an unreadable file must fall to the bottom of the
+    order rather than end the run, exactly as the body loop already treats one.
+    """
+    try:
+        with path.open("r", encoding="utf-8", errors="replace") as handle:
+            return handle.read(_RANK_READ_LIMIT).lower()
+    except (OSError, ValueError):
+        return ""
+
+
+def _is_machinery(text: str) -> bool:
+    """Whether a file under tests/ is about the builder rather than the product.
+
+    Every task in the backlog is a task about the application. The tests that
+    cover the builder are not: the model is never asked to change them and is
+    refused if it tries. They are still ordinary files under ``tests/``, so they
+    compete for context on equal terms and, being much larger than application
+    code, they win -- the machinery tests outweigh the application's own tests
+    roughly six to one, and a single one of them is three times the entire budget.
+
+    This is the part that gets worse on its own. Every fix to the builder adds to
+    its tests, so the harder the machinery is hardened the less room is left to
+    show the model the code it is supposed to be writing. Left alone it ends with
+    a context made almost entirely of files the model must not touch. Demoting
+    rather than dropping them keeps the door open if a task ever genuinely names
+    one.
+    """
+    return "from builder" in text or "import builder" in text
+
+
+def _content_hits(text: str, task_words: set[str]) -> int:
+    """How many distinct task words this file mentions.
+
+    Substring rather than token matching, because the words a task uses and the
+    identifiers a file uses differ by exactly the affixes that token matching
+    treats as a mismatch: a task saying "timestamps" is about a file saying
+    "timestamp", and one saying "UTC" is about a file calling ``utcnow()``.
+    Counting distinct words rather than occurrences stops one repeated identifier
+    from outscoring a file that genuinely covers the subject.
+    """
+    if not text:
+        return 0
+    return sum(1 for word in task_words if len(word) >= 3 and word in text)
+
+
 def _ranked_files(repo_root: Path, task_text: str) -> list[Path]:
     """Order source files by how likely they are to matter to this task.
 
@@ -266,6 +320,17 @@ def _ranked_files(repo_root: Path, task_text: str) -> list[Path]:
     be included at all because ``app/`` sorts before ``tests/``. This repository is
     supposed to keep working after years of daily commits, so file selection has to
     stay useful as the tree grows rather than degrade into an alphabetical prefix.
+
+    Names alone are not enough to do that. Most tasks share no word with any
+    filename, so every file scores zero and the order collapses back to the
+    alphabetical prefix this function exists to avoid -- while a file whose name
+    happens to catch an incidental word ("ISO 8601 *strings*") is promoted over the
+    one that actually has to change. That is not a ranking that merely reads oddly:
+    the file the task is about falls past the context budget, and the model is asked
+    to edit code it was never shown. It answers by patching whatever it *can* see,
+    the guardrail rejects the half-change, and after three tries the task is retired
+    as impossible. Scoring what is inside a file, not just what it is called, is what
+    keeps that from happening quietly for years.
     """
     tracked = sorted(
         p
@@ -276,11 +341,16 @@ def _ranked_files(repo_root: Path, task_text: str) -> list[Path]:
     )
     task_words = _words(task_text)
 
-    def rank(path: Path) -> tuple[int, int, str]:
+    def rank(path: Path) -> tuple[int, int, int, str]:
         rel = str(path.relative_to(repo_root))
         named = 0 if rel and rel in task_text else 1
-        overlap = len(_words(rel.replace("/", " ").replace("_", " ")) & task_words)
-        return (named, -overlap, rel)
+        text = _relevance_text(path)
+        name_overlap = len(_words(rel.replace("/", " ").replace("_", " ")) & task_words)
+        # A filename match is a deliberate signal and a body match is a
+        # circumstantial one, so names still lead -- they just no longer decide it
+        # alone when nothing matches by name at all.
+        score = 2 * name_overlap + _content_hits(text, task_words)
+        return (named, 1 if _is_machinery(text) else 0, -score, rel)
 
     return sorted(tracked, key=rank)
 
