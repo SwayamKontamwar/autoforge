@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import RedirectResponse
 
-from app.models import LinkCreate, LinkInfoOut, LinkOut
+from app.models import LinkCreate, LinkInfoOut, LinkOut, StatsOut
 from app.storage import InMemoryStore
 
 # URL‑safe characters per RFC 3986 (unreserved)
@@ -141,6 +141,21 @@ def create_app() -> FastAPI:
         if not store.delete(code):
             raise HTTPException(status_code=404, detail="Unknown short code")
         # FastAPI will return a 204 No Content response automatically.
+
+    @app.get("/stats", response_model=StatsOut)
+    def get_stats() -> StatsOut:
+        """Return aggregate statistics about stored links."""
+        links = store.list_all()
+        total_links = len(links)
+        total_redirects = sum(link.hits for link in links)
+        most_visited: str | None = None
+        if links:
+            most_visited = max(links, key=lambda item: item.hits).code
+        return StatsOut(
+            total_links=total_links,
+            total_redirects=total_redirects,
+            most_visited=most_visited,
+        )
 
     _order_routes(app)
     return app

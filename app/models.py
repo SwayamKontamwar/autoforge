@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -38,3 +39,14 @@ class LinkInfoOut(BaseModel):
     url: str = Field(..., description="The destination URL.")
     created_at: datetime = Field(..., description="Timestamp when the link was created.")
     hits: int = Field(..., description="Number of times the link has been accessed via redirect.")
+
+
+class StatsOut(BaseModel):
+    """Statistics about stored links."""
+
+    total_links: int = Field(..., description="Total number of stored short links.")
+    total_redirects: int = Field(..., description="Sum of all redirect hits across links.")
+    most_visited: Optional[str] = Field(
+        None,
+        description="Code of the most‑visited link, or null if no links exist.",
+    )

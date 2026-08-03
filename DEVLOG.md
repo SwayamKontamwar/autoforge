@@ -559,3 +559,9 @@ FAILED tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - assert
 1 failed, 307 passed, 1 warning in 19.78s
 
 ```
+
+## 2026-08-03T02:20Z — success: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Add /stats endpoint with totals and most‑visited code, plus tests
+
+Guardrail: ruff + import + pytest passed.
