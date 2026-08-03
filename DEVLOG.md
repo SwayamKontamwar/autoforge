@@ -565,3 +565,38 @@ FAILED tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - assert
 Add /stats endpoint with totals and most‑visited code, plus tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-03T04:09Z — failed: Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 0)
+All checks passed!
+$ import app.main
+(exit 0)
+
+$ pytest
+(exit 0)
+........................................................................ [ 23%]
+........................................................................ [ 46%]
+........................................................................ [ 69%]
+........................................................................ [ 92%]
+.........................                                                [100%]
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/models.py:43
+  /home/runner/work/autoforge/autoforge/app/models.py:43: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("created_at", pre=True)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+313 passed, 2 warnings in 37.40s
+
+$ test-suite check
+Rejected: the patch changed production code under app/ but the suite still collects 313 tests, so nothing new proves the work. Add a test that fails without this change.
+
+```
