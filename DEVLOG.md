@@ -738,3 +738,23 @@ Guardrail: ruff + import + pytest passed.
 Add Storage protocol and test its implementation by InMemoryStore
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-03T15:53Z — failed: Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 0)
+All checks passed!
+$ import app.main
+(exit 0)
+
+$ pytest
+(exit 4)
+ImportError while loading conftest '/home/runner/work/autoforge/autoforge/tests/conftest.py'.
+tests/conftest.py:34: in <module>
+    from app.main import app as shared_app
+E   ImportError: cannot import name 'app' from 'app.main' (/home/runner/work/autoforge/autoforge/app/main.py)
+
+```

@@ -1,4 +1,7 @@
 {
+  "Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.": "$ ruff check\n(exit 0)\nAll checks passed!\n$ import app.main\n(exit 0)\n\n$ pytest\n(exit 4)\nImportError while loading conftest '/home/runner/work/autoforge/autoforge/tests/conftest.py'.\ntests/conftest.py:34: in <module>\n    from app.main import app as shared_app\nE   ImportError: cannot import name 'app' from 'app.main' (/home/runner/work/autoforge/autoforge/app/main.py)\n"
+  }
 }
