@@ -284,6 +284,19 @@ fingerprint changes the attempt counts are cleared and retired tasks are reopene
 keeps it from becoming an infinite retry loop: an impossible task gets another
 look only when someone has actually changed the machinery that judged it.
 
+**One more habit, same treatment.** `lambda l: l.hits` is ingrained Python, and
+the model kept writing it — E741 accounted for a third of all guardrail failures.
+Every one of those was working, correct code thrown away over the name of a
+throwaway variable, burning an attempt each time until the task retired. `ruff`
+can't fix E741 itself, because renaming a binding needs scope analysis it doesn't
+do, so the builder does it — but only for a lambda parameter, whose scope is
+exactly the lambda body, so the rename provably cannot leak or collide. `for`
+targets and module-level assignments are left alone precisely because they do
+leak. The rewrite splices exact source positions rather than re-printing the file
+(which would reformat everything and can introduce fresh lint errors), and then
+proves itself: it re-parses the result and compares it against the same rename
+applied directly to the original tree, discarding the change unless they match.
+
 ## Honest caveats
 
 This is an experiment, and it is described as one:

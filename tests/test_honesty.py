@@ -18,6 +18,7 @@ from pathlib import Path
 import pytest
 
 from builder import honesty
+from builder import run as run
 from builder.llm import _SYSTEM_PROMPT, _TESTCLIENT_REDIRECT_HINT, File, Patch
 from builder.run import _reject_reason
 
@@ -539,3 +540,79 @@ class TestUnwritableFilesRefuseInsteadOfCrashing:
         before = (backlog.read_text(), devlog.read_text())
         assert _unusable_layout(root, backlog, devlog) == ""
         assert (backlog.read_text(), devlog.read_text()) == before
+
+
+class TestAmbiguousLambdaParamIsRenamed:
+    """E741 caused a third of all guardrail failures: real code, thrown away over
+    the name of a throwaway variable. ruff cannot fix it, so the builder does."""
+
+    def test_the_real_rejected_line_is_repaired(self):
+        source = "most_visited = max(links, key=lambda l: l.hits)\n"
+        assert run._rename_ambiguous_lambda_params(source) == (
+            "most_visited = max(links, key=lambda item: item.hits)\n"
+        )
+
+    def test_capital_i_and_o_are_renamed_too(self):
+        out = run._rename_ambiguous_lambda_params("f = lambda I: I.x\n")
+        assert out is not None and "lambda I:" not in out
+
+    def test_a_body_that_rebinds_the_name_is_left_alone(self):
+        # Here the `l` in the body is the comprehension's, not the parameter's.
+        source = "f = lambda l: [l for l in range(l)]\n"
+        assert run._rename_ambiguous_lambda_params(source) is None
+
+    def test_an_outer_scope_use_is_never_touched(self):
+        out = run._rename_ambiguous_lambda_params("l = 5\nf = lambda l: l.x\nprint(l)\n")
+        assert out is not None
+        assert "l = 5" in out and "print(l)" in out
+
+    def test_module_level_assignment_is_not_renamed(self):
+        # Only lambda parameters are provably safe to rename; bindings that leak
+        # into surrounding scope are deliberately left for the model to fix.
+        assert run._rename_ambiguous_lambda_params("l = compute()\nuse(l)\n") is None
+
+    def test_a_collision_with_an_existing_name_is_avoided(self):
+        out = run._rename_ambiguous_lambda_params("item = 1\nf = lambda l: l + item\n")
+        assert out is not None and "lambda item:" not in out
+
+    @pytest.mark.parametrize(
+        ("source", "call"),
+        [
+            ("f = lambda l: l * 2", "f(21)"),
+            ("f = lambda l: (lambda l: l + 1)(l * 10)", "f(3)"),
+            ("f = lambda l: (lambda z: z + l)", "f(10)(5)"),
+            ("f = lambda l: (n := l + 1) + n", "f(5)"),
+            ("f = lambda *l: sum(l)", "f(1, 2, 3)"),
+            ("l = 100\nf = lambda l: l + 1", "(f(1), l)"),
+            ("f = lambda I, O: I - O", "f(10, 4)"),
+        ],
+    )
+    def test_the_rename_never_changes_behaviour(self, source, call):
+        rewritten = run._rename_ambiguous_lambda_params(source) or source
+        before, after = {}, {}
+        exec(source, before)  # noqa: S102
+        exec(rewritten, after)  # noqa: S102
+        assert eval(call, before) == eval(call, after)  # noqa: S307
+
+    @pytest.mark.parametrize(
+        "source",
+        [
+            "def (\n",
+            "lambda l: \ud800",
+            "\x00lambda l: l",
+            "f = " + "lambda l: " * 2000 + "l",  # blows the stack in ast.dump
+        ],
+    )
+    def test_hostile_input_is_declined_not_raised(self, source):
+        assert run._rename_ambiguous_lambda_params(source) is None
+
+    def test_autofix_repairs_a_generated_file(self, tmp_path):
+        (tmp_path / "app").mkdir()
+        target = tmp_path / "app" / "main.py"
+        target.write_text("best = max(rows, key=lambda l: l.hits)\n", encoding="utf-8")
+        patch = Patch(
+            files=[File(path="app/main.py", content=target.read_text(encoding="utf-8"))],
+            summary="m",
+        )
+        assert run._fix_ambiguous_names(tmp_path, patch) == ["app/main.py"]
+        assert "lambda l:" not in target.read_text(encoding="utf-8")

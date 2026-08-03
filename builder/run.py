@@ -15,9 +15,11 @@ Run ``python -m builder.run --provider mock --no-push`` to exercise it offline.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import inspect
 import json
+import keyword
 import os
 import re
 import subprocess
@@ -408,6 +410,167 @@ def _fix_retired_kwargs(repo_root: Path, patch: Patch) -> list[str]:
     return changed
 
 
+_AMBIGUOUS_NAMES = frozenset({"l", "I", "O"})
+_RENAME_CANDIDATES = ("item", "value", "entry", "element", "obj")
+
+
+def _lambda_args(node: ast.Lambda) -> list[ast.arg]:
+    args = node.args
+    every = [*args.posonlyargs, *args.args, *args.kwonlyargs]
+    if args.vararg is not None:
+        every.append(args.vararg)
+    if args.kwarg is not None:
+        every.append(args.kwarg)
+    return every
+
+
+def _rebinds(body: ast.expr, name: str) -> bool:
+    """True if anything inside a lambda body binds ``name`` again.
+
+    If it does, the occurrences of ``name`` in that body no longer all refer to the
+    lambda's own parameter, so a blanket rename would be wrong. Rather than reason
+    about which occurrence belongs to which scope, this bails out entirely.
+    """
+    for sub in ast.walk(body):
+        if isinstance(sub, ast.Lambda) and any(a.arg == name for a in _lambda_args(sub)):
+            return True
+        if isinstance(sub, ast.ListComp | ast.SetComp | ast.DictComp | ast.GeneratorExp):
+            for gen in sub.generators:
+                for target in ast.walk(gen.target):
+                    if isinstance(target, ast.Name) and target.id == name:
+                        return True
+        if (
+            isinstance(sub, ast.NamedExpr)
+            and isinstance(sub.target, ast.Name)
+            and sub.target.id == name
+        ):
+            return True
+    return False
+
+
+def _free_name(taken: set[str]) -> str | None:
+    for base in _RENAME_CANDIDATES:
+        if base not in taken and not keyword.iskeyword(base):
+            return base
+    for suffix in range(2, 100):
+        for base in _RENAME_CANDIDATES:
+            candidate = f"{base}{suffix}"
+            if candidate not in taken:
+                return candidate
+    return None
+
+
+def _rename_ambiguous_lambda_params(source: str) -> str | None:
+    """Rename E741 lambda parameters. Returns new source, or None if nothing to do.
+
+    ``ruff`` cannot fix E741 itself -- renaming a binding needs scope analysis it
+    does not do -- so this does it, and only for the one case where it is provably
+    safe: a lambda parameter. Its scope is exactly the lambda body, so it cannot be
+    a global, cannot leak into surrounding code, and cannot collide with anything
+    outside. ``for`` targets and assignments are deliberately left alone; they leak.
+
+    The rewrite is done by splicing exact source positions rather than
+    ``ast.unparse``, which would reformat the whole file and could introduce fresh
+    lint errors of its own. The splice is then proven correct by comparing the
+    result's AST against the same rename applied directly to the original tree.
+
+    Every step walks an attacker-shaped tree, so the whole thing is guarded: deeply
+    nested input blows the stack inside ``ast.walk`` and ``ast.dump`` as readily as
+    inside ``ast.parse``. A cosmetic repair must never be the thing that kills a run.
+    """
+    try:
+        return _rename_ambiguous_lambda_params_unguarded(source)
+    except (SyntaxError, ValueError, RecursionError, MemoryError):
+        return None
+
+
+def _rename_ambiguous_lambda_params_unguarded(source: str) -> str | None:
+    tree = ast.parse(source)
+
+    taken = {n.id for n in ast.walk(tree) if isinstance(n, ast.Name)}
+    taken |= {a.arg for n in ast.walk(tree) if isinstance(n, ast.Lambda) for a in _lambda_args(n)}
+    taken |= {n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef | ast.ClassDef)}
+
+    renames: list[tuple[ast.arg, list[ast.Name], str]] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Lambda):
+            continue
+        for arg in _lambda_args(node):
+            if arg.arg not in _AMBIGUOUS_NAMES or _rebinds(node.body, arg.arg):
+                continue
+            new = _free_name(taken)
+            if new is None:
+                continue
+            taken.add(new)
+            uses = [n for n in ast.walk(node.body) if isinstance(n, ast.Name) and n.id == arg.arg]
+            renames.append((arg, uses, new))
+    if not renames:
+        return None
+
+    edits: list[tuple[int, int, int, str]] = []
+    for arg, uses, new in renames:
+        for spot in (arg, *uses):
+            if spot.end_lineno != spot.lineno or spot.end_col_offset is None:
+                return None
+            edits.append((spot.lineno, spot.col_offset, spot.end_col_offset, new))
+
+    # col_offset is a utf-8 byte offset, not a character index, so splice in bytes.
+    lines = source.splitlines(keepends=True)
+    by_line: dict[int, list[tuple[int, int, str]]] = {}
+    for lineno, start, end, new in edits:
+        if not 1 <= lineno <= len(lines):
+            return None
+        by_line.setdefault(lineno, []).append((start, end, new))
+    for lineno, spots in by_line.items():
+        raw = lines[lineno - 1].encode("utf-8")
+        for start, end, new in sorted(spots, reverse=True):
+            raw = raw[:start] + new.encode("utf-8") + raw[end:]
+        lines[lineno - 1] = raw.decode("utf-8")
+    rewritten = "".join(lines)
+
+    # Prove the text surgery did exactly the intended rename and nothing else.
+    for arg, uses, new in renames:
+        arg.arg = new
+        for use in uses:
+            use.id = new
+    try:
+        actual = ast.parse(rewritten)
+    except (SyntaxError, ValueError, RecursionError, MemoryError):
+        return None
+    if ast.dump(actual) != ast.dump(tree):
+        return None
+    return rewritten
+
+
+def _fix_ambiguous_names(repo_root: Path, patch: Patch) -> list[str]:
+    """Rename ambiguous lambda parameters in generated code. Returns files changed.
+
+    ``lambda l: l.hits`` is an ingrained Python habit and the model writes it
+    constantly -- it caused a third of all guardrail failures. Every one was real,
+    working code rejected purely on the name of a throwaway variable, burning an
+    attempt each time until the task retired permanently. Telling the model not to
+    was already proven useless on the httpx keyword, so this is repaired instead.
+    """
+    changed = []
+    for file in patch.files:
+        if not file.path.endswith(".py"):
+            continue
+        target = repo_root / file.path
+        try:
+            source = target.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        fixed = _rename_ambiguous_lambda_params(source)
+        if fixed is None or fixed == source:
+            continue
+        try:
+            target.write_text(fixed, encoding="utf-8")
+        except OSError:
+            continue
+        changed.append(file.path)
+    return changed
+
+
 def _autofix(repo_root: Path, patch: Patch) -> None:
     """Auto-repair safe, trivial lint issues in the generated files before judging.
 
@@ -420,6 +583,9 @@ def _autofix(repo_root: Path, patch: Patch) -> None:
     fixed = _fix_retired_kwargs(repo_root, patch)
     if fixed:
         print(f"rewrote a retired httpx keyword in: {', '.join(fixed)}")
+    renamed = _fix_ambiguous_names(repo_root, patch)
+    if renamed:
+        print(f"renamed an ambiguous lambda parameter in: {', '.join(renamed)}")
     paths = [file.path for file in patch.files if (repo_root / file.path).exists()]
     if not paths:
         return
