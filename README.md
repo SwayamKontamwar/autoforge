@@ -312,12 +312,16 @@ This is an experiment, and it is described as one:
   point a self-hosted runner at the repo, or drive `python -m builder.run` from a
   local `cron`/`launchd` job.
 - **Cron is best-effort, and the drift is real.** GitHub queues scheduled runs and
-  both delays and drops them under load. Measured here: the 17:23 UTC slot started
-  at 18:27 UTC, an hour and four minutes late, and still did its work correctly.
-  Across the first day three slots came due: two ran, 51 and 65 minutes late, and
-  one never fired at all. Three slots is far too small a sample to quote a landing
-  rate from, so this README does not quote one — the honest claim is only that an
-  individual slot is not something to count on.
+  delays them under load. Measured here, over the first five slots to come due:
+  every one of them eventually ran, none was skipped, and all five were late — by
+  52, 65, 155, 197 and 211 minutes. The delay grew as the day went on, so the two
+  overnight slots landed closer to three and a half hours behind than to one.
+  Five slots is a small sample and a landing rate should not be read off it. What
+  it does show is that the useful question is *when* a slot lands rather than
+  whether it does, and that a run can be hours late while still doing its work
+  correctly. This bullet previously said one slot had never fired: it had, three
+  and a half hours later, about half an hour after the check that concluded
+  otherwise. A snapshot taken during the drift is not evidence of a drop.
   Five are scheduled because the project only needs *some* of them to land. At one
   build a day the backlog is still more than five years of work, so the schedule
   degrading is a slowdown, not a failure. The slots deliberately sit at odd minutes

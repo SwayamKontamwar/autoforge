@@ -3,10 +3,10 @@ name: daily-build
 on:
   schedule:
     # Five slots a day, four to five hours apart (UTC). Cron here is best-effort:
-    # GitHub both delays and drops scheduled runs under load. Measured over the
-    # first day, three slots came due -- two ran, 51 and 65 minutes late, and one
-    # never fired. Five are scheduled because only some of them need to land; at
-    # one build a day the backlog is still years of work.
+    # GitHub queues scheduled runs and delays them under load. Measured over the
+    # first five slots to come due, every one ran and every one was late -- by 52,
+    # 65, 155, 197 and 211 minutes. Five are scheduled because only some of them
+    # need to land; at one build a day the backlog is still years of work.
     #
     # The top of the hour is when every other scheduled workflow on the platform
     # wakes up, so these deliberately sit at odd minutes to stay out of that peak.
