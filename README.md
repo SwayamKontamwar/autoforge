@@ -314,11 +314,16 @@ This is an experiment, and it is described as one:
 - **Cron is best-effort, and the drift is real.** GitHub queues scheduled runs and
   both delays and drops them under load. Measured here: the 17:23 UTC slot started
   at 18:27 UTC, an hour and four minutes late, and still did its work correctly.
-  Five slots are scheduled and three to five typically land — asking for five is
-  what makes a bad day three builds rather than none. The slots deliberately sit at
-  odd minutes rather than on the hour, which is when every other scheduled workflow
-  on the platform wakes up. A late or missed slot costs one task, not the project:
-  the next run picks up exactly where this one left off.
+  Across the first day three slots came due: two ran, 51 and 65 minutes late, and
+  one never fired at all. Three slots is far too small a sample to quote a landing
+  rate from, so this README does not quote one — the honest claim is only that an
+  individual slot is not something to count on.
+  Five are scheduled because the project only needs *some* of them to land. At one
+  build a day the backlog is still more than five years of work, so the schedule
+  degrading is a slowdown, not a failure. The slots deliberately sit at odd minutes
+  rather than on the hour, which is when every other scheduled workflow on the
+  platform wakes up. A late or missed slot costs one task, not the project: the
+  next run picks up exactly where this one left off.
 - **Sixty-day auto-disable.** GitHub disables scheduled workflows after 60 days
   with no repository activity; the daily commits themselves keep it alive.
 - **Some pins have expiry dates.** `actions/checkout@v4`, `actions/setup-python@v5`
