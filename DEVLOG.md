@@ -758,3 +758,7 @@ tests/conftest.py:34: in <module>
 E   ImportError: cannot import name 'app' from 'app.main' (/home/runner/work/autoforge/autoforge/app/main.py)
 
 ```
+
+## 2026-08-03T19:02Z — rejected: Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
