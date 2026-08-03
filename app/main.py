@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Query
@@ -117,7 +117,7 @@ def create_app() -> FastAPI:
         if link is None:
             raise HTTPException(status_code=404, detail="Unknown short code")
         # Expiry handling
-        if link.expires_at is not None and datetime.utcnow() > link.expires_at:
+        if link.expires_at is not None and datetime.now(timezone.utc) > link.expires_at:
             raise HTTPException(status_code=410, detail="Link expired")
         store.record_hit(code)
         return RedirectResponse(url=link.url, status_code=307)

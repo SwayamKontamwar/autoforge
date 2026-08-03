@@ -10,7 +10,7 @@ from __future__ import annotations
 import secrets
 import string
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 _ALPHABET = string.ascii_letters + string.digits
@@ -58,11 +58,11 @@ class InMemoryStore:
             code = self._new_code()
         expires_at: Optional[datetime] = None
         if expires_in_seconds is not None:
-            expires_at = datetime.utcnow() + timedelta(seconds=expires_in_seconds)
+            expires_at = datetime.now(timezone.utc) + timedelta(seconds=expires_in_seconds)
         link = Link(
             code=code,
             url=url,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
             expires_at=expires_at,
         )
         self._links[code] = link
@@ -83,20 +83,12 @@ class InMemoryStore:
         return False
 
     def record_hit(self, code: str) -> None:
-        """Increment the hit counter for ``code`` if it exists."""
+        """Increment the hit counter for a link."""
         link = self._links.get(code)
         if link is not None:
             link.hits += 1
 
     def list_all(self) -> list[Link]:
         """Return a list of all stored links."""
+        # Return a copy to avoid accidental mutation.
         return list(self._links.values())
-
-    def clear(self) -> None:
-        """Drop every stored link.
-
-        Mutates in place rather than rebinding, because the request handlers close
-        over this exact object -- handing back a new one would leave them writing to
-        the old store.
-        """
-        self._links.clear()

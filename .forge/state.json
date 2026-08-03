@@ -1,7 +1,4 @@
 {
-  "Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.": 2,
-  "__builder_fingerprint__": "a606cfda69a59cbb",
-  "__last_failures__": {
-    "Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.": "$ ruff check\n(exit 1)\nF841 Local variable `data` is assigned to but never used\n  --> tests/test_created_timestamp.py:17:5\n   |\n15 |     )\n16 |     assert response.status_code == 201\n17 |     data = response.json()\n   |     ^^^^\n18 |     # The created link response does not include created_at, but we can fetch it via list endpoint\n19 |     list_resp = client.get(\"/links\")\n   |\nhelp: Remove assignment to unused variable `data`\n\nFound 1 error.\nNo fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).\n"
-  }
+  "__builder_fingerprint__": "f2e8d536f3bc6e7e",
+  "__last_failures__": {}
 }

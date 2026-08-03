@@ -720,3 +720,9 @@ Found 1 error.
 No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
 
 ```
+
+## 2026-08-03T05:48Z — success: Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
+
+Normalise timestamps to UTC aware ISO‑8601 strings in storage and expiry checks, add test for ISO‑8601 format
+
+Guardrail: ruff + import + pytest passed.
