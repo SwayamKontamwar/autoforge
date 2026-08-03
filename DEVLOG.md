@@ -726,3 +726,9 @@ No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option
 Normalise timestamps to UTC aware ISO‑8601 strings in storage and expiry checks, add test for ISO‑8601 format
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-03T05:55Z — success: Add GET /healthz/details reporting uptime in seconds and the number of stored links.
+
+Add /healthz/details endpoint reporting uptime and link count, with tests
+
+Guardrail: ruff + import + pytest passed.

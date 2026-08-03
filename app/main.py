@@ -64,11 +64,21 @@ def create_app() -> FastAPI:
     # Published so tests can reset between cases. The handlers close over `store`,
     # so this must stay the same object, never a copy.
     app.state.store = store
+    # Record the time the application started for uptime reporting.
+    app.state.start_time = datetime.now(timezone.utc)
 
     @app.get("/healthz")
     def healthz() -> dict[str, str]:
         """Liveness probe."""
         return {"status": "ok"}
+
+    @app.get("/healthz/details")
+    def healthz_details() -> dict[str, int]:
+        """Readiness probe with uptime and link count."""
+        now = datetime.now(timezone.utc)
+        uptime_seconds = int((now - app.state.start_time).total_seconds())
+        total_links = len(app.state.store.list_all())
+        return {"uptime_seconds": uptime_seconds, "total_links": total_links}
 
     @app.post("/links", response_model=LinkOut, status_code=201)
     def create_link(payload: LinkCreate) -> LinkOut:

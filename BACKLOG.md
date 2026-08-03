@@ -22,7 +22,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Add optional link expiry: accept an expires_in_seconds field and return 410 Gone when an expired link is visited.
 - [x] Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
 - [x] Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
-- [ ] Add GET /healthz/details reporting uptime in seconds and the number of stored links.
+- [x] Add GET /healthz/details reporting uptime in seconds and the number of stored links.
 - [ ] Introduce a Storage protocol in app/storage.py so the in-memory store and future backends share one interface.
 - [ ] Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.
 - [ ] Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.
