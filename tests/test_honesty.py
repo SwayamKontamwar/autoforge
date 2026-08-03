@@ -210,11 +210,25 @@ class TestGuardrailIntegration:
         )
         assert proc.returncode == 0, proc.stderr.decode()
 
-    def test_reopened_stats_task_is_open(self):
-        """It was ticked off with nothing built; it must be available again."""
-        backlog = (REPO_ROOT / "BACKLOG.md").read_text(encoding="utf-8")
-        line = next(ln for ln in backlog.splitlines() if "GET /stats returning totals" in ln)
-        assert line.startswith("- [ ]")
+    def test_the_stats_task_is_only_ticked_off_if_it_was_really_built(self):
+        """It was once ticked off with nothing built. Either it is still open, or
+        the endpoint and its tests genuinely exist.
+
+        Deliberately not asserting it is *open*. An earlier version did exactly
+        that, the bot then legitimately built it, and the line correctly became
+        ``- [x]`` -- which made this test fail on a clean tree. A clean tree that
+        fails the guardrail is read as a broken environment, so every subsequent
+        run declines to work and logs a blocked task instead. Asserting transient
+        state does not merely punish success here; it wedges the project
+        permanently, silently, with nobody watching.
+        """
+        text = (REPO_ROOT / "BACKLOG.md").read_text(encoding="utf-8")
+        line = next(ln for ln in text.splitlines() if "GET /stats returning totals" in ln)
+        if line.startswith("- [ ]"):
+            return
+        assert line.startswith("- [x]"), line
+        assert '"/stats"' in (REPO_ROOT / "app" / "main.py").read_text(encoding="utf-8")
+        assert list((REPO_ROOT / "tests").glob("test_stats*.py"))
 
 
 class TestHostileModelOutput:
