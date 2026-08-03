@@ -762,3 +762,9 @@ E   ImportError: cannot import name 'app' from 'app.main' (/home/runner/work/aut
 ## 2026-08-03T19:02Z — rejected: Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-08-03T22:18Z — skipped: Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
