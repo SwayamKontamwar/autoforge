@@ -651,3 +651,89 @@ class TestAmbiguousLambdaParamIsRenamed:
         )
         assert run._fix_ambiguous_names(tmp_path, patch) == ["app/main.py"]
         assert "lambda l:" not in target.read_text(encoding="utf-8")
+
+
+class TestUnusedLocalIsRepairedNotRejected:
+    """Assigning a result and never reading it is a habit, not a defect.
+
+    A live run wrote a correct test, assigned ``data = response.json()``, never
+    read ``data``, and had the entire patch reverted over it. Ruff files the fix
+    as unsafe because it cannot tell "delete this" from "you forgot to use it" --
+    intent, not meaning. The rewrite keeps the expression and drops only the
+    binding, so anything the line actually did still happens.
+    """
+
+    def _autofix(self, tmp_path, source: str) -> str:
+        (tmp_path / "tests").mkdir(parents=True, exist_ok=True)
+        target = tmp_path / "tests" / "test_generated.py"
+        target.write_text(source, encoding="utf-8")
+        run._autofix(
+            tmp_path,
+            Patch(
+                files=[File(path="tests/test_generated.py", content=source)],
+                summary="m",
+            ),
+        )
+        return target.read_text(encoding="utf-8")
+
+    def test_the_verbatim_rejected_line_is_repaired(self, tmp_path):
+        source = (
+            "def test_created(client):\n"
+            "    response = client.post('/links', json={'url': 'http://e.example'})\n"
+            "    assert response.status_code == 201\n"
+            "    data = response.json()\n"
+            "    assert client.get('/links').json()\n"
+        )
+        fixed = self._autofix(tmp_path, source)
+        assert "data =" not in fixed
+        # The call itself must survive; only the name it was bound to goes.
+        assert "response.json()" in fixed
+
+    def test_a_call_with_side_effects_still_runs(self, tmp_path):
+        source = "def test_x(client):\n    r = client.delete('/links/abc')\n    assert True\n"
+        fixed = self._autofix(tmp_path, source)
+        assert "client.delete('/links/abc')" in fixed or 'client.delete("/links/abc")' in fixed
+
+    def test_a_used_variable_is_left_alone(self, tmp_path):
+        """Negative control: repair must not touch code that is already correct."""
+        source = (
+            "def test_x(client):\n"
+            "    data = client.get('/links').json()\n"
+            "    assert data == []\n"
+        )
+        fixed = self._autofix(tmp_path, source)
+        assert "data = client.get(" in fixed
+        assert "assert data == []" in fixed
+
+    def test_other_unsafe_fixes_are_not_enabled(self, tmp_path):
+        """The escape hatch is pinned to F841 and must not widen.
+
+        Enabling unsafe fixes wholesale would let ruff rewrite code on rules
+        nobody measured. A bare `except:` carries an unsafe fix under E722; it
+        must survive untouched.
+        """
+        source = (
+            "def test_x():\n"
+            "    try:\n"
+            "        pass\n"
+            "    except:\n"
+            "        pass\n"
+        )
+        fixed = self._autofix(tmp_path, source)
+        assert "except:" in fixed
+
+    def test_repaired_output_passes_the_lint_the_guardrail_runs(self, tmp_path):
+        source = (
+            "def test_created(client):\n"
+            "    response = client.post('/links', json={'url': 'http://e.example'})\n"
+            "    data = response.json()\n"
+            "    assert response.status_code == 201\n"
+        )
+        self._autofix(tmp_path, source)
+        result = subprocess.run(
+            [sys.executable, "-m", "ruff", "check", "tests/test_generated.py"],
+            cwd=tmp_path,
+            capture_output=True,
+            text=True,
+        )
+        assert result.returncode == 0, result.stdout

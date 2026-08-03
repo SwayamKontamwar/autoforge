@@ -659,7 +659,21 @@ def _autofix(repo_root: Path, patch: Patch) -> None:
     paths = [file.path for file in patch.files if (repo_root / file.path).exists()]
     if not paths:
         return
-    for tool in (["check", "--fix", "--quiet"], ["format", "--quiet"]):
+    for tool in (
+        ["check", "--fix", "--quiet"],
+        # F841 only, and only here. Ruff files this fix as unsafe because it cannot
+        # know whether an unused variable means "delete this" or "you forgot to use
+        # it" -- a question about intent, not about meaning. The rewrite itself
+        # keeps the expression and drops only the binding, so the call still
+        # happens: `data = resp.json()` becomes `resp.json()`. Assigning a result
+        # and not using it is a habit the model has, the same way it reaches for
+        # `lambda l:`, and a whole patch is otherwise thrown away over a name that
+        # nothing reads. Enabling unsafe fixes wholesale would be a different and
+        # much worse trade, so this is pinned to the single rule that was measured
+        # rejecting good work.
+        ["check", "--fix", "--unsafe-fixes", "--select", "F841", "--quiet"],
+        ["format", "--quiet"],
+    ):
         subprocess.run(
             [sys.executable, "-m", "ruff", *tool, *paths],
             cwd=repo_root,
