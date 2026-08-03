@@ -188,6 +188,27 @@ class TestPromptTellsTheTruth:
         assert _TESTCLIENT_REDIRECT_HINT in _SYSTEM_PROMPT
         assert "follow_redirects" in _SYSTEM_PROMPT
 
+    def test_the_prompt_asks_for_what_the_guardrail_actually_accepts(self):
+        """The prompt used to say "add or update a test". The guardrail rejects a
+        patch unless the collected count *rises*, so updating one in place is
+        refused -- the model obeyed the instruction and was punished for it twice.
+
+        An instruction that does not match the acceptance criterion burns attempts
+        and eventually retires solvable tasks, so the two are pinned together here.
+        """
+        assert honesty.untested_production_reason(
+            [File(path="app/main.py", content="x = 1"), File(path="tests/test_x.py", content="")],
+            tests_before=10,
+            tests_after=10,
+        )
+        assert not honesty.untested_production_reason(
+            [File(path="app/main.py", content="x = 1")],
+            tests_before=10,
+            tests_after=11,
+        )
+        assert "brand-new" in _SYSTEM_PROMPT
+        assert "or update a pytest test" not in _SYSTEM_PROMPT
+
     def test_prompt_forbids_patching_the_harness(self):
         lowered = _SYSTEM_PROMPT.lower()
         assert "never import pytest" in lowered
