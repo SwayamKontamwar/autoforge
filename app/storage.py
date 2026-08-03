@@ -91,3 +91,12 @@ class InMemoryStore:
     def list_all(self) -> list[Link]:
         """Return a list of all stored links."""
         return list(self._links.values())
+
+    def clear(self) -> None:
+        """Drop every stored link.
+
+        Mutates in place rather than rebinding, because the request handlers close
+        over this exact object -- handing back a new one would leave them writing to
+        the old store.
+        """
+        self._links.clear()

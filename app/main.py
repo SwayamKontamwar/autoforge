@@ -61,6 +61,9 @@ def create_app() -> FastAPI:
     """
     app = FastAPI(title="autoforge URL shortener", version="0.1.0")
     store = InMemoryStore()
+    # Published so tests can reset between cases. The handlers close over `store`,
+    # so this must stay the same object, never a copy.
+    app.state.store = store
 
     @app.get("/healthz")
     def healthz() -> dict[str, str]:
