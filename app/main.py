@@ -37,6 +37,23 @@ def _validate_alias(alias: str) -> None:
         raise HTTPException(status_code=422, detail="Invalid alias")
 
 
+def _order_routes(app: FastAPI) -> None:
+    """Let static paths win over parameterised ones, whatever order they were added.
+
+    Starlette matches routes in definition order, so ``/{code}`` silently swallows
+    every static top-level path declared after it: a request for ``/stats`` reaches
+    the redirect handler, which looks up a short code named "stats", finds none and
+    returns 404. Nothing raises, so the endpoint simply appears not to exist.
+
+    The sort is stable and keyed only on whether a route has path parameters at all,
+    so routes that cannot collide keep the order they were written in and only the
+    genuinely ambiguous pairs move. An exact static path is unambiguously more
+    specific than a parameterised one; most routers apply this precedence for you,
+    and Starlette leaves it to the application.
+    """
+    app.router.routes.sort(key=lambda route: bool(getattr(route, "param_convertors", None)))
+
+
 def create_app() -> FastAPI:
     """Build and return the FastAPI application.
 
@@ -122,6 +139,7 @@ def create_app() -> FastAPI:
             raise HTTPException(status_code=404, detail="Unknown short code")
         # FastAPI will return a 204 No Content response automatically.
 
+    _order_routes(app)
     return app
 
 
