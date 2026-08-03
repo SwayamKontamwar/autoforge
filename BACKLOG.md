@@ -23,7 +23,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
 - [x] Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
 - [x] Add GET /healthz/details reporting uptime in seconds and the number of stored links.
-- [ ] Introduce a Storage protocol in app/storage.py so the in-memory store and future backends share one interface.
+- [x] Introduce a Storage protocol in app/storage.py so the in-memory store and future backends share one interface.
 - [ ] Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.
 - [ ] Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.
 - [ ] Add a global exception handler returning consistent JSON error bodies with a detail field.

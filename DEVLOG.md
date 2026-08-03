@@ -732,3 +732,9 @@ Guardrail: ruff + import + pytest passed.
 Add /healthz/details endpoint reporting uptime and link count, with tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-03T10:58Z — success: Introduce a Storage protocol in app/storage.py so the in-memory store and future backends share one interface.
+
+Add Storage protocol and test its implementation by InMemoryStore
+
+Guardrail: ruff + import + pytest passed.

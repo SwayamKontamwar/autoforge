@@ -11,7 +11,7 @@ import secrets
 import string
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from typing import Optional, Protocol, runtime_checkable
 
 _ALPHABET = string.ascii_letters + string.digits
 
@@ -25,6 +25,26 @@ class Link:
     created_at: datetime
     hits: int = 0
     expires_at: Optional[datetime] = None
+
+
+@runtime_checkable
+class Storage(Protocol):
+    """Protocol that all storage back‑ends must implement."""
+
+    def create(
+        self,
+        url: str,
+        alias: str | None = ...,
+        expires_in_seconds: int | None = ...,
+    ) -> Link: ...
+
+    def get(self, code: str) -> Link | None: ...
+
+    def delete(self, code: str) -> bool: ...
+
+    def record_hit(self, code: str) -> None: ...
+
+    def list_all(self) -> list[Link]: ...
 
 
 class InMemoryStore:
@@ -92,3 +112,6 @@ class InMemoryStore:
         """Return a list of all stored links."""
         # Return a copy to avoid accidental mutation.
         return list(self._links.values())
+
+
+__all__ = ["Link", "Storage", "InMemoryStore"]
