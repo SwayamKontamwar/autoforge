@@ -696,3 +696,27 @@ ERROR tests/toolkit/test_strings.py::test_slugify_strips_accents_and_edges - Att
 1 warning, 325 errors in 0.93s
 
 ```
+
+## 2026-08-03T05:41Z — failed: Normalise created timestamps to timezone-aware UTC ISO 8601 strings everywhere they appear.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F841 Local variable `data` is assigned to but never used
+  --> tests/test_created_timestamp.py:17:5
+   |
+15 |     )
+16 |     assert response.status_code == 201
+17 |     data = response.json()
+   |     ^^^^
+18 |     # The created link response does not include created_at, but we can fetch it via list endpoint
+19 |     list_resp = client.get("/links")
+   |
+help: Remove assignment to unused variable `data`
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
+
+```
