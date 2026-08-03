@@ -439,3 +439,25 @@ FAILED tests/test_stats.py::test_stats_endpoint - assert 404 == 200
 Implement alias conflict handling with 409 response and add test
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-03T01:55Z — failed: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+E741 Ambiguous variable name: `l`
+   --> app/main.py:133:50
+    |
+131 |         most_visited_code: str | None = None
+132 |         if links:
+133 |             most_visited = max(links, key=lambda l: l.hits)
+    |                                                  ^
+134 |             most_visited_code = most_visited.code
+135 |         return StatsOut(
+    |
+
+Found 1 error.
+
+```
