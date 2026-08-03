@@ -510,3 +510,52 @@ FAILED tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - assert
 1 failed, 303 passed, 1 warning in 19.88s
 
 ```
+
+## 2026-08-03T02:11Z — failed: Add GET /stats returning totals: number of links, total redirects, and the most-visited code.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+... (truncated)
+................................................ [ 70%]
+........................................................................ [ 93%]
+.................F..                                                     [100%]
+=================================== FAILURES ===================================
+_________________ test_stats_endpoint_counts_and_most_visited __________________
+
+    def test_stats_endpoint_counts_and_most_visited() -> None:
+        client = TestClient(app)
+    
+        # Create two distinct links.
+        resp_a = client.post("/links", json={"url": "http://example.com"})
+        assert resp_a.status_code == 201
+        code_a = resp_a.json()["code"]
+    
+        resp_b = client.post("/links", json={"url": "http://example.org"})
+        assert resp_b.status_code == 201
+        code_b = resp_b.json()["code"]
+    
+        # Hit the first link twice and the second once.
+        client.get(f"/{code_a}")
+        client.get(f"/{code_a}")
+        client.get(f"/{code_b}")
+    
+        # Retrieve statistics.
+        stats_resp = client.get("/stats")
+        assert stats_resp.status_code == 200
+        data = stats_resp.json()
+>       assert data["total_links"] == 2
+E       assert 3 == 2
+
+tests/test_stats.py:27: AssertionError
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - assert 3 == 2
+1 failed, 307 passed, 1 warning in 19.78s
+
+```
