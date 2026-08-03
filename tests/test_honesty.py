@@ -403,8 +403,71 @@ class TestRetirementIsProvisional:
         _save_state(p, {_BUILDER_KEY: "abc123"})
         assert _load_state(p).get(_BUILDER_KEY) == "abc123"
 
-    def test_the_two_bug_retired_tasks_are_open_again(self):
+    def test_the_two_bug_retired_tasks_are_no_longer_retired(self):
+        """Neither task may sit in the retired state again.
+
+        This deliberately does not assert they are *open*. An earlier version did,
+        and it broke the moment the system worked -- the bot picked up the revived
+        alias task and genuinely completed it, so the line correctly reads ``- [x]``
+        with no skip note. Asserting a transient state punishes success. What must
+        stay true is that neither was abandoned by a builder bug.
+        """
         text = (REPO_ROOT / "BACKLOG.md").read_text(encoding="utf-8")
         for want in ("GET /stats returning totals", "Support a custom alias on POST /links"):
             line = next(ln for ln in text.splitlines() if want in ln)
-            assert line.startswith("- [ ]"), line
+            assert "skipped after" not in line, line
+
+
+class TestUndecodableFilesRefuseInsteadOfCrashing:
+    """Found by soaking: one invalid byte wedged the loop permanently.
+
+    BACKLOG.md and DEVLOG.md are read as UTF-8 by six different functions. A
+    single invalid byte raised UnicodeDecodeError from whichever ran first, as a
+    bare traceback. Both files are committed, so the same bytes return on every
+    future checkout and the run dies in exactly the same place forever.
+    """
+
+    @pytest.mark.parametrize("name", ["BACKLOG.md", "DEVLOG.md"])
+    def test_layout_guard_names_the_bad_file(self, tmp_path, name):
+        from builder.run import _unusable_layout
+
+        backlog = tmp_path / "BACKLOG.md"
+        devlog = tmp_path / "DEVLOG.md"
+        backlog.write_text("# B\n\n- [ ] a task\n", encoding="utf-8")
+        devlog.write_text("# D\n", encoding="utf-8")
+        (tmp_path / name).write_bytes(b"\x00\xff\xfe not utf-8 \x00")
+
+        reason = _unusable_layout(tmp_path, backlog, devlog)
+        assert name in reason
+        assert "UTF-8" in reason
+
+    def test_valid_files_are_accepted(self, tmp_path):
+        from builder.run import _unusable_layout
+
+        backlog = tmp_path / "BACKLOG.md"
+        devlog = tmp_path / "DEVLOG.md"
+        backlog.write_text("# B\n\n- [ ] a task with unicode: caf\u00e9 \u4e2d\u6587\n")
+        devlog.write_text("# D\n\u2014 dash\n")
+        assert _unusable_layout(tmp_path, backlog, devlog) == ""
+
+    def test_missing_devlog_is_not_an_error(self, tmp_path):
+        """DEVLOG.md is created on first write; absent is normal, not broken."""
+        from builder.run import _unusable_layout
+
+        backlog = tmp_path / "BACKLOG.md"
+        backlog.write_text("# B\n\n- [ ] a task\n")
+        assert _unusable_layout(tmp_path, backlog, tmp_path / "DEVLOG.md") == ""
+
+    def test_corrupt_archive_does_not_crash_task_lookup(self, tmp_path):
+        """Archives are not covered by the layout guard, so they must be tolerant."""
+        from builder import backlog
+
+        p = tmp_path / "BACKLOG.md"
+        p.write_text("# B\n\n- [ ] live task\n", encoding="utf-8")
+        archive = tmp_path / "docs" / "backlog"
+        archive.mkdir(parents=True)
+        (archive / "completed-001.md").write_bytes(b"- [x] old task\n\xff\xfe\x00")
+
+        texts = backlog.all_task_texts(p)
+        assert "live task" in texts
+        assert "old task" in texts

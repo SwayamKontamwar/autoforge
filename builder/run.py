@@ -777,6 +777,20 @@ def _unusable_layout(repo_root: Path, backlog_path: Path, devlog_path: Path) -> 
         return ".forge exists but is not a directory, so run state cannot be stored"
     if devlog_path.exists() and not devlog_path.is_file():
         return f"{devlog_path.name} is not a regular file"
+    # Every reader of these files decodes them as UTF-8. One invalid byte raises
+    # UnicodeDecodeError from whichever reader happens to run first -- and because
+    # both files are committed, the same bytes come back on every future checkout,
+    # so the loop dies at exactly the same place forever with nobody watching.
+    # Refusing here turns a permanent traceback into one sentence naming the file.
+    for path in (backlog_path, devlog_path):
+        if not path.is_file():
+            continue
+        try:
+            path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            return f"{path.name} is not valid UTF-8 text, so its contents cannot be read"
+        except OSError as exc:
+            return f"{path.name} cannot be read ({exc.strerror or exc})"
     return ""
 
 

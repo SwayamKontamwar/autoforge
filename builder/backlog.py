@@ -154,7 +154,19 @@ def all_task_texts(backlog_path: Path) -> set[str]:
     """
     texts: set[str] = set()
     sources = [backlog_path, *_archive_paths(backlog_path)]
-    combined = "\n".join(p.read_text(encoding="utf-8") for p in sources if p.exists())
+    # Archives are only read to avoid regenerating finished work, and they are not
+    # covered by the layout guard the way BACKLOG.md is. Mangling an undecodable
+    # byte here is harmless -- at worst one archived title is not recognised -- and
+    # is much better than a corrupt archive file crashing every future run.
+    parts = []
+    for p in sources:
+        if not p.is_file():
+            continue
+        try:
+            parts.append(p.read_text(encoding="utf-8", errors="replace"))
+        except OSError:
+            continue
+    combined = "\n".join(parts)
     for line in combined.splitlines():
         stripped = line.strip()
         for marker in (_OPEN, _DONE):
