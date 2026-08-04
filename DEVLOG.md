@@ -776,3 +776,40 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-08-04T10:18Z — rejected: Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-08-04T15:36Z — skipped: Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+$ ruff check
+(exit 0)
+All checks passed!
+$ import app.main
+(exit 0)
+
+$ pytest
+(exit 2)
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_storage_protocol.py ________________
+ImportError while importing test module '/home/runner/work/autoforge/autoforge/tests/test_storage_protocol.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_storage_protocol.py:3: in <module>
+    from app.storage import InMemoryStore, Storage
+E   ImportError: cannot import name 'Storage' from 'app.storage' (/home/runner/work/autoforge/autoforge/app/storage.py)
+=============================== warnings summary ===============================
+../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/test_storage_protocol.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 warning, 1 error in 0.21s
+
+```
