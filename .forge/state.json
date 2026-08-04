@@ -1,5 +1,5 @@
 {
-  "Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.": 1,
+  "Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
