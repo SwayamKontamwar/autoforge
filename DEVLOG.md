@@ -813,3 +813,24 @@ ERROR tests/test_storage_protocol.py
 1 warning, 1 error in 0.21s
 
 ```
+
+## 2026-08-04T19:02Z — failed: Add a global exception handler returning consistent JSON error bodies with a detail field.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F821 Undefined name `create_app`
+ --> tests/test_global_exception_handler.py:7:29
+  |
+6 | def test_generic_exception_is_returned_as_json_detail():
+7 |     client = TestClient(app=create_app())
+  |                             ^^^^^^^^^^
+8 |     response = client.get("/test-error")
+9 |     assert response.status_code == 500
+  |
+
+Found 1 error.
+
+```
