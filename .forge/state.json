@@ -1,4 +1,7 @@
 {
+  "Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.": "$ ruff check\n(exit 1)\ninvalid-syntax: Expected `,`, found `...`\n   --> app/main.py:191:1\n    |\n189 |         links = store.list_all()\n190 |         total_links = len(links\n191 | ... (truncated)\n    | ^^^\n\ninvalid-syntax: unexpected EOF while parsing\n   --> app/main.py:191:17\n    |\n190 |         total_links = len(links\n191 | ... (truncated)\n    |                ^\n\nFound 2 errors.\n"
+  }
 }

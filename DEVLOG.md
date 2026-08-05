@@ -912,3 +912,29 @@ assert 1 == 0
 2 failed, 332 passed, 1 warning in 21.66s
 
 ```
+
+## 2026-08-05T10:16Z — failed: Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: Expected `,`, found `...`
+   --> app/main.py:191:1
+    |
+189 |         links = store.list_all()
+190 |         total_links = len(links
+191 | ... (truncated)
+    | ^^^
+
+invalid-syntax: unexpected EOF while parsing
+   --> app/main.py:191:17
+    |
+190 |         total_links = len(links
+191 | ... (truncated)
+    |                ^
+
+Found 2 errors.
+
+```
