@@ -958,3 +958,39 @@ tests/conftest.py:34: in <module>
 E   ImportError: cannot import name 'app' from 'app.main' (/home/runner/work/autoforge/autoforge/app/main.py)
 
 ```
+
+## 2026-08-05T19:00Z — skipped: Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+ == 201
+  E                +  where 429 = <Response [429 Too Many Requests]>.status_code
+  
+  tests/test_rate_limit.py:12: AssertionError
+  =============================== warnings summary ===============================
+  ../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+    /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+      from starlette.testclient import TestClient as TestClient  # noqa
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/test_rate_limit.py::test_rate_limit_exceeded - AssertionError: unexpected failure at 76
+  assert 429 == 201
+   +  where 429 = <Response [429 Too Many Requests]>.status_code
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...Requests]>.status_code\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/test_rate_limit.py::test_rate_limit_exceeded - AssertionError: unexpected failure at 89
+assert 429 == 201
+ +  where 429 = <Response [429 Too Many Requests]>.status_code
+FAILED tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes - KeyError: 'code'
+FAILED tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - pydantic_core._pydantic_core.ValidationError: 1 validation error for StatsOut
+total_redirects
+  Field required [type=missing, input_value={'total_links': 2, 'total_hits': 3}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+4 failed, 330 passed, 1 warning in 30.12s
+
+```
