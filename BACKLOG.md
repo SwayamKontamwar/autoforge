@@ -28,7 +28,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.  _(skipped after 3 failed attempts)_
 - [x] Add a global exception handler returning consistent JSON error bodies with a detail field.  _(skipped after 3 failed attempts)_
 - [x] Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.  _(skipped after 3 failed attempts)_
-- [ ] Add request logging middleware that records method, path, and status without logging request bodies.
+- [x] Add request logging middleware that records method, path, and status without logging request bodies.
 - [ ] Add a configurable maximum URL length and reject overly long targets with 422.
 - [ ] Add an OpenAPI description and example to each endpoint so the generated docs read clearly.
 - [ ] Add a GET / root endpoint returning the service name, version, and a link to /docs.

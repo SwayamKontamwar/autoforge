@@ -994,3 +994,9 @@ total_redirects
 4 failed, 330 passed, 1 warning in 30.12s
 
 ```
+
+## 2026-08-05T22:29Z — success: Add request logging middleware that records method, path, and status without logging request bodies.
+
+Add request logging middleware and test its output
+
+Guardrail: ruff + import + pytest passed.

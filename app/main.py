@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse
 
 from app.models import LinkCreate, LinkInfoOut, LinkOut, StatsOut
@@ -14,6 +15,9 @@ from app.storage import InMemoryStore
 
 # URL‑safe characters per RFC 3986 (unreserved)
 _ALIAS_REGEX = re.compile(r"^[A-Za-z0-9\-\._~]{3,32}$")
+
+# Logger for request logging middleware
+_logger = logging.getLogger("app.request")
 
 
 def _validate_url(url: str) -> None:
@@ -66,6 +70,13 @@ def create_app() -> FastAPI:
     app.state.store = store
     # Record the time the application started for uptime reporting.
     app.state.start_time = datetime.now(timezone.utc)
+
+    @app.middleware("http")
+    async def _log_requests(request: Request, call_next):
+        """Log HTTP method, path, and response status code."""
+        response = await call_next(request)
+        _logger.info("%s %s %s", request.method, request.url.path, response.status_code)
+        return response
 
     @app.get("/healthz")
     def healthz() -> dict[str, str]:
