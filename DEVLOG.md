@@ -938,3 +938,23 @@ invalid-syntax: unexpected EOF while parsing
 Found 2 errors.
 
 ```
+
+## 2026-08-05T15:28Z — failed: Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+$ ruff check
+(exit 0)
+All checks passed!
+$ import app.main
+(exit 0)
+
+$ pytest
+(exit 4)
+ImportError while loading conftest '/home/runner/work/autoforge/autoforge/tests/conftest.py'.
+tests/conftest.py:34: in <module>
+    from app.main import app as shared_app
+E   ImportError: cannot import name 'app' from 'app.main' (/home/runner/work/autoforge/autoforge/app/main.py)
+
+```
