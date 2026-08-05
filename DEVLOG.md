@@ -873,3 +873,42 @@ assert 1 == 0
 2 failed, 332 passed, 1 warning in 21.70s
 
 ```
+
+## 2026-08-05T05:27Z — skipped: Add a global exception handler returning consistent JSON error bodies with a detail field.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+^^^^^^^^^^^
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/anyio/to_thread.py:65: in run_sync
+      return await get_async_backend().run_sync_in_worker_thread(
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/anyio/_backends/_asyncio.py:2641: in run_sync_in_worker_thread
+      return await future
+             ^^^^^^^^^^^^
+  /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/anyio/_backends/_asyncio.py:1033: in run
+      result = context.run(func, *args)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+  
+      @app.get("/test/error")
+      def error_route() -> None:
+  >       raise RuntimeError("boom")
+  E       RuntimeError: boom
+  
+  tests/test_global_exception_handler.py:10: RuntimeError
+  =============================== warnings summary ===============================
+  ../../../../../opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1
+    /opt/hostedtoolcache/Python/3.11.15/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+      from starlette.testclient import TestClient as TestClient  # noqa
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/test_global_exception_handler.py::test_generic_exception_is_returned_as_json_detail - RuntimeError: boom
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...l - RuntimeError: boom\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+2 failed, 332 passed, 1 warning in 21.66s
+
+```

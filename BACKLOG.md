@@ -26,7 +26,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Introduce a Storage protocol in app/storage.py so the in-memory store and future backends share one interface.
 - [x] Add a SQLite-backed store implementing the Storage protocol, selectable by an environment variable, defaulting to in-memory.  _(skipped after 3 out-of-bounds patches)_
 - [x] Persist hit counts and expiry in the SQLite store so they survive a restart, with a test using a temp database file.  _(skipped after 3 failed attempts)_
-- [ ] Add a global exception handler returning consistent JSON error bodies with a detail field.
+- [x] Add a global exception handler returning consistent JSON error bodies with a detail field.  _(skipped after 3 failed attempts)_
 - [ ] Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.
 - [ ] Add request logging middleware that records method, path, and status without logging request bodies.
 - [ ] Add a configurable maximum URL length and reject overly long targets with 422.
