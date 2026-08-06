@@ -30,7 +30,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Add basic per-client rate limiting on POST /links using an in-memory token bucket, returning 429 when exceeded.  _(skipped after 3 failed attempts)_
 - [x] Add request logging middleware that records method, path, and status without logging request bodies.
 - [x] Add a configurable maximum URL length and reject overly long targets with 422.
-- [ ] Add an OpenAPI description and example to each endpoint so the generated docs read clearly.
+- [x] Add an OpenAPI description and example to each endpoint so the generated docs read clearly.
 - [ ] Add a GET / root endpoint returning the service name, version, and a link to /docs.
 - [ ] Add a wire the app.toolkit.strings.slugify helper into a POST /links option that derives a readable alias from a title field.
 

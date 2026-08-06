@@ -8,7 +8,7 @@ import re
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import Body, FastAPI, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse
 
 from app.models import LinkCreate, LinkInfoOut, LinkOut, StatsOut
@@ -92,12 +92,20 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
         _logger.info("%s %s %s", request.method, request.url.path, response.status_code)
         return response
 
-    @app.get("/healthz")
+    @app.get(
+        "/healthz",
+        summary="Health check",
+        description="Liveness probe.",
+    )
     def healthz() -> dict[str, str]:
         """Liveness probe."""
         return {"status": "ok"}
 
-    @app.get("/healthz/details")
+    @app.get(
+        "/healthz/details",
+        summary="Readiness probe",
+        description="Readiness probe with uptime and link count.",
+    )
     def healthz_details() -> dict[str, int]:
         """Readiness probe with uptime and link count."""
         now = datetime.now(timezone.utc)
@@ -105,8 +113,19 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
         total_links = len(app.state.store.list_all())
         return {"uptime_seconds": uptime_seconds, "total_links": total_links}
 
-    @app.post("/links", response_model=LinkOut, status_code=201)
-    def create_link(payload: LinkCreate) -> LinkOut:
+    @app.post(
+        "/links",
+        response_model=LinkOut,
+        status_code=201,
+        summary="Create a short link",
+        description="Create a short link for the supplied URL.",
+    )
+    def create_link(
+        payload: LinkCreate = Body(
+            ...,
+            example={"url": "https://example.com", "alias": "myalias"},
+        ),
+    ) -> LinkOut:
         """Create a short link for the supplied URL."""
         _validate_url(payload.url, app.state.max_url_length)
         if payload.alias is not None:
@@ -119,7 +138,12 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
         # Ensure the URL is a plain string for Pydantic validation.
         return LinkOut(code=link.code, url=str(link.url))
 
-    @app.get("/links", response_model=list[LinkInfoOut])
+    @app.get(
+        "/links",
+        response_model=list[LinkInfoOut],
+        summary="List stored links",
+        description="Return a paginated list of stored links with their details.",
+    )
     def list_links(
         limit: int = Query(100, ge=1, le=1000),
         offset: int = Query(0, ge=0),
@@ -145,7 +169,11 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
             for link in sliced
         ]
 
-    @app.get("/{code}")
+    @app.get(
+        "/{code}",
+        summary="Redirect short code",
+        description="Redirect a short code to its destination URL.",
+    )
     def redirect(code: str) -> RedirectResponse:
         """Redirect a short code to its destination URL."""
         link = store.get(code)
@@ -157,7 +185,12 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
         store.record_hit(code)
         return RedirectResponse(url=link.url, status_code=307)
 
-    @app.get("/links/{code}/info", response_model=LinkInfoOut)
+    @app.get(
+        "/links/{code}/info",
+        response_model=LinkInfoOut,
+        summary="Link information",
+        description="Return detailed information about a short link without redirect.",
+    )
     def link_info(code: str) -> LinkInfoOut:
         """Return detailed information about a short link without redirect."""
         link = store.get(code)
@@ -170,14 +203,24 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
             hits=link.hits,
         )
 
-    @app.delete("/links/{code}", status_code=204)
+    @app.delete(
+        "/links/{code}",
+        status_code=204,
+        summary="Delete a short link",
+        description="Delete a short link identified by ``code``.",
+    )
     def delete_link(code: str) -> None:
         """Delete a short link identified by ``code``."""
         if not store.delete(code):
             raise HTTPException(status_code=404, detail="Unknown short code")
         # FastAPI will return a 204 No Content response automatically.
 
-    @app.get("/stats", response_model=StatsOut)
+    @app.get(
+        "/stats",
+        response_model=StatsOut,
+        summary="Aggregate statistics",
+        description="Return aggregate statistics about stored links.",
+    )
     def get_stats() -> StatsOut:
         """Return aggregate statistics about stored links."""
         links = store.list_all()

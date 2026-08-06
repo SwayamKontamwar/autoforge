@@ -1006,3 +1006,9 @@ Guardrail: ruff + import + pytest passed.
 Add configurable max URL length validation and test for rejection
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-06T10:18Z — success: Add an OpenAPI description and example to each endpoint so the generated docs read clearly.
+
+Add OpenAPI descriptions and request body example for POST /links endpoint and test it
+
+Guardrail: ruff + import + pytest passed.
