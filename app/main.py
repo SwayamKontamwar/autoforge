@@ -113,6 +113,19 @@ def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
         total_links = len(app.state.store.list_all())
         return {"uptime_seconds": uptime_seconds, "total_links": total_links}
 
+    @app.get(
+        "/",
+        summary="Root endpoint",
+        description="Return service name, version, and documentation link.",
+    )
+    def root() -> dict[str, str]:
+        """Root endpoint providing basic service information."""
+        return {
+            "service": app.title,
+            "version": app.version,
+            "docs": "/docs",
+        }
+
     @app.post(
         "/links",
         response_model=LinkOut,

@@ -1012,3 +1012,9 @@ Guardrail: ruff + import + pytest passed.
 Add OpenAPI descriptions and request body example for POST /links endpoint and test it
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-06T15:30Z — success: Add a GET / root endpoint returning the service name, version, and a link to /docs.
+
+Add root GET endpoint returning service info and docs link, with test
+
+Guardrail: ruff + import + pytest passed.
