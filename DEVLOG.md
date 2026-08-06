@@ -1000,3 +1000,9 @@ total_redirects
 Add request logging middleware and test its output
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-06T05:29Z — success: Add a configurable maximum URL length and reject overly long targets with 422.
+
+Add configurable max URL length validation and test for rejection
+
+Guardrail: ruff + import + pytest passed.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
 from datetime import datetime, timezone
 from urllib.parse import urlparse
@@ -16,16 +17,23 @@ from app.storage import InMemoryStore
 # URL‑safe characters per RFC 3986 (unreserved)
 _ALIAS_REGEX = re.compile(r"^[A-Za-z0-9\-\._~]{3,32}$")
 
+# Default maximum URL length; can be overridden via environment variable or
+# ``create_app`` argument.
+_DEFAULT_MAX_URL_LENGTH = int(os.getenv("MAX_URL_LENGTH", "2048"))
+
 # Logger for request logging middleware
 _logger = logging.getLogger("app.request")
 
 
-def _validate_url(url: str) -> None:
-    """Validate that ``url`` has http/https scheme and a non‑empty host.
+def _validate_url(url: str, max_length: int) -> None:
+    """Validate that ``url`` has http/https scheme, a non‑empty host,
+    and does not exceed ``max_length`` characters.
 
     Raises:
         HTTPException: with status 422 if validation fails.
     """
+    if len(url) > max_length:
+        raise HTTPException(status_code=422, detail="URL too long")
     parsed = urlparse(url)
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise HTTPException(status_code=422, detail="Invalid URL")
@@ -58,8 +66,12 @@ def _order_routes(app: FastAPI) -> None:
     app.router.routes.sort(key=lambda route: bool(getattr(route, "param_convertors", None)))
 
 
-def create_app() -> FastAPI:
+def create_app(max_url_length: int = _DEFAULT_MAX_URL_LENGTH) -> FastAPI:
     """Build and return the FastAPI application.
+
+    Args:
+        max_url_length: Maximum allowed length for target URLs. Defaults to
+            the value of ``MAX_URL_LENGTH`` environment variable or 2048.
 
     A fresh store is bound per application instance so tests are isolated.
     """
@@ -70,6 +82,8 @@ def create_app() -> FastAPI:
     app.state.store = store
     # Record the time the application started for uptime reporting.
     app.state.start_time = datetime.now(timezone.utc)
+    # Store the configured maximum URL length for validation.
+    app.state.max_url_length = max_url_length
 
     @app.middleware("http")
     async def _log_requests(request: Request, call_next):
@@ -94,7 +108,7 @@ def create_app() -> FastAPI:
     @app.post("/links", response_model=LinkOut, status_code=201)
     def create_link(payload: LinkCreate) -> LinkOut:
         """Create a short link for the supplied URL."""
-        _validate_url(payload.url)
+        _validate_url(payload.url, app.state.max_url_length)
         if payload.alias is not None:
             _validate_alias(payload.alias)
         try:
