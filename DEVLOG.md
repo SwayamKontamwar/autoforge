@@ -1066,3 +1066,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement truncate utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-07T18:09Z — success: (numbers) Implement `clamp` in app/toolkit/numbers.py: constrain a number to an inclusive min and max. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `clamp` from app/toolkit/__init__.py.
+
+Implement clamp utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
