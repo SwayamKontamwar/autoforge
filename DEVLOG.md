@@ -1050,3 +1050,7 @@ created_at
 24 failed, 313 passed, 23 warnings in 20.61s
 
 ```
+
+## 2026-08-07T04:34Z — rejected: Add a wire the app.toolkit.strings.slugify helper into a POST /links option that derives a readable alias from a title field.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
