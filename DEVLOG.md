@@ -1072,3 +1072,9 @@ Guardrail: ruff + import + pytest passed.
 Implement clamp utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-07T21:57Z — success: (datetimes) Implement `parse_iso` in app/toolkit/datetimes.py: parse an ISO 8601 string into a timezone-aware datetime. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `parse_iso` from app/toolkit/__init__.py.
+
+Implement parse_iso utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
