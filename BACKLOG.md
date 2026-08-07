@@ -32,7 +32,7 @@ edit that script to change the seed roadmap in bulk.
 - [x] Add a configurable maximum URL length and reject overly long targets with 422.
 - [x] Add an OpenAPI description and example to each endpoint so the generated docs read clearly.
 - [x] Add a GET / root endpoint returning the service name, version, and a link to /docs.
-- [ ] Add a wire the app.toolkit.strings.slugify helper into a POST /links option that derives a readable alias from a title field.
+- [x] Add a wire the app.toolkit.strings.slugify helper into a POST /links option that derives a readable alias from a title field.  _(skipped after 3 out-of-bounds patches)_
 
 ## Toolkit — a self-building standard library
 
