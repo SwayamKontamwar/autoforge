@@ -38,7 +38,7 @@ edit that script to change the seed roadmap in bulk.
 
 Each task adds one small, independently tested utility. Tasks are interleaved across areas on purpose.
 
-- [ ] (strings) Implement `truncate` in app/toolkit/strings.py: shorten a string to a max length, appending an ellipsis only when it was cut. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `truncate` from app/toolkit/__init__.py.
+- [x] (strings) Implement `truncate` in app/toolkit/strings.py: shorten a string to a max length, appending an ellipsis only when it was cut. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `truncate` from app/toolkit/__init__.py.
 - [ ] (numbers) Implement `clamp` in app/toolkit/numbers.py: constrain a number to an inclusive min and max. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `clamp` from app/toolkit/__init__.py.
 - [ ] (datetimes) Implement `parse_iso` in app/toolkit/datetimes.py: parse an ISO 8601 string into a timezone-aware datetime. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `parse_iso` from app/toolkit/__init__.py.
 - [ ] (collections) Implement `chunk` in app/toolkit/collections.py: split an iterable into lists of a fixed size. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `chunk` from app/toolkit/__init__.py.

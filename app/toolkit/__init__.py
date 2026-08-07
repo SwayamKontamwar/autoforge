@@ -8,6 +8,6 @@ collections, encoding, validation, data structures, algorithms, and more.
 
 from __future__ import annotations
 
-from app.toolkit.strings import slugify
+from app.toolkit.strings import slugify, truncate
 
-__all__ = ["slugify"]
+__all__ = ["slugify", "truncate"]

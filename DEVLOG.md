@@ -1060,3 +1060,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-08-07T14:20Z — success: (strings) Implement `truncate` in app/toolkit/strings.py: shorten a string to a max length, appending an ellipsis only when it was cut. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `truncate` from app/toolkit/__init__.py.
+
+Implement truncate utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
