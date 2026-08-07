@@ -1018,3 +1018,35 @@ Guardrail: ruff + import + pytest passed.
 Add root GET endpoint returning service info and docs link, with test
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-07T01:03Z — failed: Add a wire the app.toolkit.strings.slugify helper into a POST /links option that derives a readable alias from a title field.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+ocs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/test_alias_conflict.py::test_create_link_conflict_returns_409 - pydantic_core._pydantic_core.ValidationError: 1 validation error for LinkOut
+  created_at
+    Field required [type=missing, input_value={'code': 'duplicate', 'ur...: 'https://example.com'}, input_type=dict]
+      For further information visit https://errors.pydantic.dev/2.13/v/missing
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...tic.dev/2.13/v/missing\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes - pydantic_core._pydantic_core.ValidationError: 1 validation error for LinkOut
+created_at
+  Field required [type=missing, input_value={'code': 'Mn4mHSA', 'url': 'http://example.com'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+FAILED tests/test_stats.py::test_stats_endpoint_counts_and_most_visited - pydantic_core._pydantic_core.ValidationError: 1 validation error for LinkOut
+created_at
+  Field required [type=missing, input_value={'code': 'sNHidXA', 'url': 'http://example.com'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+FAILED tests/test_timestamp_normalization.py::test_created_at_is_utc_isoformat - pydantic_core._pydantic_core.ValidationError: 1 validation error for LinkOut
+created_at
+  Field required [type=missing, input_value={'code': '6Lc9Orw', 'url': 'http://example.com'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+24 failed, 313 passed, 23 warnings in 20.61s
+
+```
