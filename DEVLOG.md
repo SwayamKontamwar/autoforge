@@ -1078,3 +1078,9 @@ Guardrail: ruff + import + pytest passed.
 Implement parse_iso utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-08T03:47Z — success: (collections) Implement `chunk` in app/toolkit/collections.py: split an iterable into lists of a fixed size. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `chunk` from app/toolkit/__init__.py.
+
+Implement chunk utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
