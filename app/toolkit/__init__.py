@@ -10,7 +10,8 @@ from __future__ import annotations
 
 from app.toolkit.collections import chunk
 from app.toolkit.datetimes import parse_iso
+from app.toolkit.functional import compose
 from app.toolkit.numbers import clamp
 from app.toolkit.strings import slugify, truncate
 
-__all__ = ["slugify", "truncate", "clamp", "parse_iso", "chunk"]
+__all__ = ["slugify", "truncate", "clamp", "parse_iso", "chunk", "compose"]

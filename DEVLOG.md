@@ -1122,3 +1122,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 349 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-08T13:57Z — success: (functional) Implement `compose` in app/toolkit/functional.py: compose functions right to left. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `compose` from app/toolkit/__init__.py.
+
+Implement compose utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
