@@ -1134,3 +1134,9 @@ Guardrail: ruff + import + pytest passed.
 Implement base62_encode utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-08T21:47Z — success: (hashing) Implement `md5_hex` in app/toolkit/hashing.py: return the md5 hex digest of bytes. Add a pytest in tests/toolkit/test_hashing.py covering the documented behaviour and at least one edge case, and export `md5_hex` from app/toolkit/__init__.py.
+
+Implement md5_hex utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

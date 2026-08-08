@@ -12,6 +12,7 @@ from app.toolkit.collections import chunk
 from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
 from app.toolkit.functional import compose
+from app.toolkit.hashing import md5_hex
 from app.toolkit.numbers import clamp
 from app.toolkit.strings import slugify, truncate
 
@@ -23,4 +24,5 @@ __all__ = [
     "chunk",
     "compose",
     "base62_encode",
+    "md5_hex",
 ]
