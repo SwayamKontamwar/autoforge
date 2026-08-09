@@ -1190,3 +1190,9 @@ Guardrail: ruff + import + pytest passed.
 Implement parse_semver utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-09T17:55Z — success: (structures) Implement `LRUCache` in app/toolkit/structures.py: a fixed-capacity least-recently-used cache with get and put. Add a pytest in tests/toolkit/test_structures.py covering the documented behaviour and at least one edge case, and export `LRUCache` from app/toolkit/__init__.py.
+
+Implement LRUCache with get/put, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
