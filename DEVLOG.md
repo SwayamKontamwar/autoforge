@@ -1196,3 +1196,9 @@ Guardrail: ruff + import + pytest passed.
 Implement LRUCache with get/put, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-09T21:49Z — success: (algorithms) Implement `binary_search` in app/toolkit/algorithms.py: return the index of a target in a sorted list or -1. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `binary_search` from app/toolkit/__init__.py.
+
+Implement binary_search algorithm, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

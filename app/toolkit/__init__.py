@@ -8,6 +8,7 @@ collections, encoding, validation, data structures, algorithms, and more.
 
 from __future__ import annotations
 
+from app.toolkit.algorithms import binary_search
 from app.toolkit.collections import chunk
 from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
@@ -31,4 +32,5 @@ __all__ = [
     "is_email",
     "parse_semver",
     "LRUCache",
+    "binary_search",
 ]

@@ -1,0 +1,30 @@
+"""Algorithm utilities.
+
+Provides ``binary_search`` for sorted sequences.
+"""
+
+from __future__ import annotations
+
+from typing import Sequence, TypeVar
+
+T = TypeVar("T")
+
+
+def binary_search(seq: Sequence[T], target: T) -> int:
+    """Return the index of *target* in *seq* or -1 if not present.
+
+    *seq* must be sorted in ascending order. The function works with any
+    sequence supporting ``__len__`` and element access via ``[]``.
+    """
+    lo = 0
+    hi = len(seq) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        mid_val = seq[mid]
+        if mid_val == target:
+            return mid
+        if mid_val < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
