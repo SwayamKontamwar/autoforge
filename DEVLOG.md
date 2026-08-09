@@ -1178,3 +1178,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 359 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-09T08:22Z — success: (validation) Implement `is_email` in app/toolkit/validation.py: validate an email address with a pragmatic regex. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_email` from app/toolkit/__init__.py.
+
+Implement is_email validation, add test, export from toolkit init
+
+Guardrail: ruff + import + pytest passed.
