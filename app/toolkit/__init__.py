@@ -14,6 +14,7 @@ from app.toolkit.encoding import base62_encode
 from app.toolkit.functional import compose
 from app.toolkit.hashing import md5_hex
 from app.toolkit.numbers import clamp
+from app.toolkit.parsing import parse_semver
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.validation import is_email
 
@@ -27,4 +28,5 @@ __all__ = [
     "base62_encode",
     "md5_hex",
     "is_email",
+    "parse_semver",
 ]

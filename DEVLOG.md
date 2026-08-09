@@ -1184,3 +1184,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement is_email validation, add test, export from toolkit init
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-09T13:59Z — success: (parsing) Implement `parse_semver` in app/toolkit/parsing.py: parse a semantic version into major, minor, patch, and pre-release. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `parse_semver` from app/toolkit/__init__.py.
+
+Implement parse_semver utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
