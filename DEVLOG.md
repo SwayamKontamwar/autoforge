@@ -1287,3 +1287,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 374 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-10T21:59Z — success: (files) Implement `human_path` in app/toolkit/files.py: shorten a filesystem path with a home tilde and ellipsis. Add a pytest in tests/toolkit/test_files.py covering the documented behaviour and at least one edge case, and export `human_path` from app/toolkit/__init__.py.
+
+Implement human_path utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
