@@ -1243,3 +1243,9 @@ FAILED tests/toolkit/test_textsearch.py::test_fuzzy_ratio_typical_case - Asserti
 2 failed, 374 passed, 22 warnings in 39.67s
 
 ```
+
+## 2026-08-10T14:33Z — success: (textsearch) Implement `fuzzy_ratio` in app/toolkit/textsearch.py: return a 0-100 similarity ratio between two strings. Add a pytest in tests/toolkit/test_textsearch.py covering the documented behaviour and at least one edge case, and export `fuzzy_ratio` from app/toolkit/__init__.py.
+
+Implement fuzzy_ratio with Levenshtein similarity and add tests and export
+
+Guardrail: ruff + import + pytest passed.

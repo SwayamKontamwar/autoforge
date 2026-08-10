@@ -19,6 +19,7 @@ from app.toolkit.parsing import parse_semver
 from app.toolkit.randomness import random_string
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.structures import LRUCache
+from app.toolkit.textsearch import fuzzy_ratio
 from app.toolkit.validation import is_email
 
 __all__ = [
@@ -35,4 +36,5 @@ __all__ = [
     "LRUCache",
     "binary_search",
     "random_string",
+    "fuzzy_ratio",
 ]
