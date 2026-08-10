@@ -1208,3 +1208,38 @@ Guardrail: ruff + import + pytest passed.
 Implement random_string utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-10T09:02Z — failed: (textsearch) Implement `fuzzy_ratio` in app/toolkit/textsearch.py: return a 0-100 similarity ratio between two strings. Add a pytest in tests/toolkit/test_textsearch.py covering the documented behaviour and at least one edge case, and export `fuzzy_ratio` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+o/tests/test_route_precedence.py:22: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app()
+  
+  tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_textsearch.py::test_fuzzy_ratio_typical_case - AssertionError: assert 62 == 57
+   +  where 62 = fuzzy_ratio('kitten', 'sitting')
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...kitten\', \'sitting\')\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_textsearch.py::test_fuzzy_ratio_typical_case - AssertionError: assert 62 == 57
+ +  where 62 = fuzzy_ratio('kitten', 'sitting')
+2 failed, 374 passed, 22 warnings in 39.67s
+
+```
