@@ -1293,3 +1293,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement human_path utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-11T03:57Z — success: (net) Implement `build_query` in app/toolkit/net.py: build a query string from a dict, skipping None values. Add a pytest in tests/toolkit/test_net.py covering the documented behaviour and at least one edge case, and export `build_query` from app/toolkit/__init__.py.
+
+Implement build_query utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

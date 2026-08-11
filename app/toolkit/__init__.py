@@ -15,6 +15,7 @@ from app.toolkit.encoding import base62_encode
 from app.toolkit.files import human_path
 from app.toolkit.functional import compose
 from app.toolkit.hashing import md5_hex
+from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp
 from app.toolkit.parsing import parse_semver
 from app.toolkit.randomness import random_string
@@ -39,4 +40,5 @@ __all__ = [
     "random_string",
     "fuzzy_ratio",
     "human_path",
+    "build_query",
 ]
