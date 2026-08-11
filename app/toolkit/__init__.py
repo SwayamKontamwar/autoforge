@@ -15,6 +15,7 @@ from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
 from app.toolkit.files import human_path
 from app.toolkit.functional import compose
+from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
 from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp
@@ -45,4 +46,5 @@ __all__ = [
     "build_query",
     "hex_to_rgb",
     "celsius_to_fahrenheit",
+    "distance_2d",
 ]

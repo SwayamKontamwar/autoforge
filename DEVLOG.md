@@ -1311,3 +1311,9 @@ Guardrail: ruff + import + pytest passed.
 Implement celsius_to_fahrenheit utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-11T18:13Z — success: (geometry) Implement `distance_2d` in app/toolkit/geometry.py: return the Euclidean distance between two points. Add a pytest in tests/toolkit/test_geometry.py covering the documented behaviour and at least one edge case, and export `distance_2d` from app/toolkit/__init__.py.
+
+Implement Euclidean distance utility and export it with tests
+
+Guardrail: ruff + import + pytest passed.
