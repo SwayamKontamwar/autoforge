@@ -3,7 +3,7 @@
 Each backlog item adds one small, well‑specified, independently tested utility to
 a module here and exports it below. Starting from a single seed (``slugify``),
 the collection is designed to expand indefinitely: strings, numbers, dates,
-collections, encoding, validation, data structures, algorithms, and more.
+collections, encoding, validation, data, structures, algorithms, and more.
 """
 
 from __future__ import annotations
@@ -23,6 +23,7 @@ from app.toolkit.randomness import random_string
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.structures import LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
+from app.toolkit.units import celsius_to_fahrenheit
 from app.toolkit.validation import is_email
 
 __all__ = [
@@ -43,4 +44,5 @@ __all__ = [
     "human_path",
     "build_query",
     "hex_to_rgb",
+    "celsius_to_fahrenheit",
 ]

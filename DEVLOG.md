@@ -1305,3 +1305,9 @@ Guardrail: ruff + import + pytest passed.
 Add hex_to_rgb utility, export it, and test conversion and errors
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-11T14:33Z — success: (units) Implement `celsius_to_fahrenheit` in app/toolkit/units.py: convert Celsius to Fahrenheit. Add a pytest in tests/toolkit/test_units.py covering the documented behaviour and at least one edge case, and export `celsius_to_fahrenheit` from app/toolkit/__init__.py.
+
+Implement celsius_to_fahrenheit utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
