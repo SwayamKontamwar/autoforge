@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from app.toolkit.algorithms import binary_search
 from app.toolkit.collections import chunk
+from app.toolkit.colors import hex_to_rgb
 from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
 from app.toolkit.files import human_path
@@ -41,4 +42,5 @@ __all__ = [
     "fuzzy_ratio",
     "human_path",
     "build_query",
+    "hex_to_rgb",
 ]

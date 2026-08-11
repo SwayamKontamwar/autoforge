@@ -1299,3 +1299,9 @@ Guardrail: ruff + import + pytest passed.
 Implement build_query utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-11T08:37Z — success: (colors) Implement `hex_to_rgb` in app/toolkit/colors.py: convert a hex colour to an r,g,b tuple. Add a pytest in tests/toolkit/test_colors.py covering the documented behaviour and at least one edge case, and export `hex_to_rgb` from app/toolkit/__init__.py.
+
+Add hex_to_rgb utility, export it, and test conversion and errors
+
+Guardrail: ruff + import + pytest passed.
