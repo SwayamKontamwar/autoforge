@@ -14,6 +14,7 @@ from app.toolkit.colors import hex_to_rgb
 from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
 from app.toolkit.files import human_path
+from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose
 from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
@@ -47,4 +48,5 @@ __all__ = [
     "hex_to_rgb",
     "celsius_to_fahrenheit",
     "distance_2d",
+    "compound_interest",
 ]

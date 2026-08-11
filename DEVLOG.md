@@ -1317,3 +1317,9 @@ Guardrail: ruff + import + pytest passed.
 Implement Euclidean distance utility and export it with tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-11T22:06Z — success: (finance) Implement `compound_interest` in app/toolkit/finance.py: compute the future value with compound interest. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `compound_interest` from app/toolkit/__init__.py.
+
+Implement compound_interest utility and tests, export from toolkit init
+
+Guardrail: ruff + import + pytest passed.
