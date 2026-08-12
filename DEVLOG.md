@@ -1373,3 +1373,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement retry decorator with tests and export it
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-12T18:14Z — success: (cli) Implement `parse_args_simple` in app/toolkit/cli.py: parse a list of --key value CLI args into a dict. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `parse_args_simple` from app/toolkit/__init__.py.
+
+Implement parse_args_simple CLI parser, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
