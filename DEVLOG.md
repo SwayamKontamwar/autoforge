@@ -1367,3 +1367,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 401 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-12T14:33Z — success: (resilience) Implement `retry` in app/toolkit/resilience.py: a decorator retrying on exception with configurable attempts. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `retry` from app/toolkit/__init__.py.
+
+Implement retry decorator with tests and export it
+
+Guardrail: ruff + import + pytest passed.
