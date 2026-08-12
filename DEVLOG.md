@@ -1379,3 +1379,37 @@ Guardrail: ruff + import + pytest passed.
 Implement parse_args_simple CLI parser, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-12T22:04Z — failed: (webframework) Implement `Router` in app/toolkit/webframework.py: a minimal path router matching methods and patterns to handlers. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `Router` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+lease use `examples` instead
+      app = create_app()
+  
+  tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_webframework.py::test_static_and_parameterised_routes - re.error: unbalanced parenthesis at position 22
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...nthesis at position 22\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_webframework.py::test_static_and_parameterised_routes - re.error: unbalanced parenthesis at position 22
+FAILED tests/toolkit/test_webframework.py::test_precedence_static_over_param_when_added_later - re.error: unbalanced parenthesis at position 24
+3 failed, 406 passed, 22 warnings in 40.01s
+
+```
