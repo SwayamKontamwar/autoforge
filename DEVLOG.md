@@ -1323,3 +1323,9 @@ Guardrail: ruff + import + pytest passed.
 Implement compound_interest utility and tests, export from toolkit init
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-12T04:19Z — success: (config) Implement `get_env_bool` in app/toolkit/config.py: read a boolean environment variable with a default. Add a pytest in tests/toolkit/test_config.py covering the documented behaviour and at least one edge case, and export `get_env_bool` from app/toolkit/__init__.py.
+
+Implement get_env_bool utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
