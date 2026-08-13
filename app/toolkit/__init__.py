@@ -26,6 +26,7 @@ from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
 from app.toolkit.randomness import random_string
 from app.toolkit.resilience import retry
+from app.toolkit.security import constant_time_equals
 from app.toolkit.serialization import to_jsonl
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.structures import LRUCache
@@ -61,4 +62,5 @@ __all__ = [
     "Router",
     "Stopwatch",
     "to_jsonl",
+    "constant_time_equals",
 ]

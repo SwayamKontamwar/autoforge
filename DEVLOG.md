@@ -1464,3 +1464,9 @@ Guardrail: ruff + import + pytest passed.
 Implement to_jsonl serialization, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-13T22:04Z — success: (security) Implement `constant_time_equals` in app/toolkit/security.py: compare two strings in constant time. Add a pytest in tests/toolkit/test_security.py covering the documented behaviour and at least one edge case, and export `constant_time_equals` from app/toolkit/__init__.py.
+
+Implement constant_time_equals utility with tests and export
+
+Guardrail: ruff + import + pytest passed.
