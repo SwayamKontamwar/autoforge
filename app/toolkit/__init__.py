@@ -22,6 +22,7 @@ from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
 from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp
+from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
 from app.toolkit.randomness import random_string
 from app.toolkit.resilience import retry
@@ -57,4 +58,5 @@ __all__ = [
     "retry",
     "parse_args_simple",
     "Router",
+    "Stopwatch",
 ]

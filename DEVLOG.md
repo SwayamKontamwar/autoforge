@@ -1452,3 +1452,9 @@ FAILED tests/toolkit/test_observability.py::test_stopwatch_edge_cases - assert (
 2 failed, 409 passed, 22 warnings in 41.85s
 
 ```
+
+## 2026-08-13T14:34Z — success: (observability) Implement `Stopwatch` in app/toolkit/observability.py: a start/stop stopwatch reporting elapsed seconds. Add a pytest in tests/toolkit/test_observability.py covering the documented behaviour and at least one edge case, and export `Stopwatch` from app/toolkit/__init__.py.
+
+Implement Stopwatch utility with start/stop, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
