@@ -1413,3 +1413,9 @@ FAILED tests/toolkit/test_webframework.py::test_precedence_static_over_param_whe
 3 failed, 406 passed, 22 warnings in 40.01s
 
 ```
+
+## 2026-08-13T04:23Z — success: (webframework) Implement `Router` in app/toolkit/webframework.py: a minimal path router matching methods and patterns to handlers. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `Router` from app/toolkit/__init__.py.
+
+Implement minimal Router with method/path matching, add tests, export Router
+
+Guardrail: ruff + import + pytest passed.
