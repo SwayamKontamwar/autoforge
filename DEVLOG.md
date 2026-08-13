@@ -1458,3 +1458,9 @@ FAILED tests/toolkit/test_observability.py::test_stopwatch_edge_cases - assert (
 Implement Stopwatch utility with start/stop, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-13T18:14Z — success: (serialization) Implement `to_jsonl` in app/toolkit/serialization.py: serialise an iterable of objects to JSON Lines text. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `to_jsonl` from app/toolkit/__init__.py.
+
+Implement to_jsonl serialization, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

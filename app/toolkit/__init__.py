@@ -26,6 +26,7 @@ from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
 from app.toolkit.randomness import random_string
 from app.toolkit.resilience import retry
+from app.toolkit.serialization import to_jsonl
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.structures import LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
@@ -59,4 +60,5 @@ __all__ = [
     "parse_args_simple",
     "Router",
     "Stopwatch",
+    "to_jsonl",
 ]
