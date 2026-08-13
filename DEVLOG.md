@@ -1419,3 +1419,36 @@ FAILED tests/toolkit/test_webframework.py::test_precedence_static_over_param_whe
 Implement minimal Router with method/path matching, add tests, export Router
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-13T08:55Z — failed: (observability) Implement `Stopwatch` in app/toolkit/observability.py: a start/stop stopwatch reporting elapsed seconds. Add a pytest in tests/toolkit/test_observability.py covering the documented behaviour and at least one edge case, and export `Stopwatch` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+sts/test_route_precedence.py:22: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app()
+  
+  tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_observability.py::test_stopwatch_edge_cases - assert (0.0100748779999833 < 4.523100000142222e-05 or 4.523100000142222e-05 == 0.0)
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...0000142222e-05 == 0.0)\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_observability.py::test_stopwatch_edge_cases - assert (0.010091487000011057 < 4.37470000065332e-05 or 4.37470000065332e-05 == 0.0)
+2 failed, 409 passed, 22 warnings in 41.85s
+
+```
