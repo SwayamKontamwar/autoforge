@@ -29,6 +29,7 @@ from app.toolkit.randomness import random_string
 from app.toolkit.resilience import retry
 from app.toolkit.security import constant_time_equals
 from app.toolkit.serialization import to_jsonl
+from app.toolkit.streams import batched
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.structures import LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
@@ -65,4 +66,5 @@ __all__ = [
     "to_jsonl",
     "constant_time_equals",
     "set_bit",
+    "batched",
 ]

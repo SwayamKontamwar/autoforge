@@ -1476,3 +1476,9 @@ Guardrail: ruff + import + pytest passed.
 Implement set_bit utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-14T08:48Z — success: (streams) Implement `batched` in app/toolkit/streams.py: yield tuples of up to n items from an iterable. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `batched` from app/toolkit/__init__.py.
+
+Implement batched utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
