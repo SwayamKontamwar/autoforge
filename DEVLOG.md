@@ -1470,3 +1470,9 @@ Guardrail: ruff + import + pytest passed.
 Implement constant_time_equals utility with tests and export
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-14T04:20Z — success: (bits) Implement `set_bit` in app/toolkit/bits.py: return an integer with the bit at a position set. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `set_bit` from app/toolkit/__init__.py.
+
+Implement set_bit utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
