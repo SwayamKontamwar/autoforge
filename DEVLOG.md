@@ -1488,3 +1488,9 @@ Guardrail: ruff + import + pytest passed.
 Implement hypot utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-14T18:12Z — success: (matrix) Implement `mat_zeros` in app/toolkit/matrix.py: build a matrix of zeros with given dimensions. Add a pytest in tests/toolkit/test_matrix.py covering the documented behaviour and at least one edge case, and export `mat_zeros` from app/toolkit/__init__.py.
+
+Implement mat_zeros matrix builder, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
