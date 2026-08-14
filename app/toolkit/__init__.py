@@ -21,6 +21,7 @@ from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose
 from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
+from app.toolkit.mathx import hypot
 from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp
 from app.toolkit.observability import Stopwatch
@@ -67,4 +68,5 @@ __all__ = [
     "constant_time_equals",
     "set_bit",
     "batched",
+    "hypot",
 ]

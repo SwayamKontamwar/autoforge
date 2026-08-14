@@ -1482,3 +1482,9 @@ Guardrail: ruff + import + pytest passed.
 Implement batched utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-14T14:21Z — success: (mathx) Implement `hypot` in app/toolkit/mathx.py: return the Euclidean norm of several components. Add a pytest in tests/toolkit/test_mathx.py covering the documented behaviour and at least one edge case, and export `hypot` from app/toolkit/__init__.py.
+
+Implement hypot utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
