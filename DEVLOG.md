@@ -1550,3 +1550,41 @@ Guardrail: ruff + import + pytest passed.
 Implement nth_permutation utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-15T17:43Z — failed: (probability) Implement `binomial_pmf` in app/toolkit/probability.py: evaluate the binomial probability mass function. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `binomial_pmf` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+test_openapi_descriptions.py::test_openapi_post_links_example
+  /home/runner/work/autoforge/autoforge/tests/test_openapi_descriptions.py:12: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app(), follow_redirects=False)
+
+tests/test_request_logging.py::test_request_logging_middleware_logs_method_path_status
+  /home/runner/work/autoforge/autoforge/tests/test_request_logging.py:14: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app()
+
+tests/test_route_precedence.py::test_a_static_route_declared_after_the_catch_all_still_resolves
+  /home/runner/work/autoforge/autoforge/tests/test_route_precedence.py:22: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app()
+
+tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+  /home/runner/work/autoforge/autoforge/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app())
+
+tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+  /home/runner/work/autoforge/autoforge/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    response = TestClient(create_app()).get("/definitely-not-a-code")
+
+tests/test_url_length.py::test_create_link_rejects_overly_long_url
+  /home/runner/work/autoforge/autoforge/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app(max_url_length=10)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+434 passed, 22 warnings in 40.47s
+
+$ test-suite check
+Rejected: the patch changed production code under app/ but the suite still collects 434 tests, so nothing new proves the work. Add a test that fails without this change.
+
+```
