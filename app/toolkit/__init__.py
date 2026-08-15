@@ -31,6 +31,7 @@ from app.toolkit.randomness import random_string
 from app.toolkit.resilience import retry
 from app.toolkit.security import constant_time_equals
 from app.toolkit.serialization import to_jsonl
+from app.toolkit.stats import geometric_mean
 from app.toolkit.streams import batched
 from app.toolkit.strings import slugify, truncate
 from app.toolkit.structures import LRUCache
@@ -71,4 +72,5 @@ __all__ = [
     "batched",
     "hypot",
     "mat_zeros",
+    "geometric_mean",
 ]

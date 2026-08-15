@@ -1532,3 +1532,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 428 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-15T03:08Z — success: (stats) Implement `geometric_mean` in app/toolkit/stats.py: return the geometric mean of positive numbers. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `geometric_mean` from app/toolkit/__init__.py.
+
+Add geometric_mean implementation, export it, and test its behavior
+
+Guardrail: ruff + import + pytest passed.
