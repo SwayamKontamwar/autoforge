@@ -1588,3 +1588,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 434 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-15T21:36Z — success: (probability) Implement `binomial_pmf` in app/toolkit/probability.py: evaluate the binomial probability mass function. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `binomial_pmf` from app/toolkit/__init__.py.
+
+Implement binomial_pmf, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

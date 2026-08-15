@@ -29,6 +29,7 @@ from app.toolkit.numbers import clamp
 from app.toolkit.numbertheory import euler_totient
 from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
+from app.toolkit.probability import binomial_pmf
 from app.toolkit.randomness import random_string
 from app.toolkit.resilience import retry
 from app.toolkit.security import constant_time_equals
@@ -77,4 +78,5 @@ __all__ = [
     "mat_zeros",
     "geometric_mean",
     "nth_permutation",
+    "binomial_pmf",
 ]
