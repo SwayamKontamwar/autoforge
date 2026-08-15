@@ -25,6 +25,7 @@ from app.toolkit.mathx import hypot
 from app.toolkit.matrix import mat_zeros
 from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp
+from app.toolkit.numbertheory import euler_totient
 from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
 from app.toolkit.randomness import random_string
@@ -44,6 +45,7 @@ __all__ = [
     "slugify",
     "truncate",
     "clamp",
+    "euler_totient",
     "parse_iso",
     "chunk",
     "compose",

@@ -1538,3 +1538,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Add geometric_mean implementation, export it, and test its behavior
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-15T07:59Z — success: (numbertheory) Implement `euler_totient` in app/toolkit/numbertheory.py: return Euler's totient of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `euler_totient` from app/toolkit/__init__.py.
+
+Implement Euler's totient function, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
