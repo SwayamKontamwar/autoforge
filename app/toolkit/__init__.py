@@ -13,6 +13,7 @@ from app.toolkit.bits import set_bit
 from app.toolkit.cli import parse_args_simple
 from app.toolkit.collections import chunk
 from app.toolkit.colors import hex_to_rgb
+from app.toolkit.combinatorics import nth_permutation
 from app.toolkit.config import get_env_bool
 from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
@@ -75,4 +76,5 @@ __all__ = [
     "hypot",
     "mat_zeros",
     "geometric_mean",
+    "nth_permutation",
 ]

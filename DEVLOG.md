@@ -1544,3 +1544,9 @@ Guardrail: ruff + import + pytest passed.
 Implement Euler's totient function, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-15T13:44Z — success: (combinatorics) Implement `nth_permutation` in app/toolkit/combinatorics.py: return the nth lexicographic permutation of a sequence. Add a pytest in tests/toolkit/test_combinatorics.py covering the documented behaviour and at least one edge case, and export `nth_permutation` from app/toolkit/__init__.py.
+
+Implement nth_permutation utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
