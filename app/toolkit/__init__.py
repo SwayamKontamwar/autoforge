@@ -31,6 +31,7 @@ from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
 from app.toolkit.probability import binomial_pmf
 from app.toolkit.randomness import random_string
+from app.toolkit.regexutil import extract_emails
 from app.toolkit.resilience import retry
 from app.toolkit.security import constant_time_equals
 from app.toolkit.serialization import to_jsonl
@@ -79,4 +80,5 @@ __all__ = [
     "geometric_mean",
     "nth_permutation",
     "binomial_pmf",
+    "extract_emails",
 ]

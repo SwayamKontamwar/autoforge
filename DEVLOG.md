@@ -1594,3 +1594,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement binomial_pmf, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-16T03:15Z — success: (regexutil) Implement `extract_emails` in app/toolkit/regexutil.py: return all email addresses found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_emails` from app/toolkit/__init__.py.
+
+Implement extract_emails utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
