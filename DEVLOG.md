@@ -1628,3 +1628,9 @@ E741 Ambiguous variable name: `l`
 Found 1 error.
 
 ```
+
+## 2026-08-16T17:41Z — success: (calendars) Implement `easter_date` in app/toolkit/calendars.py: return the date of Easter Sunday for a year. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `easter_date` from app/toolkit/__init__.py.
+
+Implement easter_date, export it, add tests, fix ruff naming
+
+Guardrail: ruff + import + pytest passed.
