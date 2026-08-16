@@ -1606,3 +1606,25 @@ Guardrail: ruff + import + pytest passed.
 Implement md_bold utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-16T13:45Z — failed: (calendars) Implement `easter_date` in app/toolkit/calendars.py: return the date of Easter Sunday for a year. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `easter_date` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+E741 Ambiguous variable name: `l`
+  --> app/toolkit/calendars.py:30:5
+   |
+28 |     i = c // 4
+29 |     k = c % 4
+30 |     l = (32 + 2 * e + 2 * i - h - k) % 7
+   |     ^
+31 |     m = (a + 11 * h + 22 * l) // 451
+32 |     month = (h + l - 7 * m + 114) // 31
+   |
+
+Found 1 error.
+
+```

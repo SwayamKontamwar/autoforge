@@ -1,4 +1,7 @@
 {
+  "(calendars) Implement `easter_date` in app/toolkit/calendars.py: return the date of Easter Sunday for a year. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `easter_date` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "(calendars) Implement `easter_date` in app/toolkit/calendars.py: return the date of Easter Sunday for a year. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `easter_date` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\nE741 Ambiguous variable name: `l`\n  --> app/toolkit/calendars.py:30:5\n   |\n28 |     i = c // 4\n29 |     k = c % 4\n30 |     l = (32 + 2 * e + 2 * i - h - k) % 7\n   |     ^\n31 |     m = (a + 11 * h + 22 * l) // 451\n32 |     month = (h + l - 7 * m + 114) // 31\n   |\n\nFound 1 error.\n"
+  }
 }
