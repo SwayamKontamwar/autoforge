@@ -1600,3 +1600,9 @@ Guardrail: ruff + import + pytest passed.
 Implement extract_emails utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-16T07:59Z — success: (markdown) Implement `md_bold` in app/toolkit/markdown.py: wrap text in markdown bold markers. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_bold` from app/toolkit/__init__.py.
+
+Implement md_bold utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
