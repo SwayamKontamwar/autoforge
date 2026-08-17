@@ -15,6 +15,7 @@ from app.toolkit.cli import parse_args_simple
 from app.toolkit.collections import chunk
 from app.toolkit.colors import hex_to_rgb
 from app.toolkit.combinatorics import nth_permutation
+from app.toolkit.compression import rle_bytes_encode
 from app.toolkit.config import get_env_bool
 from app.toolkit.datetimes import parse_iso
 from app.toolkit.encoding import base62_encode
@@ -91,4 +92,5 @@ __all__ = [
     "plural_rule_en",
     "v3_add",
     "kinetic_energy",
+    "rle_bytes_encode",
 ]
