@@ -32,6 +32,7 @@ from app.toolkit.numbers import clamp
 from app.toolkit.numbertheory import euler_totient
 from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
+from app.toolkit.physics import kinetic_energy
 from app.toolkit.probability import binomial_pmf
 from app.toolkit.randomness import random_string
 from app.toolkit.regexutil import extract_emails
@@ -89,4 +90,5 @@ __all__ = [
     "easter_date",
     "plural_rule_en",
     "v3_add",
+    "kinetic_energy",
 ]

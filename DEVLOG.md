@@ -1729,3 +1729,9 @@ FAILED tests/toolkit/test_vectors3d.py::test_v3_add_typical - assert (2.0, 1.000
 Implement v3_add, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-17T17:51Z — success: (physics) Implement `kinetic_energy` in app/toolkit/physics.py: compute kinetic energy from mass and velocity. Add a pytest in tests/toolkit/test_physics.py covering the documented behaviour and at least one edge case, and export `kinetic_energy` from app/toolkit/__init__.py.
+
+Implement kinetic_energy function, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
