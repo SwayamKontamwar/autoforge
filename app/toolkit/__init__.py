@@ -23,6 +23,7 @@ from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose
 from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
+from app.toolkit.i18n import plural_rule_en
 from app.toolkit.markdown import md_bold
 from app.toolkit.mathx import hypot
 from app.toolkit.matrix import mat_zeros
@@ -85,4 +86,5 @@ __all__ = [
     "extract_emails",
     "md_bold",
     "easter_date",
+    "plural_rule_en",
 ]

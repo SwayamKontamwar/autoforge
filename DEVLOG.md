@@ -1668,3 +1668,9 @@ FAILED tests/toolkit/test_i18n.py::test_plural_rule_en_type_error - Failed: DID 
 2 failed, 447 passed, 22 warnings in 39.53s
 
 ```
+
+## 2026-08-17T03:16Z — success: (i18n) Implement `plural_rule_en` in app/toolkit/i18n.py: return one or other for an English plural given a count. Add a pytest in tests/toolkit/test_i18n.py covering the documented behaviour and at least one edge case, and export `plural_rule_en` from app/toolkit/__init__.py.
+
+Implement English plural rule utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
