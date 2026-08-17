@@ -1674,3 +1674,52 @@ FAILED tests/toolkit/test_i18n.py::test_plural_rule_en_type_error - Failed: DID 
 Implement English plural rule utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-17T08:25Z — failed: (vectors3d) Implement `v3_add` in app/toolkit/vectors3d.py: add two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_add` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_vectors3d.py::test_v3_add_typical - assert (2.0, 1.0000000000000002, 0.0) == (2.0, 1.0, 0.0)
+    
+    At index 1 diff: 1.0000000000000002 != 1.0
+    
+    Full diff:
+      (
+          2.0,
+    -     1.0,
+    +     1.0000000000000002,
+          0.0,
+      )
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...,\n        0.0,\n    )\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_vectors3d.py::test_v3_add_typical - assert (2.0, 1.0000000000000002, 0.0) == (2.0, 1.0, 0.0)
+  
+  At index 1 diff: 1.0000000000000002 != 1.0
+  
+  Full diff:
+    (
+        2.0,
+  -     1.0,
+  +     1.0000000000000002,
+        0.0,
+    )
+2 failed, 445 passed, 22 warnings in 43.20s
+
+```
