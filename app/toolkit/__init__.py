@@ -45,6 +45,7 @@ from app.toolkit.structures import LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
 from app.toolkit.units import celsius_to_fahrenheit
 from app.toolkit.validation import is_email
+from app.toolkit.vectors3d import v3_add
 from app.toolkit.webframework import Router
 
 __all__ = [
@@ -87,4 +88,5 @@ __all__ = [
     "md_bold",
     "easter_date",
     "plural_rule_en",
+    "v3_add",
 ]

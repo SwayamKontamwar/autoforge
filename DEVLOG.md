@@ -1723,3 +1723,9 @@ FAILED tests/toolkit/test_vectors3d.py::test_v3_add_typical - assert (2.0, 1.000
 2 failed, 445 passed, 22 warnings in 43.20s
 
 ```
+
+## 2026-08-17T13:54Z — success: (vectors3d) Implement `v3_add` in app/toolkit/vectors3d.py: add two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_add` from app/toolkit/__init__.py.
+
+Implement v3_add, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
