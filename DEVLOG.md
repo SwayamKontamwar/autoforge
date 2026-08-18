@@ -1793,3 +1793,7 @@ FAILED tests/toolkit/test_graphx.py::test_bellman_ford_typical - assert 3 == 4
 2 failed, 459 passed, 22 warnings in 42.80s
 
 ```
+
+## 2026-08-18T21:39Z — rejected: (graphx) Implement `bellman_ford` in app/toolkit/graphx.py: compute shortest paths allowing negative edges or detect a cycle. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `bellman_ford` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
