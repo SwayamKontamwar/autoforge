@@ -1753,3 +1753,9 @@ Guardrail: ruff + import + pytest passed.
 Implement next_cron_time utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-18T13:57Z — success: (statemachine) Implement `StateMachine` in app/toolkit/statemachine.py: a state machine with states, transitions, and a current state. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `StateMachine` from app/toolkit/__init__.py.
+
+Implement StateMachine utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

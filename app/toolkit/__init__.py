@@ -42,6 +42,7 @@ from app.toolkit.resilience import retry
 from app.toolkit.scheduling import next_cron_time
 from app.toolkit.security import constant_time_equals
 from app.toolkit.serialization import to_jsonl
+from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean
 from app.toolkit.streams import batched
 from app.toolkit.strings import slugify, truncate
@@ -97,4 +98,5 @@ __all__ = [
     "rle_bytes_encode",
     "ppm_new",
     "next_cron_time",
+    "StateMachine",
 ]
