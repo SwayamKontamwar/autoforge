@@ -1759,3 +1759,37 @@ Guardrail: ruff + import + pytest passed.
 Implement StateMachine utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-18T17:51Z — failed: (graphx) Implement `bellman_ford` in app/toolkit/graphx.py: compute shortest paths allowing negative edges or detect a cycle. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `bellman_ford` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+_precedence.py::test_a_static_route_declared_after_the_catch_all_still_resolves
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:22: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app()
+  
+  tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_graphx.py::test_bellman_ford_typical - assert 3 == 4
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.15/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...ypical - assert 3 == 4\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_graphx.py::test_bellman_ford_typical - assert 3 == 4
+2 failed, 459 passed, 22 warnings in 42.80s
+
+```
