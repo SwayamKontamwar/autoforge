@@ -1747,3 +1747,9 @@ Guardrail: ruff + import + pytest passed.
 Implement ppm_new utility, add export, and create tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-18T08:07Z — success: (scheduling) Implement `next_cron_time` in app/toolkit/scheduling.py: return the next datetime matching a cron expression. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `next_cron_time` from app/toolkit/__init__.py.
+
+Implement next_cron_time utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

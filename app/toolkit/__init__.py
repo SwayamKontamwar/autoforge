@@ -39,6 +39,7 @@ from app.toolkit.probability import binomial_pmf
 from app.toolkit.randomness import random_string
 from app.toolkit.regexutil import extract_emails
 from app.toolkit.resilience import retry
+from app.toolkit.scheduling import next_cron_time
 from app.toolkit.security import constant_time_equals
 from app.toolkit.serialization import to_jsonl
 from app.toolkit.stats import geometric_mean
@@ -95,4 +96,5 @@ __all__ = [
     "kinetic_energy",
     "rle_bytes_encode",
     "ppm_new",
+    "next_cron_time",
 ]
