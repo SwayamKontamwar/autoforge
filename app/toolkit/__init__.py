@@ -25,6 +25,7 @@ from app.toolkit.functional import compose
 from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
 from app.toolkit.i18n import plural_rule_en
+from app.toolkit.imageppm import ppm_new
 from app.toolkit.markdown import md_bold
 from app.toolkit.mathx import hypot
 from app.toolkit.matrix import mat_zeros
@@ -93,4 +94,5 @@ __all__ = [
     "v3_add",
     "kinetic_energy",
     "rle_bytes_encode",
+    "ppm_new",
 ]

@@ -1741,3 +1741,9 @@ Guardrail: ruff + import + pytest passed.
 Implement rle_bytes_encode, add export, and create comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-18T03:12Z — success: (imageppm) Implement `ppm_new` in app/toolkit/imageppm.py: create a blank RGB pixel grid of a width and height. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_new` from app/toolkit/__init__.py.
+
+Implement ppm_new utility, add export, and create tests
+
+Guardrail: ruff + import + pytest passed.
