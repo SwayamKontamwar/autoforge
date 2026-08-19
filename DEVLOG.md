@@ -1835,3 +1835,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 458 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-19T08:08Z — success: (ml) Implement `euclidean_knn` in app/toolkit/ml.py: classify a point by k nearest neighbours. Add a pytest in tests/toolkit/test_ml.py covering the documented behaviour and at least one edge case, and export `euclidean_knn` from app/toolkit/__init__.py.
+
+Implement euclidean_knn, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

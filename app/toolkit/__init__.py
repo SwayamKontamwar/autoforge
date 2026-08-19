@@ -29,6 +29,7 @@ from app.toolkit.imageppm import ppm_new
 from app.toolkit.markdown import md_bold
 from app.toolkit.mathx import hypot
 from app.toolkit.matrix import mat_zeros
+from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp
 from app.toolkit.numbertheory import euler_totient
@@ -99,4 +100,5 @@ __all__ = [
     "ppm_new",
     "next_cron_time",
     "StateMachine",
+    "euclidean_knn",
 ]
