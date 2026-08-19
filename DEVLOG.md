@@ -1853,3 +1853,9 @@ Guardrail: ruff + import + pytest passed.
 Implement word_wrap utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-19T21:42Z — success: (numbers) Implement `lerp` in app/toolkit/numbers.py: linearly interpolate between two numbers by a fraction. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `lerp` from app/toolkit/__init__.py.
+
+Implement lerp function, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

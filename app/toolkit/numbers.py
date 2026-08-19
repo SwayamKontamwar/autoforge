@@ -2,6 +2,7 @@
 
 Currently provides:
 * ``clamp`` – constrain a numeric value to an inclusive ``min_``/``max_`` range.
+* ``lerp`` – linearly interpolate between two numbers by a fraction.
 """
 
 from __future__ import annotations
@@ -35,4 +36,22 @@ def clamp(value: Number, min_: Number, max_: Number) -> Number:
     return value
 
 
-__all__ = ["clamp"]
+def lerp(start: Number, end: Number, fraction: Number) -> Number:
+    """Linearly interpolate between ``start`` and ``end`` by ``fraction``.
+
+    The result is ``start + (end - start) * fraction``.  ``fraction`` may be
+    outside the ``[0, 1]`` interval; values less than 0 extrapolate before
+    ``start`` and values greater than 1 extrapolate beyond ``end``.
+
+    Args:
+        start: The starting numeric value.
+        end: The ending numeric value.
+        fraction: The interpolation fraction.
+
+    Returns:
+        The interpolated numeric value.
+    """
+    return start + (end - start) * fraction
+
+
+__all__ = ["clamp", "lerp"]

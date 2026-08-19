@@ -32,7 +32,7 @@ from app.toolkit.mathx import hypot
 from app.toolkit.matrix import mat_zeros
 from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query
-from app.toolkit.numbers import clamp
+from app.toolkit.numbers import clamp, lerp
 from app.toolkit.numbertheory import euler_totient
 from app.toolkit.observability import Stopwatch
 from app.toolkit.parsing import parse_semver
@@ -60,6 +60,7 @@ __all__ = [
     "truncate",
     "word_wrap",
     "clamp",
+    "lerp",
     "euler_totient",
     "parse_iso",
     "chunk",
