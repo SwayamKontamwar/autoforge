@@ -47,7 +47,7 @@ from app.toolkit.serialization import to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean
 from app.toolkit.streams import batched
-from app.toolkit.strings import slugify, truncate
+from app.toolkit.strings import slugify, truncate, word_wrap
 from app.toolkit.structures import LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
 from app.toolkit.units import celsius_to_fahrenheit
@@ -58,6 +58,7 @@ from app.toolkit.webframework import Router
 __all__ = [
     "slugify",
     "truncate",
+    "word_wrap",
     "clamp",
     "euler_totient",
     "parse_iso",

@@ -35,3 +35,28 @@ def truncate(text: str, max_length: int) -> str:
     if cut_len < 0:
         cut_len = 0
     return text[:cut_len] + "…"
+
+
+def word_wrap(text: str, width: int) -> str:
+    """Wrap *text* to lines of at most *width* characters without breaking words.
+
+    Returns a string containing the wrapped lines separated by newline characters.
+    If *width* is less than or equal to zero, an empty string is returned.
+    Words longer than *width* are placed on a line by themselves.
+    """
+    if width <= 0:
+        return ""
+    words = text.split()
+    if not words:
+        return ""
+    lines: list[str] = []
+    current = words[0]
+    for word in words[1:]:
+        # If adding the next word would exceed the width, start a new line.
+        if len(current) + 1 + len(word) <= width:
+            current += " " + word
+        else:
+            lines.append(current)
+            current = word
+    lines.append(current)
+    return "\n".join(lines)
