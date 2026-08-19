@@ -1797,3 +1797,41 @@ FAILED tests/toolkit/test_graphx.py::test_bellman_ford_typical - assert 3 == 4
 ## 2026-08-18T21:39Z — rejected: (graphx) Implement `bellman_ford` in app/toolkit/graphx.py: compute shortest paths allowing negative edges or detect a cycle. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `bellman_ford` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-08-19T03:15Z — skipped: (graphx) Implement `bellman_ford` in app/toolkit/graphx.py: compute shortest paths allowing negative edges or detect a cycle. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `bellman_ford` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+test_openapi_descriptions.py::test_openapi_post_links_example
+  /home/runner/work/autoforge/autoforge/tests/test_openapi_descriptions.py:12: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app(), follow_redirects=False)
+
+tests/test_request_logging.py::test_request_logging_middleware_logs_method_path_status
+  /home/runner/work/autoforge/autoforge/tests/test_request_logging.py:14: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app()
+
+tests/test_route_precedence.py::test_a_static_route_declared_after_the_catch_all_still_resolves
+  /home/runner/work/autoforge/autoforge/tests/test_route_precedence.py:22: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app()
+
+tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+  /home/runner/work/autoforge/autoforge/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app())
+
+tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+  /home/runner/work/autoforge/autoforge/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    response = TestClient(create_app()).get("/definitely-not-a-code")
+
+tests/test_url_length.py::test_create_link_rejects_overly_long_url
+  /home/runner/work/autoforge/autoforge/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app(max_url_length=10)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+458 passed, 22 warnings in 45.15s
+
+$ test-suite check
+Rejected: the patch changed production code under app/ but the suite still collects 458 tests, so nothing new proves the work. Add a test that fails without this change.
+
+```
