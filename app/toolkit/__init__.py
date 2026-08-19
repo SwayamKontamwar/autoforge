@@ -11,6 +11,7 @@ from __future__ import annotations
 from app.toolkit.algorithms import binary_search
 from app.toolkit.bits import set_bit
 from app.toolkit.calendars import easter_date
+from app.toolkit.checkdigit import upc_check_digit
 from app.toolkit.cli import parse_args_simple
 from app.toolkit.collections import chunk
 from app.toolkit.colors import hex_to_rgb
@@ -101,4 +102,5 @@ __all__ = [
     "next_cron_time",
     "StateMachine",
     "euclidean_knn",
+    "upc_check_digit",
 ]

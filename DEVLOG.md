@@ -1841,3 +1841,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement euclidean_knn, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-19T13:58Z — success: (checkdigit) Implement `upc_check_digit` in app/toolkit/checkdigit.py: compute the UPC-A check digit. Add a pytest in tests/toolkit/test_checkdigit.py covering the documented behaviour and at least one edge case, and export `upc_check_digit` from app/toolkit/__init__.py.
+
+Implement UPC-A check digit utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
