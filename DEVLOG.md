@@ -1871,3 +1871,9 @@ Guardrail: ruff + import + pytest passed.
 Implement flatten utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-20T14:00Z — success: (functional) Implement `pipe` in app/toolkit/functional.py: compose functions left to right. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `pipe` from app/toolkit/__init__.py.
+
+Implement left-to-right pipe function, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

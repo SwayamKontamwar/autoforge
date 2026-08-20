@@ -41,3 +41,38 @@ def compose(*functions: Callable[..., Any]) -> Callable[..., Any]:
         return result
 
     return composed
+
+
+def pipe(*functions: Callable[..., Any]) -> Callable[..., Any]:
+    """Return a function that composes the given callables left‑to‑right.
+
+    ``pipe(f, g, h)(*args, **kwargs)`` is equivalent to
+    ``h(g(f(*args, **kwargs)))``.  If no functions are supplied, the returned
+    callable behaves as an identity function, returning its first positional
+    argument (or ``None`` if called without arguments).
+
+    Args:
+        *functions: Callables to compose.  They are applied from the first
+            argument to the last, i.e. left‑to‑right.
+
+    Returns:
+        A new callable representing the left‑to‑right composition.
+    """
+    if not functions:
+
+        def identity(*args: Any, **kwargs: Any) -> Any:
+            if args:
+                return args[0]
+            return None
+
+        return identity
+
+    def piped(*args: Any, **kwargs: Any) -> Any:
+        # Apply the left‑most function with the original arguments.
+        result = functions[0](*args, **kwargs)
+        # Apply the remaining functions leftwards, each receiving the previous result.
+        for fn in functions[1:]:
+            result = fn(result)
+        return result
+
+    return piped

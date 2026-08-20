@@ -22,7 +22,7 @@ from app.toolkit.datetimes import parse_iso, to_iso
 from app.toolkit.encoding import base62_encode
 from app.toolkit.files import human_path
 from app.toolkit.finance import compound_interest
-from app.toolkit.functional import compose
+from app.toolkit.functional import compose, pipe
 from app.toolkit.geometry import distance_2d
 from app.toolkit.hashing import md5_hex
 from app.toolkit.i18n import plural_rule_en
@@ -67,6 +67,7 @@ __all__ = [
     "chunk",
     "flatten",
     "compose",
+    "pipe",
     "base62_encode",
     "md5_hex",
     "is_email",
