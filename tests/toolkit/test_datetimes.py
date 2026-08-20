@@ -2,7 +2,7 @@
 
 from datetime import datetime, timedelta, timezone
 
-from app.toolkit import parse_iso
+from app.toolkit import parse_iso, to_iso
 
 
 def test_parse_iso_utc_z_suffix():
@@ -28,3 +28,17 @@ def test_parse_iso_naive_assumed_utc():
     result = parse_iso(iso_str)
     assert result == datetime(2023, 1, 2, 3, 4, 5, tzinfo=timezone.utc)
     assert result.tzinfo == timezone.utc
+
+
+def test_to_iso_converts_aware_datetime_to_utc_z():
+    """An aware datetime with a non‑UTC offset should be converted to UTC with a Z suffix."""
+    dt = datetime(2023, 1, 2, 5, 0, 0, tzinfo=timezone(timedelta(hours=2)))
+    iso = to_iso(dt)
+    assert iso == "2023-01-02T03:00:00Z"
+
+
+def test_to_iso_naive_assumed_utc():
+    """A naive datetime is assumed to be UTC and formatted with Z."""
+    dt = datetime(2023, 1, 2, 3, 4, 5)
+    iso = to_iso(dt)
+    assert iso == "2023-01-02T03:04:05Z"

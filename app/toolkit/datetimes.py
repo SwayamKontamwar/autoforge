@@ -3,6 +3,7 @@
 The module currently provides a single public function:
 
 * ``parse_iso`` – Parse an ISO‑8601 string into a timezone‑aware ``datetime``.
+* ``to_iso`` – Format a ``datetime`` as an ISO‑8601 string in UTC.
 """
 
 from __future__ import annotations
@@ -10,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Final
 
-__all__: Final = ["parse_iso"]
+__all__: Final = ["parse_iso", "to_iso"]
 
 
 def parse_iso(value: str) -> datetime:
@@ -43,3 +44,24 @@ def parse_iso(value: str) -> datetime:
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     return dt
+
+
+def to_iso(dt: datetime) -> str:
+    """Return an ISO‑8601 string representing ``dt`` in UTC.
+
+    Naive ``datetime`` objects are assumed to be UTC. Aware objects are
+    converted to UTC before formatting. The resulting string uses the ``Z``
+    suffix to denote UTC.
+
+    Args:
+        dt: The datetime to format.
+
+    Returns:
+        An ISO‑8601 formatted string ending with ``Z``.
+    """
+    if dt.tzinfo is None:
+        utc_dt = dt.replace(tzinfo=timezone.utc)
+    else:
+        utc_dt = dt.astimezone(timezone.utc)
+    # isoformat produces ``+00:00`` for UTC; replace with ``Z`` for brevity.
+    return utc_dt.isoformat().replace("+00:00", "Z")

@@ -1859,3 +1859,9 @@ Guardrail: ruff + import + pytest passed.
 Implement lerp function, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-20T03:13Z — success: (datetimes) Implement `to_iso` in app/toolkit/datetimes.py: format a datetime as an ISO 8601 string in UTC. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `to_iso` from app/toolkit/__init__.py.
+
+Implement to_iso, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
