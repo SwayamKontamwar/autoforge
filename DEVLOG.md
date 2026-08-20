@@ -1865,3 +1865,9 @@ Guardrail: ruff + import + pytest passed.
 Implement to_iso, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-20T08:18Z — success: (collections) Implement `flatten` in app/toolkit/collections.py: flatten one level of nested iterables. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `flatten` from app/toolkit/__init__.py.
+
+Implement flatten utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

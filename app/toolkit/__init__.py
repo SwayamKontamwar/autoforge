@@ -13,7 +13,7 @@ from app.toolkit.bits import set_bit
 from app.toolkit.calendars import easter_date
 from app.toolkit.checkdigit import upc_check_digit
 from app.toolkit.cli import parse_args_simple
-from app.toolkit.collections import chunk
+from app.toolkit.collections import chunk, flatten
 from app.toolkit.colors import hex_to_rgb
 from app.toolkit.combinatorics import nth_permutation
 from app.toolkit.compression import rle_bytes_encode
@@ -65,6 +65,7 @@ __all__ = [
     "parse_iso",
     "to_iso",
     "chunk",
+    "flatten",
     "compose",
     "base62_encode",
     "md5_hex",

@@ -10,7 +10,7 @@ If ``size`` is not a positive integer a ``ValueError`` is raised.
 
 from __future__ import annotations
 
-from typing import Iterable, List, TypeVar
+from typing import Any, Iterable, List, TypeVar
 
 _T = TypeVar("_T")
 
@@ -40,4 +40,27 @@ def chunk(iterable: Iterable[_T], size: int) -> List[List[_T]]:
             buffer = []
     if buffer:
         result.append(buffer)
+    return result
+
+
+def flatten(iterable: Iterable[Any]) -> List[Any]:
+    """Flatten one level of nested iterables.
+
+    Elements that are themselves iterable containers (list, tuple, set,
+    frozenset) are expanded into the result list. Strings and bytes are treated
+    as atomic values and are not iterated over.
+
+    Args:
+        iterable: An iterable whose elements may be iterables themselves.
+
+    Returns:
+        A flat list containing the original non‑iterable elements and the items
+        of any nested iterable containers.
+    """
+    result: List[Any] = []
+    for item in iterable:
+        if isinstance(item, (list, tuple, set, frozenset)):
+            result.extend(item)
+        else:
+            result.append(item)
     return result
