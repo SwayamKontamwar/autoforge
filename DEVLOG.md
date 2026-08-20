@@ -1877,3 +1877,9 @@ Guardrail: ruff + import + pytest passed.
 Implement left-to-right pipe function, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-20T17:53Z — success: (encoding) Implement `base62_decode` in app/toolkit/encoding.py: decode a base62 string to an integer. Add a pytest in tests/toolkit/test_encoding.py covering the documented behaviour and at least one edge case, and export `base62_decode` from app/toolkit/__init__.py.
+
+Implement base62_decode, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

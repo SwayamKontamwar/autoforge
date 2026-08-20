@@ -11,7 +11,7 @@ from typing import Final
 _ALPHABET: Final = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 _BASE: Final = 62
 
-__all__: list[str] = ["base62_encode"]
+__all__: list[str] = ["base62_encode", "base62_decode"]
 
 
 def base62_encode(value: int) -> str:
@@ -42,3 +42,35 @@ def base62_encode(value: int) -> str:
         value, rem = divmod(value, _BASE)
         digits.append(_ALPHABET[rem])
     return "".join(reversed(digits))
+
+
+def base62_decode(text: str) -> int:
+    """Decode a base‑62 string back to an integer.
+
+    The decoding expects characters from the same alphabet used by
+    :func:`base62_encode`. Leading zeros are allowed and are ignored in the
+    numeric value.
+
+    Args:
+        text: A string consisting only of characters ``0‑9``, ``a‑z``, ``A‑Z``.
+
+    Returns:
+        The integer represented by ``text``.
+
+    Raises:
+        TypeError: If ``text`` is not a ``str``.
+        ValueError: If ``text`` is empty or contains characters outside the
+            base‑62 alphabet.
+    """
+    if not isinstance(text, str):
+        raise TypeError("text must be a str")
+    if not text:
+        raise ValueError("text must be non‑empty")
+    value = 0
+    for char in text:
+        try:
+            digit = _ALPHABET.index(char)
+        except ValueError as exc:
+            raise ValueError(f"invalid character '{char}' for base‑62") from exc
+        value = value * _BASE + digit
+    return value

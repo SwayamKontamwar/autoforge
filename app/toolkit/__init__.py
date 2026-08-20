@@ -19,7 +19,7 @@ from app.toolkit.combinatorics import nth_permutation
 from app.toolkit.compression import rle_bytes_encode
 from app.toolkit.config import get_env_bool
 from app.toolkit.datetimes import parse_iso, to_iso
-from app.toolkit.encoding import base62_encode
+from app.toolkit.encoding import base62_decode, base62_encode
 from app.toolkit.files import human_path
 from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose, pipe
@@ -69,6 +69,7 @@ __all__ = [
     "compose",
     "pipe",
     "base62_encode",
+    "base62_decode",
     "md5_hex",
     "is_email",
     "parse_semver",
