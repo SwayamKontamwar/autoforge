@@ -24,7 +24,7 @@ from app.toolkit.files import human_path
 from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose, pipe
 from app.toolkit.geometry import distance_2d
-from app.toolkit.hashing import md5_hex
+from app.toolkit.hashing import md5_hex, sha256_hex
 from app.toolkit.i18n import plural_rule_en
 from app.toolkit.imageppm import ppm_new
 from app.toolkit.markdown import md_bold
@@ -71,6 +71,7 @@ __all__ = [
     "base62_encode",
     "base62_decode",
     "md5_hex",
+    "sha256_hex",
     "is_email",
     "parse_semver",
     "LRUCache",

@@ -1883,3 +1883,9 @@ Guardrail: ruff + import + pytest passed.
 Implement base62_decode, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-20T21:45Z — success: (hashing) Implement `sha256_hex` in app/toolkit/hashing.py: return the sha256 hex digest of bytes. Add a pytest in tests/toolkit/test_hashing.py covering the documented behaviour and at least one edge case, and export `sha256_hex` from app/toolkit/__init__.py.
+
+Implement sha256_hex utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

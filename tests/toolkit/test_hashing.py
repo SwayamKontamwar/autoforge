@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.hashing import md5_hex
+from app.toolkit.hashing import md5_hex, sha256_hex
 
 
 def test_md5_hex_basic() -> None:
@@ -14,3 +14,18 @@ def test_md5_hex_empty() -> None:
 def test_md5_hex_invalid_type() -> None:
     with pytest.raises(TypeError):
         md5_hex("not bytes")  # type: ignore
+
+
+def test_sha256_hex_basic() -> None:
+    assert (
+        sha256_hex(b"hello") == "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+    )
+
+
+def test_sha256_hex_empty() -> None:
+    assert sha256_hex(b"") == "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+
+def test_sha256_hex_invalid_type() -> None:
+    with pytest.raises(TypeError):
+        sha256_hex(123)  # type: ignore
