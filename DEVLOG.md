@@ -1895,3 +1895,9 @@ Guardrail: ruff + import + pytest passed.
 Implement is_url validation, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-21T08:20Z — success: (parsing) Implement `compare_semver` in app/toolkit/parsing.py: compare two semantic versions returning -1, 0, or 1. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `compare_semver` from app/toolkit/__init__.py.
+
+Implement compare_semver, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

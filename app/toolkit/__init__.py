@@ -35,7 +35,7 @@ from app.toolkit.net import build_query
 from app.toolkit.numbers import clamp, lerp
 from app.toolkit.numbertheory import euler_totient
 from app.toolkit.observability import Stopwatch
-from app.toolkit.parsing import parse_semver
+from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy
 from app.toolkit.probability import binomial_pmf
 from app.toolkit.randomness import random_string
@@ -75,6 +75,7 @@ __all__ = [
     "is_email",
     "is_url",
     "parse_semver",
+    "compare_semver",
     "LRUCache",
     "binary_search",
     "random_string",
