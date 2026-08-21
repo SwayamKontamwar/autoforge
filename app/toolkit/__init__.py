@@ -48,7 +48,7 @@ from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean
 from app.toolkit.streams import batched
 from app.toolkit.strings import slugify, truncate, word_wrap
-from app.toolkit.structures import LRUCache
+from app.toolkit.structures import LFUCache, LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
 from app.toolkit.units import celsius_to_fahrenheit
 from app.toolkit.validation import is_email, is_url
@@ -77,6 +77,7 @@ __all__ = [
     "parse_semver",
     "compare_semver",
     "LRUCache",
+    "LFUCache",
     "binary_search",
     "random_string",
     "fuzzy_ratio",

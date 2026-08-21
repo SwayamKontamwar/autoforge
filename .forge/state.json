@@ -1,5 +1,4 @@
 {
-  "(structures) Implement `LFUCache` in app/toolkit/structures.py: a least-frequently-used cache with eviction. Add a pytest in tests/toolkit/test_structures.py covering the documented behaviour and at least one edge case, and export `LFUCache` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
