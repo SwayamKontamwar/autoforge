@@ -51,7 +51,7 @@ from app.toolkit.strings import slugify, truncate, word_wrap
 from app.toolkit.structures import LRUCache
 from app.toolkit.textsearch import fuzzy_ratio
 from app.toolkit.units import celsius_to_fahrenheit
-from app.toolkit.validation import is_email
+from app.toolkit.validation import is_email, is_url
 from app.toolkit.vectors3d import v3_add
 from app.toolkit.webframework import Router
 
@@ -73,6 +73,7 @@ __all__ = [
     "md5_hex",
     "sha256_hex",
     "is_email",
+    "is_url",
     "parse_semver",
     "LRUCache",
     "binary_search",

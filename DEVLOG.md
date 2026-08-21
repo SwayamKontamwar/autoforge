@@ -1889,3 +1889,9 @@ Guardrail: ruff + import + pytest passed.
 Implement sha256_hex utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-21T03:26Z — success: (validation) Implement `is_url` in app/toolkit/validation.py: validate an http or https URL. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_url` from app/toolkit/__init__.py.
+
+Implement is_url validation, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

@@ -8,6 +8,7 @@ dependencies. Functions return ``True`` when the input satisfies the check,
 from __future__ import annotations
 
 import re
+from urllib.parse import urlparse
 
 # Simple but practical email regex:
 # - local part: alphanumerics and allowed special characters
@@ -37,3 +38,24 @@ def is_email(value: str) -> bool:
     if not isinstance(value, str):
         return False
     return bool(_EMAIL_REGEX.fullmatch(value))
+
+
+def is_url(value: str) -> bool:
+    """Return ``True`` if *value* looks like a valid HTTP or HTTPS URL.
+
+    The validation checks that *value* is a string, can be parsed by
+    :func:`urllib.parse.urlparse`, uses the ``http`` or ``https`` scheme, and
+    contains a non‑empty network location (host). No further checks (such as
+    length limits or DNS validation) are performed.
+
+    Args:
+        value: The string to validate.
+
+    Returns:
+        ``True`` if *value* appears to be a well‑formed HTTP/HTTPS URL,
+        ``False`` otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+    parsed = urlparse(value)
+    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
