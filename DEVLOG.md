@@ -1921,3 +1921,9 @@ Guardrail: ruff + import + pytest passed.
 Implement bisect_left, export it, and add comprehensive test
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-22T08:00Z — success: (randomness) Implement `random_hex` in app/toolkit/randomness.py: generate a random hex token of a given byte length. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `random_hex` from app/toolkit/__init__.py.
+
+Implement random_hex utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
