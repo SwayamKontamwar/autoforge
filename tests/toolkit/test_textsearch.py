@@ -1,4 +1,4 @@
-from app.toolkit.textsearch import fuzzy_ratio
+from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
 
 
 def test_fuzzy_ratio_typical_case() -> None:
@@ -12,3 +12,20 @@ def test_fuzzy_ratio_edge_cases() -> None:
     # One empty, one non‑empty → no similarity
     assert fuzzy_ratio("abc", "") == 0
     assert fuzzy_ratio("", "xyz") == 0
+
+
+def test_fuzzy_best_match_typical() -> None:
+    query = "apple"
+    candidates = ["aple", "apples", "apply", "banana"]
+    # "apples" has the highest similarity (distance 1, longer length 6 → 83%)
+    assert fuzzy_best_match(query, candidates) == "apples"
+
+
+def test_fuzzy_best_match_empty_candidates() -> None:
+    assert fuzzy_best_match("anything", []) is None
+
+
+def test_fuzzy_best_match_tie() -> None:
+    # All candidates have the same distance to "cat"
+    candidates = ["bat", "rat", "mat"]
+    assert fuzzy_best_match("cat", candidates) == "bat"

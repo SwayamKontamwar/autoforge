@@ -1927,3 +1927,9 @@ Guardrail: ruff + import + pytest passed.
 Implement random_hex utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-22T13:45Z — success: (textsearch) Implement `fuzzy_best_match` in app/toolkit/textsearch.py: return the best matching candidate for a query. Add a pytest in tests/toolkit/test_textsearch.py covering the documented behaviour and at least one edge case, and export `fuzzy_best_match` from app/toolkit/__init__.py.
+
+Implement fuzzy_best_match, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

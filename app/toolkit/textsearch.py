@@ -5,7 +5,7 @@ Provides a fuzzy similarity ratio based on Levenshtein distance.
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
 
 def _levenshtein(a: str, b: str) -> int:
@@ -52,3 +52,24 @@ def fuzzy_ratio(a: str, b: str) -> int:
         return 100
     distance = _levenshtein(a, b)
     return int((max_len - distance) * 100 / max_len)
+
+
+def fuzzy_best_match(query: str, candidates: List[str]) -> Optional[str]:
+    """Return the candidate with the highest fuzzy similarity to *query*.
+
+    If *candidates* is empty, returns ``None``.  Ties are resolved by returning
+    the first candidate with the maximal ratio.
+    """
+    if not candidates:
+        return None
+
+    best_candidate = candidates[0]
+    best_score = fuzzy_ratio(query, best_candidate)
+
+    for cand in candidates[1:]:
+        score = fuzzy_ratio(query, cand)
+        if score > best_score:
+            best_candidate = cand
+            best_score = score
+
+    return best_candidate
