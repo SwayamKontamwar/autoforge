@@ -7,12 +7,18 @@ human‑readable form by:
 * Shortening overly long paths with an ellipsis (``…``) while preserving the
   start and end of the path.
 
+Additionally, :func:`split_extension` splits a filename into its stem and
+extension, treating a trailing dot as having no extension.
+
 Typical usage::
 
-    from app.toolkit.files import human_path
+    from app.toolkit.files import human_path, split_extension
 
     print(human_path("/home/alice/projects/very/long/path/file.txt"))
     # → "~/projects/.../file.txt"
+
+    print(split_extension("archive.tar.gz"))
+    # → ("archive.tar", ".gz")
 """
 
 from __future__ import annotations
@@ -61,4 +67,26 @@ def human_path(path: Union[str, os.PathLike], max_len: int = 30) -> str:
     return s[:keep_start] + "…" + s[-keep_end:]
 
 
-__all__ = ["human_path"]
+def split_extension(path: Union[str, os.PathLike]) -> tuple[str, str]:
+    """Split *path* into a stem and an extension.
+
+    The function mirrors ``os.path.splitext`` but treats a trailing dot as
+    having no extension. For example, ``"folder."`` yields ``("folder.", "")``,
+    whereas ``os.path.splitext`` would return ``("folder", ".")``.
+
+    Args:
+        path: A string or ``os.PathLike`` representing a filename.
+
+    Returns:
+        A tuple ``(stem, ext)`` where *ext* includes the leading dot if present,
+        or is an empty string when there is no extension.
+    """
+    s = os.fspath(path)
+    stem, ext = os.path.splitext(s)
+    # A solitary trailing dot is not considered an extension.
+    if ext == ".":
+        return s, ""
+    return stem, ext
+
+
+__all__ = ["human_path", "split_extension"]

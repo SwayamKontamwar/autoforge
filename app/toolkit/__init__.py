@@ -20,7 +20,7 @@ from app.toolkit.compression import rle_bytes_encode
 from app.toolkit.config import get_env_bool
 from app.toolkit.datetimes import parse_iso, to_iso
 from app.toolkit.encoding import base62_decode, base62_encode
-from app.toolkit.files import human_path
+from app.toolkit.files import human_path, split_extension
 from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose, pipe
 from app.toolkit.geometry import distance_2d
@@ -85,6 +85,7 @@ __all__ = [
     "fuzzy_ratio",
     "fuzzy_best_match",
     "human_path",
+    "split_extension",
     "build_query",
     "hex_to_rgb",
     "celsius_to_fahrenheit",

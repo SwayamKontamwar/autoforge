@@ -1986,3 +1986,9 @@ FAILED tests/toolkit/test_files.py::test_split_extension_edge_cases - AssertionE
 2 failed, 495 passed, 22 warnings in 42.75s
 
 ```
+
+## 2026-08-22T21:37Z — success: (files) Implement `split_extension` in app/toolkit/files.py: split a filename into stem and extension. Add a pytest in tests/toolkit/test_files.py covering the documented behaviour and at least one edge case, and export `split_extension` from app/toolkit/__init__.py.
+
+Implement split_extension utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
