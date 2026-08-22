@@ -28,3 +28,22 @@ def binary_search(seq: Sequence[T], target: T) -> int:
         else:
             hi = mid - 1
     return -1
+
+
+def bisect_left(seq: Sequence[T], target: T) -> int:
+    """Return the leftmost insertion point for *target* in a sorted *seq*.
+
+    The function returns an index ``i`` such that all elements before ``i`` are
+    less than ``target`` and all elements at or after ``i`` are greater than or
+    equal to ``target``. If *target* is greater than all elements, ``i`` will be
+    ``len(seq)``. Works with any sequence supporting ``__len__`` and ``[]``.
+    """
+    lo = 0
+    hi = len(seq)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if seq[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    return lo

@@ -8,7 +8,7 @@ collections, encoding, validation, data, structures, algorithms, and more.
 
 from __future__ import annotations
 
-from app.toolkit.algorithms import binary_search
+from app.toolkit.algorithms import binary_search, bisect_left
 from app.toolkit.bits import set_bit
 from app.toolkit.calendars import easter_date
 from app.toolkit.checkdigit import upc_check_digit
@@ -79,6 +79,7 @@ __all__ = [
     "LRUCache",
     "LFUCache",
     "binary_search",
+    "bisect_left",
     "random_string",
     "fuzzy_ratio",
     "human_path",

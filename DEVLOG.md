@@ -1915,3 +1915,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement LFUCache with eviction, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-22T03:11Z — success: (algorithms) Implement `bisect_left` in app/toolkit/algorithms.py: return the leftmost insertion point in a sorted list. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `bisect_left` from app/toolkit/__init__.py.
+
+Implement bisect_left, export it, and add comprehensive test
+
+Guardrail: ruff + import + pytest passed.
