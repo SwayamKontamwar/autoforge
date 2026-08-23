@@ -9,7 +9,7 @@ string follows the insertion order of the input mapping.
 from __future__ import annotations
 
 from typing import Any, Mapping
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlparse
 
 
 def build_query(params: Mapping[str, Any]) -> str:
@@ -33,3 +33,32 @@ def build_query(params: Mapping[str, Any]) -> str:
         encoded_value = quote_plus(str(value))
         parts.append(f"{encoded_key}={encoded_value}")
     return "&".join(parts)
+
+
+def join_url(base: str, relative: str) -> str:
+    """Safely join *base* URL with *relative* path.
+
+    The function ensures exactly one ``/`` between the two parts, removes
+    duplicate slashes, and returns *relative* unchanged if it is an absolute
+    URL (i.e. contains a scheme). Empty *base* or *relative* values are handled
+    gracefully.
+
+    Args:
+        base: The base URL (e.g. ``"http://example.com/api"``).
+        relative: The relative path to append (e.g. ``"users"``).
+
+    Returns:
+        The combined URL.
+    """
+    if not base:
+        return relative
+    if not relative:
+        return base
+    # If the relative URL is absolute (has a scheme), return it unchanged.
+    if urlparse(relative).scheme:
+        return relative
+    # Remove trailing slash from base and leading slash from relative to avoid
+    # duplicate slashes.
+    base_stripped = base.rstrip("/")
+    rel_stripped = relative.lstrip("/")
+    return f"{base_stripped}/{rel_stripped}"

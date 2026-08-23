@@ -1992,3 +1992,9 @@ FAILED tests/toolkit/test_files.py::test_split_extension_edge_cases - AssertionE
 Implement split_extension utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-23T03:18Z — success: (net) Implement `join_url` in app/toolkit/net.py: join a base URL with a relative path safely. Add a pytest in tests/toolkit/test_net.py covering the documented behaviour and at least one edge case, and export `join_url` from app/toolkit/__init__.py.
+
+Implement join_url, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

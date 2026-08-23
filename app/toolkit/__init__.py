@@ -31,7 +31,7 @@ from app.toolkit.markdown import md_bold
 from app.toolkit.mathx import hypot
 from app.toolkit.matrix import mat_zeros
 from app.toolkit.ml import euclidean_knn
-from app.toolkit.net import build_query
+from app.toolkit.net import build_query, join_url
 from app.toolkit.numbers import clamp, lerp
 from app.toolkit.numbertheory import euler_totient
 from app.toolkit.observability import Stopwatch
@@ -87,6 +87,7 @@ __all__ = [
     "human_path",
     "split_extension",
     "build_query",
+    "join_url",
     "hex_to_rgb",
     "celsius_to_fahrenheit",
     "distance_2d",
