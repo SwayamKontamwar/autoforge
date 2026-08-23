@@ -2004,3 +2004,9 @@ Guardrail: ruff + import + pytest passed.
 Implement rgb_to_hex, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-23T13:47Z — success: (units) Implement `fahrenheit_to_celsius` in app/toolkit/units.py: convert Fahrenheit to Celsius. Add a pytest in tests/toolkit/test_units.py covering the documented behaviour and at least one edge case, and export `fahrenheit_to_celsius` from app/toolkit/__init__.py.
+
+Implement fahrenheit_to_celsius, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

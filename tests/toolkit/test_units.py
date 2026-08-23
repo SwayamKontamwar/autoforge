@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.units import celsius_to_fahrenheit
+from app.toolkit.units import celsius_to_fahrenheit, fahrenheit_to_celsius
 
 
 def test_celsius_to_fahrenheit_basic() -> None:
@@ -14,3 +14,16 @@ def test_celsius_to_fahrenheit_edge_cases() -> None:
     # Test with a typical body temperature conversion
     result = celsius_to_fahrenheit(37.7778)
     assert result == pytest.approx(100.0, rel=1e-5)
+
+
+def test_fahrenheit_to_celsius_basic() -> None:
+    assert fahrenheit_to_celsius(32) == 0.0
+    assert fahrenheit_to_celsius(212) == 100.0
+
+
+def test_fahrenheit_to_celsius_edge_cases() -> None:
+    # -40°F equals -40°C
+    assert fahrenheit_to_celsius(-40) == -40.0
+    # Test conversion with a non‑integer result
+    result = fahrenheit_to_celsius(98.6)
+    assert result == pytest.approx(37.0, rel=1e-5)

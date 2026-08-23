@@ -50,7 +50,7 @@ from app.toolkit.streams import batched
 from app.toolkit.strings import slugify, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
-from app.toolkit.units import celsius_to_fahrenheit
+from app.toolkit.units import celsius_to_fahrenheit, fahrenheit_to_celsius
 from app.toolkit.validation import is_email, is_url
 from app.toolkit.vectors3d import v3_add
 from app.toolkit.webframework import Router
@@ -91,6 +91,7 @@ __all__ = [
     "hex_to_rgb",
     "rgb_to_hex",
     "celsius_to_fahrenheit",
+    "fahrenheit_to_celsius",
     "distance_2d",
     "compound_interest",
     "get_env_bool",
