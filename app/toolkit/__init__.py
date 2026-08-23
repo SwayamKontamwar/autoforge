@@ -14,7 +14,7 @@ from app.toolkit.calendars import easter_date
 from app.toolkit.checkdigit import upc_check_digit
 from app.toolkit.cli import parse_args_simple
 from app.toolkit.collections import chunk, flatten
-from app.toolkit.colors import hex_to_rgb
+from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation
 from app.toolkit.compression import rle_bytes_encode
 from app.toolkit.config import get_env_bool
@@ -89,6 +89,7 @@ __all__ = [
     "build_query",
     "join_url",
     "hex_to_rgb",
+    "rgb_to_hex",
     "celsius_to_fahrenheit",
     "distance_2d",
     "compound_interest",

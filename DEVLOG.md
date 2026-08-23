@@ -1998,3 +1998,9 @@ Guardrail: ruff + import + pytest passed.
 Implement join_url, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-23T08:01Z — success: (colors) Implement `rgb_to_hex` in app/toolkit/colors.py: convert an r,g,b tuple to a hex colour. Add a pytest in tests/toolkit/test_colors.py covering the documented behaviour and at least one edge case, and export `rgb_to_hex` from app/toolkit/__init__.py.
+
+Implement rgb_to_hex, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

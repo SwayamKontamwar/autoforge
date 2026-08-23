@@ -21,3 +21,21 @@ def hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
     except ValueError as exc:
         raise ValueError("invalid hex digit") from exc
     return (r, g, b)
+
+
+def rgb_to_hex(rgb: tuple[int, int, int]) -> str:
+    """Convert an ``(r, g, b)`` tuple to a hex colour string.
+
+    Each component must be an integer in the range 0‑255 inclusive.
+    Returns a string in the form ``#rrggbb`` using lower‑case hexadecimal
+    digits.
+    """
+    if not isinstance(rgb, tuple) or len(rgb) != 3:
+        raise TypeError("rgb must be a tuple of three integers")
+    r, g, b = rgb
+    for comp in (r, g, b):
+        if not isinstance(comp, int):
+            raise TypeError("rgb components must be integers")
+        if not (0 <= comp <= 255):
+            raise ValueError("rgb components must be in the range 0-255")
+    return f"#{r:02x}{g:02x}{b:02x}"
