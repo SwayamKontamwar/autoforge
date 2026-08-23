@@ -23,7 +23,7 @@ from app.toolkit.encoding import base62_decode, base62_encode
 from app.toolkit.files import human_path, split_extension
 from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose, pipe
-from app.toolkit.geometry import distance_2d
+from app.toolkit.geometry import distance_2d, manhattan_distance
 from app.toolkit.hashing import md5_hex, sha256_hex
 from app.toolkit.i18n import plural_rule_en
 from app.toolkit.imageppm import ppm_new
@@ -93,6 +93,7 @@ __all__ = [
     "celsius_to_fahrenheit",
     "fahrenheit_to_celsius",
     "distance_2d",
+    "manhattan_distance",
     "compound_interest",
     "get_env_bool",
     "retry",

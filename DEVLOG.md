@@ -2010,3 +2010,9 @@ Guardrail: ruff + import + pytest passed.
 Implement fahrenheit_to_celsius, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-23T17:42Z — success: (geometry) Implement `manhattan_distance` in app/toolkit/geometry.py: return the Manhattan distance between two points. Add a pytest in tests/toolkit/test_geometry.py covering the documented behaviour and at least one edge case, and export `manhattan_distance` from app/toolkit/__init__.py.
+
+Implement manhattan_distance, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
