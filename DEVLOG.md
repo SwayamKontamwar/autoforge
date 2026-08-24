@@ -2067,3 +2067,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-08-24T14:03Z — success: (config) Implement `get_env_int` in app/toolkit/config.py: read an integer environment variable with a default. Add a pytest in tests/toolkit/test_config.py covering the documented behaviour and at least one edge case, and export `get_env_int` from app/toolkit/__init__.py.
+
+Implement get_env_int, export it, and add tests for its behavior
+
+Guardrail: ruff + import + pytest passed.

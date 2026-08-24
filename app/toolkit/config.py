@@ -45,3 +45,29 @@ def get_env_bool(name: str, default: bool = False) -> bool:
     if value in _FALSE_VALUES:
         return False
     raise ValueError(f"Environment variable {name!r} has unrecognised boolean value: {raw!r}")
+
+
+def get_env_int(name: str, default: int = 0) -> int:
+    """Return an integer environment variable.
+
+    The function reads ``name`` from ``os.getenv``. If the variable is not set,
+    ``default`` is returned. Otherwise the value is stripped and converted to
+    ``int``. Whitespace around the value is ignored.
+
+    Args:
+        name: Environment variable name.
+        default: Value to return when the variable is missing.
+
+    Returns:
+        The integer value of the environment variable.
+
+    Raises:
+        ValueError: If the variable is set but cannot be parsed as an integer.
+    """
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    try:
+        return int(raw.strip())
+    except Exception as exc:
+        raise ValueError(f"Environment variable {name!r} has non‑integer value: {raw!r}") from exc

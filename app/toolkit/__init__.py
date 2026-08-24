@@ -17,7 +17,7 @@ from app.toolkit.collections import chunk, flatten
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation
 from app.toolkit.compression import rle_bytes_encode
-from app.toolkit.config import get_env_bool
+from app.toolkit.config import get_env_bool, get_env_int
 from app.toolkit.datetimes import parse_iso, to_iso
 from app.toolkit.encoding import base62_decode, base62_encode
 from app.toolkit.files import human_path, split_extension
@@ -96,6 +96,7 @@ __all__ = [
     "manhattan_distance",
     "compound_interest",
     "get_env_bool",
+    "get_env_int",
     "retry",
     "parse_args_simple",
     "Router",
