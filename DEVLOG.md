@@ -2061,3 +2061,9 @@ FAILED tests/toolkit/test_finance.py::test_simple_interest_edge_cases - assert 1
 ## 2026-08-24T03:26Z — rejected: (finance) Implement `simple_interest` in app/toolkit/finance.py: compute simple interest over a period. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `simple_interest` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-08-24T08:25Z — skipped: (finance) Implement `simple_interest` in app/toolkit/finance.py: compute simple interest over a period. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `simple_interest` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
