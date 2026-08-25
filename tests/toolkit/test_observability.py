@@ -1,6 +1,8 @@
 import time
 
-from app.toolkit.observability import Stopwatch
+import pytest
+
+from app.toolkit.observability import Stopwatch, Timer
 
 
 def test_stopwatch_basic() -> None:
@@ -24,3 +26,20 @@ def test_stopwatch_edge_cases() -> None:
 
     # Subsequent stop without a new start should again return 0.0
     assert sw.stop() == 0.0
+
+
+def test_timer_context_manager_basic() -> None:
+    with Timer() as t:
+        time.sleep(0.01)
+    assert isinstance(t.elapsed, float)
+    assert t.elapsed >= 0.0
+
+
+def test_timer_context_manager_exception() -> None:
+    with pytest.raises(RuntimeError):
+        with Timer() as t:
+            time.sleep(0.005)
+            raise RuntimeError("test")
+    # Even though an exception was raised, elapsed should be recorded.
+    assert isinstance(t.elapsed, float)
+    assert t.elapsed >= 0.0

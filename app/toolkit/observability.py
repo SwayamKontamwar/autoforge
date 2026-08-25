@@ -43,3 +43,33 @@ class Stopwatch:
         elapsed = now - self._start
         self._start = None
         return elapsed
+
+
+class Timer:
+    """Context manager that measures the duration of a code block.
+
+    Example
+    -------
+    >>> with Timer() as t:
+    ...     # do some work
+    ...     pass
+    >>> elapsed = t.elapsed  # seconds as ``float``
+
+    The elapsed time is stored in the ``elapsed`` attribute after exiting the
+    context, regardless of whether the block raised an exception.
+    """
+
+    __slots__ = ("_stopwatch", "elapsed")
+
+    def __init__(self) -> None:
+        self._stopwatch = Stopwatch()
+        self.elapsed: float = 0.0
+
+    def __enter__(self) -> "Timer":
+        self._stopwatch.start()
+        return self
+
+    def __exit__(self, exc_type, exc, tb) -> bool:
+        self.elapsed = self._stopwatch.stop()
+        # Do not suppress exceptions.
+        return False

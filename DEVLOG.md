@@ -2129,3 +2129,9 @@ Guardrail: ruff + import + pytest passed.
 Implement path_to_regex utility, export it, and add tests for its behavior
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-25T17:52Z — success: (observability) Implement `Timer` in app/toolkit/observability.py: a context manager measuring a block's duration. Add a pytest in tests/toolkit/test_observability.py covering the documented behaviour and at least one edge case, and export `Timer` from app/toolkit/__init__.py.
+
+Implement Timer context manager, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

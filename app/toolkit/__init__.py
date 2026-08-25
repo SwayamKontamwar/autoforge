@@ -34,7 +34,7 @@ from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url
 from app.toolkit.numbers import clamp, lerp
 from app.toolkit.numbertheory import euler_totient
-from app.toolkit.observability import Stopwatch
+from app.toolkit.observability import Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy
 from app.toolkit.probability import binomial_pmf
@@ -103,6 +103,7 @@ __all__ = [
     "Router",
     "path_to_regex",
     "Stopwatch",
+    "Timer",
     "to_jsonl",
     "constant_time_equals",
     "set_bit",
