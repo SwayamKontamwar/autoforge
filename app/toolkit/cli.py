@@ -54,3 +54,40 @@ def parse_args_simple(args: List[str]) -> Dict[str, str]:
         i += 1
 
     return result
+
+
+def confirm_prompt(prompt: str, default: bool | None = None) -> bool:
+    """Prompt the user for a yes/no answer.
+
+    The function reads a line from ``input(prompt)`` and interprets it as a
+    boolean decision.
+
+    * Accepted affirmative responses (case‑insensitive): ``y``, ``yes``.
+    * Accepted negative responses (case‑insensitive): ``n``, ``no``.
+    * If the user enters an empty string and *default* is not ``None``, the
+      default value is returned.
+    * Otherwise a ``ValueError`` is raised for empty input without a default
+      or for any unrecognised response.
+
+    Args:
+        prompt: The prompt string displayed to the user.
+        default: The value to return when the user provides no input. If ``None``,
+            empty input is considered an error.
+
+    Returns:
+        ``True`` for an affirmative answer, ``False`` for a negative answer.
+
+    Raises:
+        ValueError: If the input is empty and no default is supplied, or if the
+            input cannot be interpreted as yes/no.
+    """
+    response = input(prompt).strip().lower()
+    if not response:
+        if default is not None:
+            return default
+        raise ValueError("No input provided and no default set")
+    if response in {"y", "yes"}:
+        return True
+    if response in {"n", "no"}:
+        return False
+    raise ValueError(f"Invalid response: {response!r}")

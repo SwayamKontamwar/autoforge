@@ -12,7 +12,7 @@ from app.toolkit.algorithms import binary_search, bisect_left
 from app.toolkit.bits import set_bit
 from app.toolkit.calendars import easter_date
 from app.toolkit.checkdigit import upc_check_digit
-from app.toolkit.cli import parse_args_simple
+from app.toolkit.cli import confirm_prompt, parse_args_simple
 from app.toolkit.collections import chunk, flatten
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation
@@ -99,6 +99,7 @@ __all__ = [
     "get_env_int",
     "retry",
     "parse_args_simple",
+    "confirm_prompt",
     "Router",
     "Stopwatch",
     "to_jsonl",

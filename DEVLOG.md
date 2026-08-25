@@ -2117,3 +2117,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-08-25T08:22Z — success: (cli) Implement `confirm_prompt` in app/toolkit/cli.py: return a yes/no decision from a prompt with a default. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `confirm_prompt` from app/toolkit/__init__.py.
+
+Implement confirm_prompt, export it, add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
