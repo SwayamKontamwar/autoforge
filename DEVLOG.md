@@ -2123,3 +2123,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement confirm_prompt, export it, add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-25T14:05Z — success: (webframework) Implement `path_to_regex` in app/toolkit/webframework.py: compile a path pattern like /users/{id} to a regex. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `path_to_regex` from app/toolkit/__init__.py.
+
+Implement path_to_regex utility, export it, and add tests for its behavior
+
+Guardrail: ruff + import + pytest passed.

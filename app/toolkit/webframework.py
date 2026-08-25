@@ -25,6 +25,40 @@ from typing import Any, Callable, Dict, List, Pattern, Tuple
 Handler = Callable[..., Any]
 
 
+def path_to_regex(path: str) -> Pattern[str]:
+    """Convert a FastAPI‑style path pattern to a compiled regular expression.
+
+    The pattern may contain ``{name}`` placeholders which are translated into
+    named capture groups matching any non‑empty sequence of characters that does
+    not contain a slash. All other characters are escaped so that they are
+    interpreted literally.
+
+    Parameters
+    ----------
+    path: str
+        The route pattern, e.g. ``"/users/{id}"``.
+
+    Returns
+    -------
+    Pattern[str]
+        A compiled regex that matches the entire path and provides the captured
+        parameters via ``match.groupdict()``.
+    """
+    # Escape everything first, then restore braces for substitution.
+    escaped = re.escape(path)
+    escaped = escaped.replace(r"\{", "{").replace(r"\}", "}")
+
+    # Find placeholders like {param}
+    param_pattern = re.compile(r"{([^}]+)}")
+
+    def repl(match: re.Match[str]) -> str:
+        name = match.group(1)
+        return f"(?P<{name}>[^/]+)"
+
+    regex_body = param_pattern.sub(repl, escaped)
+    return re.compile(f"^{regex_body}$")
+
+
 class _Route:
     __slots__ = ("method", "handler", "is_static", "pattern", "param_names")
 
@@ -108,4 +142,4 @@ class Router:
         return None, {}
 
 
-__all__ = ["Router"]
+__all__ = ["Router", "path_to_regex"]
