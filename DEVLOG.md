@@ -2168,3 +2168,9 @@ FAILED tests/toolkit/test_serialization.py::test_from_jsonl_trailing_newline_and
 2 failed, 518 passed, 22 warnings in 41.12s
 
 ```
+
+## 2026-08-26T03:29Z — success: (serialization) Implement `from_jsonl` in app/toolkit/serialization.py: parse JSON Lines text into a list of objects. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `from_jsonl` from app/toolkit/__init__.py.
+
+Implement from_jsonl, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
