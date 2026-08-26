@@ -2212,3 +2212,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 519 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-08-26T14:04Z — success: (security) Implement `generate_token` in app/toolkit/security.py: generate a URL-safe secret token of a byte length. Add a pytest in tests/toolkit/test_security.py covering the documented behaviour and at least one edge case, and export `generate_token` from app/toolkit/__init__.py.
+
+Implement generate_token, export it, and add tests for its behavior
+
+Guardrail: ruff + import + pytest passed.

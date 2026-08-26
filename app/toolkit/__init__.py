@@ -42,7 +42,7 @@ from app.toolkit.randomness import random_hex, random_string
 from app.toolkit.regexutil import extract_emails
 from app.toolkit.resilience import retry
 from app.toolkit.scheduling import next_cron_time
-from app.toolkit.security import constant_time_equals
+from app.toolkit.security import constant_time_equals, generate_token
 from app.toolkit.serialization import from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean
@@ -107,6 +107,7 @@ __all__ = [
     "to_jsonl",
     "from_jsonl",
     "constant_time_equals",
+    "generate_token",
     "set_bit",
     "batched",
     "hypot",

@@ -7,6 +7,7 @@ mitigate timing attacks when checking secrets such as tokens or passwords.
 from __future__ import annotations
 
 import itertools
+import secrets
 from typing import Iterable
 
 
@@ -49,3 +50,26 @@ def constant_time_equals(a: str, b: str) -> bool:
         result |= x ^ y
 
     return result == 0
+
+
+def generate_token(byte_length: int) -> str:
+    """Generate a URL‑safe secret token.
+
+    The token contains ``byte_length`` bytes of randomness, encoded using a
+    URL‑safe base64 variant (the same algorithm used by :func:`secrets.token_urlsafe`).
+
+    Args:
+        byte_length: Number of random bytes to include in the token. Must be
+            a positive integer.
+
+    Returns:
+        A URL‑safe string token.
+
+    Raises:
+        ValueError: If ``byte_length`` is not a positive integer.
+    """
+    if not isinstance(byte_length, int) or byte_length <= 0:
+        raise ValueError("byte_length must be a positive integer")
+    # ``secrets.token_urlsafe`` returns a string with the requested amount of
+    # randomness, URL‑safe, and without padding.
+    return secrets.token_urlsafe(byte_length)
