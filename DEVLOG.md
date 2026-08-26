@@ -2218,3 +2218,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement generate_token, export it, and add tests for its behavior
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-26T19:23Z — success: (bits) Implement `clear_bit` in app/toolkit/bits.py: return an integer with the bit at a position cleared. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `clear_bit` from app/toolkit/__init__.py.
+
+Implement clear_bit utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

@@ -9,7 +9,7 @@ collections, encoding, validation, data, structures, algorithms, and more.
 from __future__ import annotations
 
 from app.toolkit.algorithms import binary_search, bisect_left
-from app.toolkit.bits import set_bit
+from app.toolkit.bits import clear_bit, set_bit
 from app.toolkit.calendars import easter_date
 from app.toolkit.checkdigit import upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple
@@ -109,6 +109,7 @@ __all__ = [
     "constant_time_equals",
     "generate_token",
     "set_bit",
+    "clear_bit",
     "batched",
     "hypot",
     "mat_zeros",
