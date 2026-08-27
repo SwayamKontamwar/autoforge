@@ -2230,3 +2230,9 @@ Guardrail: ruff + import + pytest passed.
 Implement iterate generator, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-27T12:53Z — success: (mathx) Implement `clamp_angle` in app/toolkit/mathx.py: wrap an angle into the range -pi to pi. Add a pytest in tests/toolkit/test_mathx.py covering the documented behaviour and at least one edge case, and export `clamp_angle` from app/toolkit/__init__.py.
+
+Implement clamp_angle, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

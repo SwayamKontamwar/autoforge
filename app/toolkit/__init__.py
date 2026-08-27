@@ -28,7 +28,7 @@ from app.toolkit.hashing import md5_hex, sha256_hex
 from app.toolkit.i18n import plural_rule_en
 from app.toolkit.imageppm import ppm_new
 from app.toolkit.markdown import md_bold
-from app.toolkit.mathx import hypot
+from app.toolkit.mathx import clamp_angle, hypot
 from app.toolkit.matrix import mat_zeros
 from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url
@@ -113,6 +113,7 @@ __all__ = [
     "batched",
     "iterate",
     "hypot",
+    "clamp_angle",
     "mat_zeros",
     "geometric_mean",
     "nth_permutation",

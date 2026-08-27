@@ -4,6 +4,7 @@ Provides functions that are not covered elsewhere in the standard‑library‑st
 toolkit.  Currently includes:
 
 * ``hypot`` – Euclidean norm (length) of an arbitrary number of components.
+* ``clamp_angle`` – Wrap an angle into the range -π to π.
 """
 
 from __future__ import annotations
@@ -32,3 +33,23 @@ def hypot(*components: Number) -> float:
     # Use math.fsum for better precision when summing squares.
     total = math.fsum(c * c for c in components)
     return math.sqrt(total)
+
+
+def clamp_angle(angle: Number) -> float:
+    """Wrap *angle* into the interval ``[-π, π]``.
+
+    The function returns an equivalent angle such that the result lies
+    between ``-math.pi`` and ``math.pi`` (inclusive).  It works for any
+    real numeric input, handling large magnitudes by using modular arithmetic.
+
+    Args:
+        angle: The angle in radians to be wrapped.
+
+    Returns:
+        The wrapped angle as a ``float`` within ``[-π, π]``.
+    """
+    two_pi = 2.0 * math.pi
+    # Shift by π, take modulus, then shift back.
+    wrapped = (float(angle) + math.pi) % two_pi - math.pi
+    # Correct possible negative zero to positive zero for consistency.
+    return 0.0 if wrapped == -0.0 else wrapped
