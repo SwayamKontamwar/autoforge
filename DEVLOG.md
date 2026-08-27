@@ -2236,3 +2236,9 @@ Guardrail: ruff + import + pytest passed.
 Implement clamp_angle, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-27T18:25Z — success: (matrix) Implement `mat_identity` in app/toolkit/matrix.py: build an identity matrix of a given size. Add a pytest in tests/toolkit/test_matrix.py covering the documented behaviour and at least one edge case, and export `mat_identity` from app/toolkit/__init__.py.
+
+Implement mat_identity, export it, and add tests for identity matrix creation
+
+Guardrail: ruff + import + pytest passed.

@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.matrix import mat_zeros
+from app.toolkit.matrix import mat_identity, mat_zeros
 
 
 def test_mat_zeros_typical() -> None:
@@ -20,3 +20,22 @@ def test_mat_zeros_edge_cases() -> None:
         mat_zeros(-1, 4)
     with pytest.raises(ValueError):
         mat_zeros(4, -2)
+
+
+def test_mat_identity_typical() -> None:
+    """Typical usage: 3 × 3 identity matrix."""
+    expected = [
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+    ]
+    assert mat_identity(3) == expected
+
+
+def test_mat_identity_edge_cases() -> None:
+    """Edge cases: zero size and negative input."""
+    # Zero size yields empty list
+    assert mat_identity(0) == []
+    # Negative size raises ValueError
+    with pytest.raises(ValueError):
+        mat_identity(-5)

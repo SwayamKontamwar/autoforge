@@ -29,7 +29,7 @@ from app.toolkit.i18n import plural_rule_en
 from app.toolkit.imageppm import ppm_new
 from app.toolkit.markdown import md_bold
 from app.toolkit.mathx import clamp_angle, hypot
-from app.toolkit.matrix import mat_zeros
+from app.toolkit.matrix import mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url
 from app.toolkit.numbers import clamp, lerp
@@ -115,6 +115,7 @@ __all__ = [
     "hypot",
     "clamp_angle",
     "mat_zeros",
+    "mat_identity",
     "geometric_mean",
     "nth_permutation",
     "binomial_pmf",
