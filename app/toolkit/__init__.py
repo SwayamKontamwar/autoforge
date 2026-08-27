@@ -45,7 +45,7 @@ from app.toolkit.scheduling import next_cron_time
 from app.toolkit.security import constant_time_equals, generate_token
 from app.toolkit.serialization import from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
-from app.toolkit.stats import geometric_mean
+from app.toolkit.stats import geometric_mean, harmonic_mean
 from app.toolkit.streams import batched, iterate
 from app.toolkit.strings import slugify, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache
@@ -117,6 +117,7 @@ __all__ = [
     "mat_zeros",
     "mat_identity",
     "geometric_mean",
+    "harmonic_mean",
     "nth_permutation",
     "binomial_pmf",
     "extract_emails",

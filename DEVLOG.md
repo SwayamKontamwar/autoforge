@@ -2242,3 +2242,9 @@ Guardrail: ruff + import + pytest passed.
 Implement mat_identity, export it, and add tests for identity matrix creation
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-27T22:58Z — success: (stats) Implement `harmonic_mean` in app/toolkit/stats.py: return the harmonic mean of positive numbers. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `harmonic_mean` from app/toolkit/__init__.py.
+
+Implement harmonic_mean, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

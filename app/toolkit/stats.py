@@ -41,3 +41,30 @@ def geometric_mean(values: Iterable[float] | Sequence[float]) -> float:
     log_sum = sum(math.log(v) for v in vals)
     mean_log = log_sum / len(vals)
     return math.exp(mean_log)
+
+
+def harmonic_mean(values: Iterable[float] | Sequence[float]) -> float:
+    """Return the harmonic mean of *values*.
+
+    The harmonic mean is defined only for positive numbers.  An empty
+    *values* iterable or any non‑positive element raises :class:`ValueError`.
+
+    Args:
+        values: An iterable of positive numbers.
+
+    Returns:
+        The harmonic mean of the supplied numbers.
+
+    Example:
+        >>> harmonic_mean([1, 2, 4])
+        1.7142857142857142
+    """
+    vals = list(values)
+
+    if not vals:
+        raise ValueError("harmonic_mean requires at least one value")
+    for v in vals:
+        if v <= 0:
+            raise ValueError("harmonic_mean is defined only for positive numbers")
+
+    return len(vals) / sum(1.0 / v for v in vals)
