@@ -6,7 +6,7 @@ iterable into tuples of a specified maximum size.
 
 from __future__ import annotations
 
-from typing import Iterable, Iterator, Tuple, TypeVar
+from typing import Callable, Iterable, Iterator, Tuple, TypeVar
 
 T = TypeVar("T")
 
@@ -34,3 +34,19 @@ def batched(iterable: Iterable[T], n: int) -> Iterator[Tuple[T, ...]]:
         if not batch:
             break
         yield batch
+
+
+def iterate(start: T, f: Callable[[T], T]) -> Iterator[T]:
+    """Yield an infinite lazy sequence: start, f(start), f(f(start)), ...
+
+    Args:
+        start: The initial value of the sequence.
+        f: A function that computes the next value from the current one.
+
+    Yields:
+        The successive values of the sequence.
+    """
+    value = start
+    while True:
+        yield value
+        value = f(value)

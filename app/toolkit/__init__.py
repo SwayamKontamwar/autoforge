@@ -46,7 +46,7 @@ from app.toolkit.security import constant_time_equals, generate_token
 from app.toolkit.serialization import from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean
-from app.toolkit.streams import batched
+from app.toolkit.streams import batched, iterate
 from app.toolkit.strings import slugify, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
@@ -111,6 +111,7 @@ __all__ = [
     "set_bit",
     "clear_bit",
     "batched",
+    "iterate",
     "hypot",
     "mat_zeros",
     "geometric_mean",

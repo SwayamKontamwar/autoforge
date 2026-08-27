@@ -2224,3 +2224,9 @@ Guardrail: ruff + import + pytest passed.
 Implement clear_bit utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-27T00:49Z — success: (streams) Implement `iterate` in app/toolkit/streams.py: yield x, f(x), f(f(x)) and so on lazily. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `iterate` from app/toolkit/__init__.py.
+
+Implement iterate generator, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
