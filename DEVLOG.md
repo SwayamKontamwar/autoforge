@@ -2290,3 +2290,9 @@ Guardrail: ruff + import + pytest passed.
 Implement poisson_pmf, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-28T23:03Z — success: (regexutil) Implement `extract_urls` in app/toolkit/regexutil.py: return all http and https URLs found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_urls` from app/toolkit/__init__.py.
+
+Implement extract_urls, export it, add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

@@ -27,4 +27,24 @@ def extract_emails(text: str) -> List[str]:
     return email_pattern.findall(text)
 
 
-__all__ = ["extract_emails"]
+def extract_urls(text: str) -> List[str]:
+    """Return a list of all HTTP/HTTPS URLs found in *text*.
+
+    The function looks for substrings that start with ``http://`` or
+    ``https://`` and continues until whitespace or a character that cannot be
+    part of a URL. Trailing punctuation such as ``. , ; : ! ? )]}`` is stripped
+    from each match.
+    """
+    # Rough match: start with http(s) and consume any non‑whitespace characters
+    raw_urls = re.findall(r"https?://[^\s'\"<>]+", text)
+
+    cleaned: List[str] = []
+    for url in raw_urls:
+        # Strip trailing punctuation that is unlikely to be part of the URL.
+        while url and url[-1] in ".,;:!?)]}":
+            url = url[:-1]
+        cleaned.append(url)
+    return cleaned
+
+
+__all__ = ["extract_emails", "extract_urls"]
