@@ -1,4 +1,7 @@
 {
+  "(numbertheory) Implement `mobius` in app/toolkit/numbertheory.py: return the Mobius function value of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `mobius` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "(numbertheory) Implement `mobius` in app/toolkit/numbertheory.py: return the Mobius function value of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `mobius` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\nF601 Dictionary key literal `30` repeated\n  --> tests/toolkit/test_numbertheory.py:40:9\n   |\n38 |         12: 0,\n39 |         13: -1,\n40 |         30: -1,\n   |         ^^\n41 |         210: 1,  # 2*3*5*7, four distinct primes => (-1)^4 = 1\n42 |     }\n   |\nhelp: Remove repeated key literal `30`\n\nFound 1 error.\nNo fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).\n"
+  }
 }

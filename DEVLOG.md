@@ -2248,3 +2248,27 @@ Guardrail: ruff + import + pytest passed.
 Implement harmonic_mean, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-28T01:33Z — failed: (numbertheory) Implement `mobius` in app/toolkit/numbertheory.py: return the Mobius function value of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `mobius` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F601 Dictionary key literal `30` repeated
+  --> tests/toolkit/test_numbertheory.py:40:9
+   |
+38 |         12: 0,
+39 |         13: -1,
+40 |         30: -1,
+   |         ^^
+41 |         210: 1,  # 2*3*5*7, four distinct primes => (-1)^4 = 1
+42 |     }
+   |
+help: Remove repeated key literal `30`
+
+Found 1 error.
+No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
+
+```
