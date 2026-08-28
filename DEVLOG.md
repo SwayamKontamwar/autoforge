@@ -2278,3 +2278,9 @@ No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option
 Implement mobius function, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-28T14:25Z — success: (combinatorics) Implement `permutation_index` in app/toolkit/combinatorics.py: return the lexicographic index of a permutation. Add a pytest in tests/toolkit/test_combinatorics.py covering the documented behaviour and at least one edge case, and export `permutation_index` from app/toolkit/__init__.py.
+
+Implement permutation_index, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

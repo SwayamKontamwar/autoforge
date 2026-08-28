@@ -15,7 +15,7 @@ from app.toolkit.checkdigit import upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple
 from app.toolkit.collections import chunk, flatten
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
-from app.toolkit.combinatorics import nth_permutation
+from app.toolkit.combinatorics import nth_permutation, permutation_index
 from app.toolkit.compression import rle_bytes_encode
 from app.toolkit.config import get_env_bool, get_env_int
 from app.toolkit.datetimes import parse_iso, to_iso
@@ -120,6 +120,7 @@ __all__ = [
     "geometric_mean",
     "harmonic_mean",
     "nth_permutation",
+    "permutation_index",
     "binomial_pmf",
     "extract_emails",
     "md_bold",
