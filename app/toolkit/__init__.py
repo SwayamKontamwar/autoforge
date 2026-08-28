@@ -33,7 +33,7 @@ from app.toolkit.matrix import mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url
 from app.toolkit.numbers import clamp, lerp
-from app.toolkit.numbertheory import euler_totient
+from app.toolkit.numbertheory import euler_totient, mobius
 from app.toolkit.observability import Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy
@@ -62,6 +62,7 @@ __all__ = [
     "clamp",
     "lerp",
     "euler_totient",
+    "mobius",
     "parse_iso",
     "to_iso",
     "chunk",

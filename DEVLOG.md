@@ -2272,3 +2272,9 @@ Found 1 error.
 No fixes available (1 hidden fix can be enabled with the `--unsafe-fixes` option).
 
 ```
+
+## 2026-08-28T05:26Z — success: (numbertheory) Implement `mobius` in app/toolkit/numbertheory.py: return the Mobius function value of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `mobius` from app/toolkit/__init__.py.
+
+Implement mobius function, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
