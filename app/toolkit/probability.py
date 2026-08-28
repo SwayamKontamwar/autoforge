@@ -38,4 +38,33 @@ def binomial_pmf(k: int, n: int, p: float) -> float:
     return combination * (p**k) * ((1.0 - p) ** (n - k))
 
 
-__all__: list[str] = ["binomial_pmf"]
+def poisson_pmf(k: int, lam: float) -> float:
+    """Return the probability mass function of the Poisson distribution.
+
+    Args:
+        k: Number of occurrences (must be a non‑negative integer).
+        lam: Expected number of occurrences (λ ≥ 0).
+
+    Returns:
+        Probability of observing exactly *k* occurrences.
+
+    Raises:
+        ValueError: If *k* is negative or not an integer, or if *lam* is negative
+            or not a numeric type.
+    """
+    if not isinstance(k, int):
+        raise ValueError("k must be an integer")
+    if k < 0:
+        raise ValueError("k must be non‑negative")
+    if not isinstance(lam, (int, float)):
+        raise ValueError("lam must be a numeric type")
+    if lam < 0:
+        raise ValueError("lam must be non‑negative")
+
+    # Poisson PMF: (lam**k * e**-lam) / k!
+    if k == 0 and lam == 0:
+        return 1.0
+    return (lam**k) * math.exp(-lam) / math.factorial(k)
+
+
+__all__: list[str] = ["binomial_pmf", "poisson_pmf"]

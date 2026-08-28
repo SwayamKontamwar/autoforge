@@ -2284,3 +2284,9 @@ Guardrail: ruff + import + pytest passed.
 Implement permutation_index, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-28T19:36Z — success: (probability) Implement `poisson_pmf` in app/toolkit/probability.py: evaluate the Poisson probability mass function. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `poisson_pmf` from app/toolkit/__init__.py.
+
+Implement poisson_pmf, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

@@ -37,7 +37,7 @@ from app.toolkit.numbertheory import euler_totient, mobius
 from app.toolkit.observability import Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy
-from app.toolkit.probability import binomial_pmf
+from app.toolkit.probability import binomial_pmf, poisson_pmf
 from app.toolkit.randomness import random_hex, random_string
 from app.toolkit.regexutil import extract_emails
 from app.toolkit.resilience import retry
@@ -122,6 +122,7 @@ __all__ = [
     "nth_permutation",
     "permutation_index",
     "binomial_pmf",
+    "poisson_pmf",
     "extract_emails",
     "md_bold",
     "easter_date",

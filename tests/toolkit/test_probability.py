@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from app.toolkit.probability import binomial_pmf
+from app.toolkit.probability import binomial_pmf, poisson_pmf
 
 
 def test_binomial_pmf_typical() -> None:
@@ -34,3 +34,28 @@ def test_binomial_pmf_invalid_inputs() -> None:
         binomial_pmf(2, 5, -0.1)  # p out of range
     with pytest.raises(ValueError):
         binomial_pmf(2, 5, 1.2)  # p out of range
+
+
+def test_poisson_pmf_typical() -> None:
+    # λ = 3, k = 2 → e⁻³ * 3² / 2!
+    lam, k = 3.0, 2
+    expected = math.exp(-lam) * (lam**k) / math.factorial(k)
+    assert poisson_pmf(k, lam) == pytest.approx(expected, rel=1e-12)
+
+
+def test_poisson_pmf_edge_cases() -> None:
+    # λ = 0, k = 0 → 1
+    assert poisson_pmf(0, 0.0) == 1.0
+    # λ = 0, k > 0 → 0
+    assert poisson_pmf(5, 0.0) == 0.0
+
+
+def test_poisson_pmf_invalid_inputs() -> None:
+    with pytest.raises(ValueError):
+        poisson_pmf(-1, 2.0)  # negative k
+    with pytest.raises(ValueError):
+        poisson_pmf(2.5, 2.0)  # non‑int k
+    with pytest.raises(ValueError):
+        poisson_pmf(2, -1.0)  # negative λ
+    with pytest.raises(ValueError):
+        poisson_pmf(2, "lam")  # non‑numeric λ
