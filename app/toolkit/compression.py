@@ -53,3 +53,34 @@ def rle_bytes_encode(data: bytes) -> bytes:
     encoded_parts.append(current_byte)
 
     return bytes(encoded_parts)
+
+
+def rle_bytes_decode(data: bytes) -> bytes:
+    """Decode *data* from run‑length encoding back to the original bytes.
+
+    The input must consist of an even number of bytes, each pair representing
+    ``<count><value>``. ``count`` must be in the range 1‑255; a ``ValueError`` is
+    raised for malformed input.
+
+    Args:
+        data: The RLE‑encoded bytes.
+
+    Returns:
+        The original uncompressed ``bytes`` object.
+
+    Raises:
+        ValueError: If *data* has an odd length.
+    """
+    if not data:
+        return b""
+
+    if len(data) % 2 != 0:
+        raise ValueError("Encoded data length must be even")
+
+    decoded = bytearray()
+    for i in range(0, len(data), 2):
+        count = data[i]
+        value = data[i + 1]
+        decoded.extend([value] * count)
+
+    return bytes(decoded)

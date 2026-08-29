@@ -2326,3 +2326,9 @@ Guardrail: ruff + import + pytest passed.
 Implement gravitational potential_energy, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T19:50Z — success: (compression) Implement `rle_bytes_decode` in app/toolkit/compression.py: decode run-length encoded bytes. Add a pytest in tests/toolkit/test_compression.py covering the documented behaviour and at least one edge case, and export `rle_bytes_decode` from app/toolkit/__init__.py.
+
+Implement rle_bytes_decode, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

@@ -16,7 +16,7 @@ from app.toolkit.cli import confirm_prompt, parse_args_simple
 from app.toolkit.collections import chunk, flatten
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation, permutation_index
-from app.toolkit.compression import rle_bytes_encode
+from app.toolkit.compression import rle_bytes_decode, rle_bytes_encode
 from app.toolkit.config import get_env_bool, get_env_int
 from app.toolkit.datetimes import parse_iso, to_iso
 from app.toolkit.encoding import base62_decode, base62_encode
@@ -136,6 +136,7 @@ __all__ = [
     "kinetic_energy",
     "potential_energy",
     "rle_bytes_encode",
+    "rle_bytes_decode",
     "ppm_new",
     "next_cron_time",
     "StateMachine",
