@@ -2320,3 +2320,9 @@ Guardrail: ruff + import + pytest passed.
 Implement v3_sub, add tests, export from toolkit init
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T17:09Z — success: (physics) Implement `potential_energy` in app/toolkit/physics.py: compute gravitational potential energy. Add a pytest in tests/toolkit/test_physics.py covering the documented behaviour and at least one edge case, and export `potential_energy` from app/toolkit/__init__.py.
+
+Implement gravitational potential_energy, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

@@ -36,7 +36,7 @@ from app.toolkit.numbers import clamp, lerp
 from app.toolkit.numbertheory import euler_totient, mobius
 from app.toolkit.observability import Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
-from app.toolkit.physics import kinetic_energy
+from app.toolkit.physics import kinetic_energy, potential_energy
 from app.toolkit.probability import binomial_pmf, poisson_pmf
 from app.toolkit.randomness import random_hex, random_string
 from app.toolkit.regexutil import extract_emails, extract_urls
@@ -134,6 +134,7 @@ __all__ = [
     "v3_add",
     "v3_sub",
     "kinetic_energy",
+    "potential_energy",
     "rle_bytes_encode",
     "ppm_new",
     "next_cron_time",
