@@ -52,7 +52,7 @@ from app.toolkit.structures import LFUCache, LRUCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
 from app.toolkit.units import celsius_to_fahrenheit, fahrenheit_to_celsius
 from app.toolkit.validation import is_email, is_url
-from app.toolkit.vectors3d import v3_add
+from app.toolkit.vectors3d import v3_add, v3_sub
 from app.toolkit.webframework import Router, path_to_regex
 
 __all__ = [
@@ -132,6 +132,7 @@ __all__ = [
     "plural_rule_en",
     "format_list",
     "v3_add",
+    "v3_sub",
     "kinetic_energy",
     "rle_bytes_encode",
     "ppm_new",

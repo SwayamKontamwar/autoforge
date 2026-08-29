@@ -2314,3 +2314,9 @@ Guardrail: ruff + import + pytest passed.
 Implement format_list utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T13:22Z — success: (vectors3d) Implement `v3_sub` in app/toolkit/vectors3d.py: subtract two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_sub` from app/toolkit/__init__.py.
+
+Implement v3_sub, add tests, export from toolkit init
+
+Guardrail: ruff + import + pytest passed.
