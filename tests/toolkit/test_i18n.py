@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.toolkit.i18n import plural_rule_en
+from app.toolkit.i18n import format_list, plural_rule_en
 
 
 def test_plural_rule_en_basic():
@@ -19,3 +19,17 @@ def test_plural_rule_en_type_error():
         plural_rule_en(1.5)
     with pytest.raises(TypeError):
         plural_rule_en("1")
+
+
+def test_format_list_various_cases():
+    """Check English list formatting for different lengths and types."""
+    # Empty list → empty string
+    assert format_list([]) == ""
+    # Single element
+    assert format_list(["apple"]) == "apple"
+    # Two elements
+    assert format_list(["apple", "banana"]) == "apple and banana"
+    # Three elements
+    assert format_list(["apple", "banana", "cherry"]) == "apple, banana, and cherry"
+    # Non‑string items are stringified
+    assert format_list([1, 2, 3]) == "1, 2, and 3"

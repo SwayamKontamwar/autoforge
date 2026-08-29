@@ -2308,3 +2308,9 @@ Guardrail: ruff + import + pytest passed.
 Implement nth_weekday_of_month, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T09:09Z — success: (i18n) Implement `format_list` in app/toolkit/i18n.py: join a list into an English phrase with 'and'. Add a pytest in tests/toolkit/test_i18n.py covering the documented behaviour and at least one edge case, and export `format_list` from app/toolkit/__init__.py.
+
+Implement format_list utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
