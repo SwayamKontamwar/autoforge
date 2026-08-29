@@ -2332,3 +2332,9 @@ Guardrail: ruff + import + pytest passed.
 Implement rle_bytes_decode, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T23:22Z — success: (imageppm) Implement `ppm_set_pixel` in app/toolkit/imageppm.py: set a pixel's colour in a grid. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_set_pixel` from app/toolkit/__init__.py.
+
+Implement ppm_set_pixel, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

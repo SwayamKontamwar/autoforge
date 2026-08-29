@@ -44,3 +44,44 @@ def ppm_new(width: int, height: int) -> List[List[Tuple[int, int, int]]]:
     # Create a single row of black pixels and replicate it for each row.
     row: List[Tuple[int, int, int]] = [(0, 0, 0) for _ in range(width)]
     return [list(row) for _ in range(height)]
+
+
+def ppm_set_pixel(
+    grid: List[List[Tuple[int, int, int]]],
+    x: int,
+    y: int,
+    colour: Tuple[int, int, int],
+) -> None:
+    """Set the pixel at coordinates *(x, y)* to *colour*.
+
+    The grid is a list of rows (height) where each row is a list of pixel
+    tuples (width). ``x`` is the column index and ``y`` is the row index,
+    both zero‑based.
+
+    Args:
+        grid: The pixel grid returned by :func:`ppm_new`.
+        x: Column index (0 ≤ x < width).
+        y: Row index (0 ≤ y < height).
+        colour: A ``(r, g, b)`` tuple with each component in the range 0‑255.
+
+    Raises:
+        IndexError: If ``x`` or ``y`` is outside the bounds of the grid.
+        ValueError: If ``colour`` is not a three‑element tuple of ints in 0‑255.
+    """
+    # Validate coordinates.
+    if y < 0 or y >= len(grid):
+        raise IndexError("y coordinate out of bounds")
+    if len(grid) == 0:
+        raise IndexError("grid is empty")
+    if x < 0 or x >= len(grid[0]):
+        raise IndexError("x coordinate out of bounds")
+
+    # Validate colour.
+    if (
+        not isinstance(colour, tuple)
+        or len(colour) != 3
+        or any(not isinstance(c, int) or c < 0 or c > 255 for c in colour)
+    ):
+        raise ValueError("colour must be a tuple of three ints in 0‑255")
+
+    grid[y][x] = colour

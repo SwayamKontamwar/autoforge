@@ -26,7 +26,7 @@ from app.toolkit.functional import compose, pipe
 from app.toolkit.geometry import distance_2d, manhattan_distance
 from app.toolkit.hashing import md5_hex, sha256_hex
 from app.toolkit.i18n import format_list, plural_rule_en
-from app.toolkit.imageppm import ppm_new
+from app.toolkit.imageppm import ppm_new, ppm_set_pixel
 from app.toolkit.markdown import md_bold, md_italic
 from app.toolkit.mathx import clamp_angle, hypot
 from app.toolkit.matrix import mat_identity, mat_zeros
@@ -138,6 +138,7 @@ __all__ = [
     "rle_bytes_encode",
     "rle_bytes_decode",
     "ppm_new",
+    "ppm_set_pixel",
     "next_cron_time",
     "StateMachine",
     "euclidean_knn",
