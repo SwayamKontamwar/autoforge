@@ -2302,3 +2302,9 @@ Guardrail: ruff + import + pytest passed.
 Implement md_italic, add tests, export from toolkit init
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T03:11Z — success: (calendars) Implement `nth_weekday_of_month` in app/toolkit/calendars.py: return the date of the nth given weekday in a month. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `nth_weekday_of_month` from app/toolkit/__init__.py.
+
+Implement nth_weekday_of_month, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

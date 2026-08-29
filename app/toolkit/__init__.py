@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from app.toolkit.algorithms import binary_search, bisect_left
 from app.toolkit.bits import clear_bit, set_bit
-from app.toolkit.calendars import easter_date
+from app.toolkit.calendars import easter_date, nth_weekday_of_month
 from app.toolkit.checkdigit import upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple
 from app.toolkit.collections import chunk, flatten
@@ -128,6 +128,7 @@ __all__ = [
     "md_bold",
     "md_italic",
     "easter_date",
+    "nth_weekday_of_month",
     "plural_rule_en",
     "v3_add",
     "kinetic_energy",
