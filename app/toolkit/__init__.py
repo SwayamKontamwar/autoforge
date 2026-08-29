@@ -27,7 +27,7 @@ from app.toolkit.geometry import distance_2d, manhattan_distance
 from app.toolkit.hashing import md5_hex, sha256_hex
 from app.toolkit.i18n import plural_rule_en
 from app.toolkit.imageppm import ppm_new
-from app.toolkit.markdown import md_bold
+from app.toolkit.markdown import md_bold, md_italic
 from app.toolkit.mathx import clamp_angle, hypot
 from app.toolkit.matrix import mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
@@ -126,6 +126,7 @@ __all__ = [
     "extract_emails",
     "extract_urls",
     "md_bold",
+    "md_italic",
     "easter_date",
     "plural_rule_en",
     "v3_add",

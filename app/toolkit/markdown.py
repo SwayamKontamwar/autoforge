@@ -16,3 +16,15 @@ def md_bold(text: str) -> str:
         The input string surrounded by double asterisks, e.g. ``**text**``.
     """
     return f"**{text}**"
+
+
+def md_italic(text: str) -> str:
+    """Return *text* wrapped in markdown italic markers.
+
+    Args:
+        text: The string to be italicized.
+
+    Returns:
+        The input string surrounded by single asterisks, e.g. ``*text*``.
+    """
+    return f"*{text}*"

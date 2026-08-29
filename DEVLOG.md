@@ -2296,3 +2296,9 @@ Guardrail: ruff + import + pytest passed.
 Implement extract_urls, export it, add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-29T01:03Z — success: (markdown) Implement `md_italic` in app/toolkit/markdown.py: wrap text in markdown italic markers. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_italic` from app/toolkit/__init__.py.
+
+Implement md_italic, add tests, export from toolkit init
+
+Guardrail: ruff + import + pytest passed.
