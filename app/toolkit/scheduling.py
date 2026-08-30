@@ -22,7 +22,7 @@ next occurrence is returned.
 from __future__ import annotations
 
 import datetime
-from typing import Set
+from typing import Iterator, Set
 
 
 def _parse_field(field: str, min_val: int, max_val: int) -> Set[int]:
@@ -88,3 +88,24 @@ def next_cron_time(cron_expr: str, from_dt: datetime.datetime) -> datetime.datet
         candidate += datetime.timedelta(minutes=1)
 
     raise ValueError("No matching datetime found within 5‑year window")
+
+
+def cron_iter(cron_expr: str, start_dt: datetime.datetime) -> Iterator[datetime.datetime]:
+    """Yield successive datetimes matching *cron_expr* after *start_dt*.
+
+    The first yielded value is the first match **strictly later** than
+    ``start_dt``.  The iterator is infinite; callers should break when they have
+    collected enough values.
+
+    Args:
+        cron_expr: Five‑field cron expression (minute hour day month weekday).
+        start_dt:  Reference ``datetime`` (naïve or timezone‑aware).
+
+    Yields:
+        ``datetime`` objects matching the expression, preserving ``tzinfo``.
+    """
+    current = start_dt
+    while True:
+        nxt = next_cron_time(cron_expr, current)
+        yield nxt
+        current = nxt

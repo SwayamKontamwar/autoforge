@@ -41,7 +41,7 @@ from app.toolkit.probability import binomial_pmf, poisson_pmf
 from app.toolkit.randomness import random_hex, random_string
 from app.toolkit.regexutil import extract_emails, extract_urls
 from app.toolkit.resilience import retry
-from app.toolkit.scheduling import next_cron_time
+from app.toolkit.scheduling import cron_iter, next_cron_time
 from app.toolkit.security import constant_time_equals, generate_token
 from app.toolkit.serialization import from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
@@ -140,6 +140,7 @@ __all__ = [
     "ppm_new",
     "ppm_set_pixel",
     "next_cron_time",
+    "cron_iter",
     "StateMachine",
     "euclidean_knn",
     "upc_check_digit",

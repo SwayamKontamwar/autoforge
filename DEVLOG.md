@@ -2338,3 +2338,9 @@ Guardrail: ruff + import + pytest passed.
 Implement ppm_set_pixel, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-30T08:23Z — success: (scheduling) Implement `cron_iter` in app/toolkit/scheduling.py: yield successive datetimes matching a cron expression. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `cron_iter` from app/toolkit/__init__.py.
+
+Implement cron_iter generator, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
