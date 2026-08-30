@@ -2399,3 +2399,9 @@ Found 21 errors.
 ## 2026-08-30T17:29Z — rejected: (statemachine) Implement `add_transition` in app/toolkit/statemachine.py: register a transition between two states on an event. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `add_transition` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-08-30T19:54Z — skipped: (statemachine) Implement `add_transition` in app/toolkit/statemachine.py: register a transition between two states on an event. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `add_transition` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
