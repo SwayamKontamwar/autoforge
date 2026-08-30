@@ -2344,3 +2344,54 @@ Guardrail: ruff + import + pytest passed.
 Implement cron_iter generator, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-08-30T13:18Z — failed: (statemachine) Implement `add_transition` in app/toolkit/statemachine.py: register a transition between two states on an event. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `add_transition` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+| from app.toolkit.resilience import retry
+44 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |
+help: Add unused import `extract_emails` to __all__
+
+F401 `app.toolkit.regexutil.extract_urls` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:42:51
+   |
+40 | from app.toolkit.probability import binomial_pmf, poisson_pmf
+41 | from app.toolkit.randomness import random_hex, random_string
+42 | from app.toolkit.regexutil import extract_emails, extract_urls
+   |                                                   ^^^^^^^^^^^^
+43 | from app.toolkit.resilience import retry
+44 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |
+help: Add unused import `extract_urls` to __all__
+
+F401 `app.toolkit.scheduling.cron_iter` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:44:36
+   |
+42 | from app.toolkit.regexutil import extract_emails, extract_urls
+43 | from app.toolkit.resilience import retry
+44 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |                                    ^^^^^^^^^
+45 | from app.toolkit.security import constant_time_equals, generate_token
+46 | from app.toolkit.serialization import from_jsonl, to_jsonl
+   |
+help: Add unused import `cron_iter` to __all__
+
+F401 `app.toolkit.scheduling.next_cron_time` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:44:47
+   |
+42 | from app.toolkit.regexutil import extract_emails, extract_urls
+43 | from app.toolkit.resilience import retry
+44 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |                                               ^^^^^^^^^^^^^^
+45 | from app.toolkit.security import constant_time_equals, generate_token
+46 | from app.toolkit.serialization import from_jsonl, to_jsonl
+   |
+help: Add unused import `next_cron_time` to __all__
+
+Found 21 errors.
+
+```
