@@ -2405,3 +2405,39 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-08-30T23:32Z — failed: (graphx) Implement `floyd_warshall` in app/toolkit/graphx.py: compute all-pairs shortest paths. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `floyd_warshall` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+olves
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:22: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app()
+  
+  tests/test_route_precedence.py::test_the_catch_all_still_serves_real_short_codes
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_graphx.py::test_floyd_warshall_basic - assert 3.0 < 1e-09
+   +  where 3.0 = abs((8.0 - 5))
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...e 3.0 = abs((8.0 - 5))\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_graphx.py::test_floyd_warshall_basic - assert 3.0 < 1e-09
+ +  where 3.0 = abs((8.0 - 5))
+2 failed, 560 passed, 22 warnings in 41.06s
+
+```
