@@ -2455,3 +2455,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-08-31T19:30Z — rejected: (ml) Implement `kmeans` in app/toolkit/ml.py: cluster points into k groups by Lloyd's algorithm. Add a pytest in tests/toolkit/test_ml.py covering the documented behaviour and at least one edge case, and export `kmeans` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-08-31T21:56Z — skipped: (ml) Implement `kmeans` in app/toolkit/ml.py: cluster points into k groups by Lloyd's algorithm. Add a pytest in tests/toolkit/test_ml.py covering the documented behaviour and at least one edge case, and export `kmeans` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
