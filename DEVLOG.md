@@ -2479,3 +2479,9 @@ Guardrail: ruff + import + pytest passed.
 Implement inverse_lerp, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-01T17:20Z — success: (datetimes) Implement `now_utc` in app/toolkit/datetimes.py: return the current timezone-aware UTC datetime. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `now_utc` from app/toolkit/__init__.py.
+
+Implement now_utc, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
