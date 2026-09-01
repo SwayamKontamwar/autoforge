@@ -60,3 +60,45 @@ def word_wrap(text: str, width: int) -> str:
             current = word
     lines.append(current)
     return "\n".join(lines)
+
+
+_SMALL_WORDS = {
+    "a",
+    "an",
+    "and",
+    "as",
+    "at",
+    "but",
+    "by",
+    "for",
+    "in",
+    "nor",
+    "of",
+    "on",
+    "or",
+    "the",
+    "to",
+    "up",
+    "via",
+    "with",
+}
+
+
+def title_case(text: str) -> str:
+    """Return *text* in title case.
+
+    The first character of each word is capitalised, except for small words
+    (articles, prepositions, etc.) which remain lower‑case unless they are the
+    first word in the string.
+    """
+    if not text:
+        return ""
+    words = text.split()
+    result: list[str] = []
+    for i, word in enumerate(words):
+        low = word.lower()
+        if i == 0 or low not in _SMALL_WORDS:
+            result.append(low.capitalize())
+        else:
+            result.append(low)
+    return " ".join(result)

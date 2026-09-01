@@ -48,7 +48,7 @@ from app.toolkit.serialization import from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean, harmonic_mean
 from app.toolkit.streams import batched, iterate
-from app.toolkit.strings import slugify, truncate, word_wrap
+from app.toolkit.strings import slugify, title_case, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
 from app.toolkit.units import celsius_to_fahrenheit, fahrenheit_to_celsius
@@ -60,6 +60,7 @@ __all__ = [
     "slugify",
     "truncate",
     "word_wrap",
+    "title_case",
     "clamp",
     "lerp",
     "euler_totient",

@@ -2467,3 +2467,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement ean13_check_digit, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-01T07:53Z — success: (strings) Implement `title_case` in app/toolkit/strings.py: capitalise the first letter of each word, leaving small words like 'of' lowercase unless first. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `title_case` from app/toolkit/__init__.py.
+
+Implement title_case utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
