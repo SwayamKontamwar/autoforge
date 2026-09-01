@@ -2473,3 +2473,9 @@ Guardrail: ruff + import + pytest passed.
 Implement title_case utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-01T12:45Z — success: (numbers) Implement `inverse_lerp` in app/toolkit/numbers.py: return the fraction of a value between two bounds. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `inverse_lerp` from app/toolkit/__init__.py.
+
+Implement inverse_lerp, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

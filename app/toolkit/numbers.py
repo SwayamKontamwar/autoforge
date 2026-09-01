@@ -3,6 +3,7 @@
 Currently provides:
 * ``clamp`` – constrain a numeric value to an inclusive ``min_``/``max_`` range.
 * ``lerp`` – linearly interpolate between two numbers by a fraction.
+* ``inverse_lerp`` – compute the fraction of a value between two bounds.
 """
 
 from __future__ import annotations
@@ -54,4 +55,26 @@ def lerp(start: Number, end: Number, fraction: Number) -> Number:
     return start + (end - start) * fraction
 
 
-__all__ = ["clamp", "lerp"]
+def inverse_lerp(start: Number, end: Number, value: Number) -> Number:
+    """Return the fractional position of ``value`` between ``start`` and ``end``.
+
+    The result is ``(value - start) / (end - start)``.  If ``start`` and ``end``
+    are equal, a ``ValueError`` is raised because the fraction is undefined.
+
+    Args:
+        start: The lower bound of the range.
+        end: The upper bound of the range.
+        value: The value whose fractional position is desired.
+
+    Returns:
+        The fraction representing ``value``'s position between ``start`` and ``end``.
+
+    Raises:
+        ValueError: If ``start`` equals ``end``.
+    """
+    if start == end:
+        raise ValueError("start and end must not be equal")
+    return (value - start) / (end - start)
+
+
+__all__ = ["clamp", "lerp", "inverse_lerp"]
