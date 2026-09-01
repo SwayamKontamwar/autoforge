@@ -2491,3 +2491,9 @@ Guardrail: ruff + import + pytest passed.
 Implement flatten_deep, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-01T23:20Z — success: (functional) Implement `curry` in app/toolkit/functional.py: return a curried version of a function. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `curry` from app/toolkit/__init__.py.
+
+Implement curry utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

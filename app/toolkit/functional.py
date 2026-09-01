@@ -1,10 +1,13 @@
 """Functional utilities for the toolkit.
 
-This module currently provides a simple function composition helper.
+This module currently provides a simple function composition helper and a
+pipeline helper.  The new ``curry`` function transforms a callable into its
+curried form, allowing partial application of arguments.
 """
 
 from __future__ import annotations
 
+from inspect import Parameter, signature
 from typing import Any, Callable
 
 
@@ -76,3 +79,47 @@ def pipe(*functions: Callable[..., Any]) -> Callable[..., Any]:
         return result
 
     return piped
+
+
+def curry(func: Callable[..., Any]) -> Callable[..., Any]:
+    """Return a curried version of *func*.
+
+    The returned callable accepts arguments incrementally until the original
+    function's required positional parameters are satisfied, at which point it
+    invokes *func* with the accumulated arguments and any supplied keyword
+    arguments.
+
+    Example:
+        >>> def add(a, b): return a + b
+        >>> curried_add = curry(add)
+        >>> add_one = curried_add(1)
+        >>> add_one(2)  # returns 3
+        3
+
+    Args:
+        func: The callable to curry. It should have a fixed number of required
+            positional arguments (no ``*args`` handling).
+
+    Returns:
+        A new callable that can be partially applied.
+    """
+    sig = signature(func)
+    required_params = [
+        p
+        for p in sig.parameters.values()
+        if p.kind in (Parameter.POSITIONAL_ONLY, Parameter.POSITIONAL_OR_KEYWORD)
+        and p.default is Parameter.empty
+    ]
+    required_count = len(required_params)
+
+    def _curried(*args: Any, **kwargs: Any) -> Any:
+        # If we already have enough arguments to satisfy required positional
+        # parameters, call the original function.
+        if len(args) + len(kwargs) >= required_count:
+            return func(*args, **kwargs)
+        # Otherwise, return a new function that collects more arguments.
+        return lambda *more_args, **more_kwargs: _curried(
+            *args, *more_args, **{**kwargs, **more_kwargs}
+        )
+
+    return _curried

@@ -1,4 +1,4 @@
-from app.toolkit.functional import compose
+from app.toolkit.functional import compose, curry
 
 
 def test_compose_basic_two_functions() -> None:
@@ -40,3 +40,45 @@ def test_compose_multiple_args_first_function() -> None:
 
     # sum_two receives two args, double receives the result
     assert compose(double, sum_two)(2, 3) == 10
+
+
+def test_curry_partial_application() -> None:
+    def add(a: int, b: int) -> int:
+        return a + b
+
+    curried = curry(add)
+    add_five = curried(5)
+    assert callable(add_five)
+    assert add_five(3) == 8
+
+
+def test_curry_multiple_arguments_at_once() -> None:
+    def mul(a: int, b: int, c: int) -> int:
+        return a * b * c
+
+    curried = curry(mul)
+    # Supplying all arguments in one call should work.
+    assert curried(2, 3, 4) == 24
+    # Supplying them step‑by‑step also works.
+    assert curried(2)(3)(4) == 24
+    assert curried(2, 3)(4) == 24
+    assert curried(2)(3, 4) == 24
+
+
+def test_curry_with_keyword_arguments() -> None:
+    def greet(greeting: str, name: str) -> str:
+        return f"{greeting}, {name}"
+
+    curried = curry(greet)
+    step = curried(greeting="Hi")
+    assert callable(step)
+    assert step(name="Alice") == "Hi, Alice"
+
+
+def test_curry_zero_argument_function() -> None:
+    def constant() -> int:
+        return 42
+
+    curried = curry(constant)
+    # No arguments needed; calling returns the result immediately.
+    assert curried() == 42

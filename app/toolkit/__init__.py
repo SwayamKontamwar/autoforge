@@ -22,7 +22,7 @@ from app.toolkit.datetimes import now_utc, parse_iso, to_iso
 from app.toolkit.encoding import base62_decode, base62_encode
 from app.toolkit.files import human_path, split_extension
 from app.toolkit.finance import compound_interest
-from app.toolkit.functional import compose, pipe
+from app.toolkit.functional import compose, curry, pipe
 from app.toolkit.geometry import distance_2d, manhattan_distance
 from app.toolkit.graphx import floyd_warshall
 from app.toolkit.hashing import md5_hex, sha256_hex
@@ -74,6 +74,7 @@ __all__ = [
     "flatten_deep",
     "compose",
     "pipe",
+    "curry",
     "base62_encode",
     "base62_decode",
     "md5_hex",
