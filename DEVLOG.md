@@ -2461,3 +2461,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-09-01T00:38Z — success: (checkdigit) Implement `ean13_check_digit` in app/toolkit/checkdigit.py: compute the EAN-13 check digit. Add a pytest in tests/toolkit/test_checkdigit.py covering the documented behaviour and at least one edge case, and export `ean13_check_digit` from app/toolkit/__init__.py.
+
+Implement ean13_check_digit, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

@@ -11,7 +11,7 @@ from __future__ import annotations
 from app.toolkit.algorithms import binary_search, bisect_left
 from app.toolkit.bits import clear_bit, set_bit
 from app.toolkit.calendars import easter_date, nth_weekday_of_month
-from app.toolkit.checkdigit import upc_check_digit
+from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple
 from app.toolkit.collections import chunk, flatten
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
@@ -145,5 +145,6 @@ __all__ = [
     "StateMachine",
     "euclidean_knn",
     "upc_check_digit",
+    "ean13_check_digit",
     "floyd_warshall",
 ]
