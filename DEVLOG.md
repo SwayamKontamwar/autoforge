@@ -2485,3 +2485,9 @@ Guardrail: ruff + import + pytest passed.
 Implement now_utc, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-01T20:00Z — success: (collections) Implement `flatten_deep` in app/toolkit/collections.py: recursively flatten arbitrarily nested iterables. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `flatten_deep` from app/toolkit/__init__.py.
+
+Implement flatten_deep, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

@@ -13,7 +13,7 @@ from app.toolkit.bits import clear_bit, set_bit
 from app.toolkit.calendars import easter_date, nth_weekday_of_month
 from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple
-from app.toolkit.collections import chunk, flatten
+from app.toolkit.collections import chunk, flatten, flatten_deep
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation, permutation_index
 from app.toolkit.compression import rle_bytes_decode, rle_bytes_encode
@@ -71,6 +71,7 @@ __all__ = [
     "now_utc",
     "chunk",
     "flatten",
+    "flatten_deep",
     "compose",
     "pipe",
     "base62_encode",

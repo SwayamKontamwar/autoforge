@@ -64,3 +64,25 @@ def flatten(iterable: Iterable[Any]) -> List[Any]:
         else:
             result.append(item)
     return result
+
+
+def flatten_deep(iterable: Iterable[Any]) -> List[Any]:
+    """Recursively flatten arbitrarily nested iterables.
+
+    Containers such as ``list``, ``tuple``, ``set`` and ``frozenset`` are
+    traversed recursively. Strings and bytes are treated as atomic values and
+    are not iterated over.
+
+    Args:
+        iterable: An iterable that may contain nested iterable containers.
+
+    Returns:
+        A flat list containing all non‑container elements in depth‑first order.
+    """
+    result: List[Any] = []
+    for item in iterable:
+        if isinstance(item, (list, tuple, set, frozenset)):
+            result.extend(flatten_deep(item))
+        else:
+            result.append(item)
+    return result
