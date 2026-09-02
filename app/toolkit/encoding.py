@@ -11,7 +11,15 @@ from typing import Final
 _ALPHABET: Final = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 _BASE: Final = 62
 
-__all__: list[str] = ["base62_encode", "base62_decode"]
+# Bitcoin‑style Base58 alphabet (no 0, O, I, l)
+_ALPHABET_BASE58: Final = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+_BASE58: Final = 58
+
+__all__: list[str] = [
+    "base62_encode",
+    "base62_decode",
+    "base58_encode",
+]
 
 
 def base62_encode(value: int) -> str:
@@ -74,3 +82,33 @@ def base62_decode(text: str) -> int:
             raise ValueError(f"invalid character '{char}' for base‑62") from exc
         value = value * _BASE + digit
     return value
+
+
+def base58_encode(value: int) -> str:
+    """Encode a non‑negative integer to a Bitcoin‑style base‑58 string.
+
+    The alphabet excludes characters that are easily confused: ``0``, ``O``,
+    ``I`` and ``l``. ``1`` represents zero and ``z`` represents fifty‑seven.
+
+    Args:
+        value: An integer greater than or equal to ``0``.
+
+    Returns:
+        The base‑58 representation of ``value`` without leading zeros.
+
+    Raises:
+        TypeError: If ``value`` is not an ``int``.
+        ValueError: If ``value`` is negative.
+    """
+    if not isinstance(value, int):
+        raise TypeError("value must be an int")
+    if value < 0:
+        raise ValueError("value must be non‑negative")
+    if value == 0:
+        return _ALPHABET_BASE58[0]
+
+    digits: list[str] = []
+    while value:
+        value, rem = divmod(value, _BASE58)
+        digits.append(_ALPHABET_BASE58[rem])
+    return "".join(reversed(digits))

@@ -2497,3 +2497,9 @@ Guardrail: ruff + import + pytest passed.
 Implement curry utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-02T07:10Z — success: (encoding) Implement `base58_encode` in app/toolkit/encoding.py: encode bytes to a Bitcoin-style base58 string. Add a pytest in tests/toolkit/test_encoding.py covering the documented behaviour and at least one edge case, and export `base58_encode` from app/toolkit/__init__.py.
+
+Implement Bitcoin-style base58_encode, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
