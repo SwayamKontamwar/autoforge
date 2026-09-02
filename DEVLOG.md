@@ -2509,3 +2509,22 @@ Guardrail: ruff + import + pytest passed.
 Implement sha1_hex utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-02T17:11Z — failed: (validation) Implement `is_ipv4` in app/toolkit/validation.py: validate an IPv4 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv4` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: Expected `,`, found `}`
+  --> app/toolkit/validation.py:61:69
+   |
+59 |         return False
+60 |     parsed = urlparse(value)
+61 |     return parsed.scheme in {"http", "https"} and bool(parsed.netloc})
+   |                                                                     ^
+
+Found 1 error.
+
+```
