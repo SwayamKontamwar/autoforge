@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.hashing import md5_hex, sha256_hex
+from app.toolkit.hashing import md5_hex, sha1_hex, sha256_hex
 
 
 def test_md5_hex_basic() -> None:
@@ -29,3 +29,16 @@ def test_sha256_hex_empty() -> None:
 def test_sha256_hex_invalid_type() -> None:
     with pytest.raises(TypeError):
         sha256_hex(123)  # type: ignore
+
+
+def test_sha1_hex_basic() -> None:
+    assert sha1_hex(b"hello") == "aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
+
+
+def test_sha1_hex_empty() -> None:
+    assert sha1_hex(b"") == "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+
+
+def test_sha1_hex_invalid_type() -> None:
+    with pytest.raises(TypeError):
+        sha1_hex(None)  # type: ignore

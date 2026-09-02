@@ -25,7 +25,7 @@ from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose, curry, pipe
 from app.toolkit.geometry import distance_2d, manhattan_distance
 from app.toolkit.graphx import floyd_warshall
-from app.toolkit.hashing import md5_hex, sha256_hex
+from app.toolkit.hashing import md5_hex, sha1_hex, sha256_hex
 from app.toolkit.i18n import format_list, plural_rule_en
 from app.toolkit.imageppm import ppm_new, ppm_set_pixel
 from app.toolkit.markdown import md_bold, md_italic
@@ -80,6 +80,7 @@ __all__ = [
     "base62_decode",
     "md5_hex",
     "sha256_hex",
+    "sha1_hex",
     "is_email",
     "is_url",
     "parse_semver",

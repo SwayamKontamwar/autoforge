@@ -8,7 +8,7 @@ from __future__ import annotations
 import hashlib
 from typing import Final
 
-__all__: Final = ["md5_hex", "sha256_hex"]
+__all__: Final = ["md5_hex", "sha256_hex", "sha1_hex"]
 
 
 def md5_hex(data: bytes) -> str:
@@ -43,3 +43,20 @@ def sha256_hex(data: bytes) -> str:
     if not isinstance(data, (bytes, bytearray, memoryview)):
         raise TypeError("sha256_hex expects a bytes-like object")
     return hashlib.sha256(data).hexdigest()
+
+
+def sha1_hex(data: bytes) -> str:
+    """Return the SHA‑1 hex digest of *data*.
+
+    Args:
+        data: Bytes-like object to hash.
+
+    Returns:
+        A 40‑character hexadecimal string representing the SHA‑1 digest.
+
+    Raises:
+        TypeError: If *data* is not a ``bytes``‑like object.
+    """
+    if not isinstance(data, (bytes, bytearray, memoryview)):
+        raise TypeError("sha1_hex expects a bytes-like object")
+    return hashlib.sha1(data).hexdigest()

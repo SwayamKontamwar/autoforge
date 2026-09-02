@@ -2503,3 +2503,9 @@ Guardrail: ruff + import + pytest passed.
 Implement Bitcoin-style base58_encode, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-02T12:17Z — success: (hashing) Implement `sha1_hex` in app/toolkit/hashing.py: return the sha1 hex digest of bytes. Add a pytest in tests/toolkit/test_hashing.py covering the documented behaviour and at least one edge case, and export `sha1_hex` from app/toolkit/__init__.py.
+
+Implement sha1_hex utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
