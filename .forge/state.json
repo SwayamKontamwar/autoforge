@@ -1,7 +1,7 @@
 {
-  "(validation) Implement `is_ipv4` in app/toolkit/validation.py: validate an IPv4 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv4` from app/toolkit/__init__.py.": 1,
+  "(validation) Implement `is_ipv4` in app/toolkit/validation.py: validate an IPv4 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv4` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {
-    "(validation) Implement `is_ipv4` in app/toolkit/validation.py: validate an IPv4 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv4` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\ninvalid-syntax: Expected `,`, found `}`\n  --> app/toolkit/validation.py:61:69\n   |\n59 |         return False\n60 |     parsed = urlparse(value)\n61 |     return parsed.scheme in {\"http\", \"https\"} and bool(parsed.netloc})\n   |                                                                     ^\n\nFound 1 error.\n"
+    "(validation) Implement `is_ipv4` in app/toolkit/validation.py: validate an IPv4 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv4` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\nF821 Undefined name `_IPv4_REGEX`\n  --> app/toolkit/validation.py:84:17\n   |\n82 |     if not isinstance(value, str):\n83 |         return False\n84 |     return bool(_IPv4_REGEX.fullmatch(value))\n   |                 ^^^^^^^^^^^\n\nFound 1 error.\n"
   }
 }

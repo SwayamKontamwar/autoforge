@@ -2528,3 +2528,22 @@ invalid-syntax: Expected `,`, found `}`
 Found 1 error.
 
 ```
+
+## 2026-09-02T19:54Z — failed: (validation) Implement `is_ipv4` in app/toolkit/validation.py: validate an IPv4 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv4` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F821 Undefined name `_IPv4_REGEX`
+  --> app/toolkit/validation.py:84:17
+   |
+82 |     if not isinstance(value, str):
+83 |         return False
+84 |     return bool(_IPv4_REGEX.fullmatch(value))
+   |                 ^^^^^^^^^^^
+
+Found 1 error.
+
+```
