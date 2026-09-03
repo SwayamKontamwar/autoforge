@@ -47,3 +47,30 @@ def bisect_left(seq: Sequence[T], target: T) -> int:
         else:
             hi = mid
     return lo
+
+
+def quicksort(seq: list[T]) -> None:
+    """Sort *seq* in place using the quicksort algorithm.
+
+    The function modifies the list directly and returns ``None``.
+    """
+
+    def _quicksort(lo: int, hi: int) -> None:
+        if lo < hi:
+            p = _partition(lo, hi)
+            _quicksort(lo, p - 1)
+            _quicksort(p + 1, hi)
+
+    def _partition(lo: int, hi: int) -> int:
+        pivot = seq[hi]
+        i = lo
+        for j in range(lo, hi):
+            if seq[j] <= pivot:
+                seq[i], seq[j] = seq[j], seq[i]
+                i += 1
+        seq[i], seq[hi] = seq[hi], seq[i]
+        return i
+
+    if len(seq) <= 1:
+        return
+    _quicksort(0, len(seq) - 1)

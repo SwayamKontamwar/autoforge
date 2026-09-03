@@ -2586,3 +2586,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement TTLCache with expiration, export it, add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-03T23:18Z — success: (algorithms) Implement `quicksort` in app/toolkit/algorithms.py: sort a list with an in-place quicksort. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `quicksort` from app/toolkit/__init__.py.
+
+Implement in-place quicksort, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

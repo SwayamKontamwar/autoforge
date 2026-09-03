@@ -1,4 +1,4 @@
-from app.toolkit.algorithms import binary_search, bisect_left
+from app.toolkit.algorithms import binary_search, bisect_left, quicksort
 
 
 def test_binary_search_found() -> None:
@@ -39,3 +39,27 @@ def test_bisect_left_edge_cases() -> None:
     assert bisect_left([5, 5, 5], 5) == 0
     # Target less than all elements
     assert bisect_left([10, 20, 30], 5) == 0
+
+
+def test_quicksort_basic_and_edge_cases() -> None:
+    # Typical unsorted list with duplicates
+    data = [3, 1, 4, 1, 5, 9, 2, 6, 5]
+    expected = sorted(data)
+    result = quicksort(data)
+    assert result is None
+    assert data == expected
+
+    # Empty list
+    empty: list[int] = []
+    assert quicksort(empty) is None
+    assert empty == []
+
+    # Single-element list
+    single = [42]
+    assert quicksort(single) is None
+    assert single == [42]
+
+    # Already sorted list
+    sorted_list = [1, 2, 3, 4]
+    assert quicksort(sorted_list) is None
+    assert sorted_list == [1, 2, 3, 4]
