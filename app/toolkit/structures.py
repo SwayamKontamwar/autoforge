@@ -17,6 +17,7 @@ Typical usage::
 
 from __future__ import annotations
 
+import time
 from collections import OrderedDict
 from typing import Generic, Hashable, Optional, TypeVar
 
@@ -122,27 +123,26 @@ class LFUCache(Generic[K, V]):
     def put(self, key: K, value: V) -> None:
         """Insert or update *key* with *value*.
 
-        If the cache exceeds its capacity the LFU entry is evicted.
-        Updating an existing key also counts as an access.
+        If the cache
         """
         if key in self._data:
-            # Update value and treat as access
-            _, freq, _ = self._data[key]
+            # Update existing entry; reset frequency to 1 and update timestamp
             self._counter += 1
-            self._data[key] = (value, freq + 1, self._counter)
+            self._data[key] = (value, 1, self._counter)
         else:
             if len(self._data) >= self.capacity:
-                # Evict the key with lowest (freq, timestamp)
-                evict_key = min(
-                    self._data.items(),
-                    key=lambda item: (item[1][1], item[1][2]),
-                )[0]
+                # Evict the least‑frequently used entry
+                # Find minimum frequency
+                min_freq = min(freq for _, freq, _ in self._data.values())
+                # Among those, find the oldest timestamp
+                candidates = [
+                    (k, ts) for k, (_, freq, ts) in self._data.items() if freq == min_freq
+                ]
+                evict_key, _ = min(candidates, key=lambda item: item[1])
                 del self._data[evict_key]
             self._counter += 1
-            # New entries start with frequency 1
             self._data[key] = (value, 1, self._counter)
 
-    # Optional convenience methods ------------------------------------------------
     def __len__(self) -> int:
         return len(self._data)
 
@@ -150,5 +150,77 @@ class LFUCache(Generic[K, V]):
         return key in self._data
 
     def __repr__(self) -> str:
-        items = [(k, v[0], v[1]) for k, v in self._data.items()]
-        return f"{self.__class__.__name__}(capacity={self.capacity}, data={items})"
+        return f"{self.__class__.__name__}(capacity={self.capacity}, data={self._data})"
+
+
+class TTLCache(Generic[K, V]):
+    """Time‑to‑Live cache.
+
+    Each entry expires *ttl* seconds after insertion.  Expired entries are
+    treated as missing and are removed on access or when space is needed.
+
+    Args:
+        capacity: Positive integer defining the maximum number of items.
+        ttl: Positive number of seconds an entry remains valid.
+
+    Raises:
+        ValueError: If *capacity* or *ttl* is not positive.
+    """
+
+    __slots__ = ("capacity", "ttl", "_data")
+
+    def __init__(self, capacity: int, ttl: float) -> None:
+        if capacity <= 0:
+            raise ValueError("capacity must be a positive integer")
+        if ttl <= 0:
+            raise ValueError("ttl must be a positive number")
+        self.capacity: int = capacity
+        self.ttl: float = float(ttl)
+        # key -> (value, expiry_timestamp)
+        self._data: dict[K, tuple[V, float]] = {}
+
+    def _purge_expired(self) -> None:
+        """Remove all expired entries."""
+        now = time.monotonic()
+        expired_keys = [k for k, (_, exp) in self._data.items() if exp <= now]
+        for k in expired_keys:
+            del self._data[k]
+
+    def get(self, key: K) -> Optional[V]:
+        """Return the value for *key* if present and not expired, otherwise ``None``."""
+        self._purge_expired()
+        entry = self._data.get(key)
+        if entry is None:
+            return None
+        value, expiry = entry
+        if expiry <= time.monotonic():
+            del self._data[key]
+            return None
+        return value
+
+    def put(self, key: K, value: V) -> None:
+        """Insert or update *key* with *value* and reset its TTL."""
+        self._purge_expired()
+        expiry = time.monotonic() + self.ttl
+        self._data[key] = (value, expiry)
+        if len(self._data) > self.capacity:
+            # Evict the entry with the earliest expiry (i.e., the one that will
+            # expire soonest).  If multiple share the same expiry, evict an
+            # arbitrary one.
+            oldest_key = min(self._data.items(), key=lambda item: item[1][1])[0]
+            del self._data[oldest_key]
+
+    def __len__(self) -> int:
+        self._purge_expired()
+        return len(self._data)
+
+    def __contains__(self, key: object) -> bool:
+        self._purge_expired()
+        return key in self._data
+
+    def __repr__(self) -> str:
+        self._purge_expired()
+        return (
+            f"{self.__class__.__name__}(capacity={self.capacity}, ttl={self.ttl}, "
+            f"data={list(self._data.items())})"
+        )
