@@ -2566,3 +2566,7 @@ F821 Undefined name `_IPv4_REGEX`
 Found 1 error.
 
 ```
+
+## 2026-09-03T07:14Z — rejected: (parsing) Implement `parse_bool` in app/toolkit/parsing.py: parse strings like yes/no/on/off/1/0 into a bool. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `parse_bool` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.

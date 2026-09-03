@@ -1,4 +1,5 @@
 {
+  "(parsing) Implement `parse_bool` in app/toolkit/parsing.py: parse strings like yes/no/on/off/1/0 into a bool. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `parse_bool` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
