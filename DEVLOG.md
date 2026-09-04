@@ -2612,3 +2612,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-04T19:42Z — rejected: (files) Implement `change_extension` in app/toolkit/files.py: replace a filename's extension. Add a pytest in tests/toolkit/test_files.py covering the documented behaviour and at least one edge case, and export `change_extension` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-04T23:03Z — skipped: (files) Implement `change_extension` in app/toolkit/files.py: replace a filename's extension. Add a pytest in tests/toolkit/test_files.py covering the documented behaviour and at least one edge case, and export `change_extension` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
