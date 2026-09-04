@@ -2598,3 +2598,9 @@ Guardrail: ruff + import + pytest passed.
 Implement uuid4 utility, export it, and add comprehensive test
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-04T12:16Z — success: (textsearch) Implement `ngrams` in app/toolkit/textsearch.py: return the character n-grams of a string. Add a pytest in tests/toolkit/test_textsearch.py covering the documented behaviour and at least one edge case, and export `ngrams` from app/toolkit/__init__.py.
+
+Implement ngrams utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

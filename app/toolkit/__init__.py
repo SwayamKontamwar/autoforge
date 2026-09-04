@@ -50,7 +50,7 @@ from app.toolkit.stats import geometric_mean, harmonic_mean
 from app.toolkit.streams import batched, iterate
 from app.toolkit.strings import slugify, title_case, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache, TTLCache
-from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
+from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio, ngrams
 from app.toolkit.units import celsius_to_fahrenheit, fahrenheit_to_celsius
 from app.toolkit.validation import is_email, is_url
 from app.toolkit.vectors3d import v3_add, v3_sub
@@ -96,6 +96,7 @@ __all__ = [
     "uuid4",
     "fuzzy_ratio",
     "fuzzy_best_match",
+    "ngrams",
     "human_path",
     "split_extension",
     "build_query",

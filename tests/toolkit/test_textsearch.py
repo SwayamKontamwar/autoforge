@@ -1,4 +1,4 @@
-from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio
+from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio, ngrams
 
 
 def test_fuzzy_ratio_typical_case() -> None:
@@ -29,3 +29,10 @@ def test_fuzzy_best_match_tie() -> None:
     # All candidates have the same distance to "cat"
     candidates = ["bat", "rat", "mat"]
     assert fuzzy_best_match("cat", candidates) == "bat"
+
+
+def test_ngrams_typical_and_edge_cases() -> None:
+    assert ngrams("hello", 2) == ["he", "el", "ll", "lo"]
+    assert ngrams("abc", 1) == ["a", "b", "c"]
+    assert ngrams("", 2) == []
+    assert ngrams("a", 3) == []

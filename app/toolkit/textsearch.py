@@ -73,3 +73,14 @@ def fuzzy_best_match(query: str, candidates: List[str]) -> Optional[str]:
             best_score = score
 
     return best_candidate
+
+
+def ngrams(s: str, n: int) -> List[str]:
+    """Return a list of contiguous character *n*-grams from *s*.
+
+    If ``n`` is less than or equal to zero, or greater than the length of *s*,
+    an empty list is returned.
+    """
+    if n <= 0 or n > len(s):
+        return []
+    return [s[i : i + n] for i in range(len(s) - n + 1)]
