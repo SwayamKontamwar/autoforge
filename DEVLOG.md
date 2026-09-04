@@ -2592,3 +2592,9 @@ Guardrail: ruff + import + pytest passed.
 Implement in-place quicksort, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-04T07:18Z — success: (randomness) Implement `uuid4` in app/toolkit/randomness.py: return a random UUID4 string. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `uuid4` from app/toolkit/__init__.py.
+
+Implement uuid4 utility, export it, and add comprehensive test
+
+Guardrail: ruff + import + pytest passed.

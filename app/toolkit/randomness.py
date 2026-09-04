@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import secrets
 import string
+import uuid
 
 
 def random_string(length: int) -> str:
@@ -27,3 +28,12 @@ def random_hex(byte_length: int) -> str:
     if byte_length <= 0:
         return ""
     return secrets.token_bytes(byte_length).hex()
+
+
+def uuid4() -> str:
+    """Return a random UUID4 string.
+
+    The UUID is generated using :func:`uuid.uuid4` and returned in the
+    canonical 8‑4‑4‑4‑12 hexadecimal format (e.g. ``'123e4567-e89b-12d3-a456-426614174000'`).
+    """
+    return str(uuid.uuid4())
