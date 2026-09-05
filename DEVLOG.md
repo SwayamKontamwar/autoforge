@@ -2628,3 +2628,76 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement strip_query utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-05T16:05Z — failed: (colors) Implement `rgb_to_hsl` in app/toolkit/colors.py: convert RGB to HSL. Add a pytest in tests/toolkit/test_colors.py covering the documented behaviour and at least one edge case, and export `rgb_to_hsl` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+E741 Ambiguous variable name: `l`
+  --> app/toolkit/colors.py:64:5
+   |
+62 |     max_c = max(r_f, g_f, b_f)
+63 |     min_c = min(r_f, g_f, b_f)
+64 |     l = (max_c + min_c) / 2.0
+   |     ^
+65 |
+66 |     if max_c == min_c:
+   |
+
+E741 Ambiguous variable name: `l`
+  --> tests/toolkit/test_colors.py:20:11
+   |
+18 | def test_rgb_to_hsl_basic() -> None:
+19 |     # Red
+20 |     h, s, l = rgb_to_hsl((255, 0, 0))
+   |           ^
+21 |     assert h == pytest.approx(0.0)
+22 |     assert s == pytest.approx(1.0)
+   |
+
+E741 Ambiguous variable name: `l`
+  --> tests/toolkit/test_colors.py:26:11
+   |
+25 |     # Green
+26 |     h, s, l = rgb_to_hsl((0, 255, 0))
+   |           ^
+27 |     assert h == pytest.approx(120.0)
+28 |     assert s == pytest.approx(1.0)
+   |
+
+E741 Ambiguous variable name: `l`
+  --> tests/toolkit/test_colors.py:32:11
+   |
+31 |     # Blue
+32 |     h, s, l = rgb_to_hsl((0, 0, 255))
+   |           ^
+33 |     assert h == pytest.approx(240.0)
+34 |     assert s == pytest.approx(1.0)
+   |
+
+E741 Ambiguous variable name: `l`
+  --> tests/toolkit/test_colors.py:38:11
+   |
+37 |     # White
+38 |     h, s, l = rgb_to_hsl((255, 255, 255))
+   |           ^
+39 |     assert h == pytest.approx(0.0)
+40 |     assert s == pytest.approx(0.0)
+   |
+
+E741 Ambiguous variable name: `l`
+  --> tests/toolkit/test_colors.py:44:11
+   |
+43 |     # Black
+44 |     h, s, l = rgb_to_hsl((0, 0, 0))
+   |           ^
+45 |     assert h == pytest.approx(0.0)
+46 |     assert s == pytest.approx(0.0)
+   |
+
+Found 6 errors.
+
+```
