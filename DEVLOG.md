@@ -2701,3 +2701,7 @@ E741 Ambiguous variable name: `l`
 Found 6 errors.
 
 ```
+
+## 2026-09-05T19:10Z — rejected: (colors) Implement `rgb_to_hsl` in app/toolkit/colors.py: convert RGB to HSL. Add a pytest in tests/toolkit/test_colors.py covering the documented behaviour and at least one edge case, and export `rgb_to_hsl` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
