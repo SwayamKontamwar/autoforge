@@ -32,7 +32,7 @@ from app.toolkit.markdown import md_bold, md_italic
 from app.toolkit.mathx import clamp_angle, hypot
 from app.toolkit.matrix import mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
-from app.toolkit.net import build_query, join_url
+from app.toolkit.net import build_query, join_url, strip_query
 from app.toolkit.numbers import clamp, inverse_lerp, lerp
 from app.toolkit.numbertheory import euler_totient, mobius
 from app.toolkit.observability import Stopwatch, Timer
@@ -101,6 +101,7 @@ __all__ = [
     "split_extension",
     "build_query",
     "join_url",
+    "strip_query",
     "hex_to_rgb",
     "rgb_to_hex",
     "celsius_to_fahrenheit",

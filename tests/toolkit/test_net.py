@@ -1,6 +1,6 @@
 """Tests for the ``app.toolkit.net`` module."""
 
-from app.toolkit.net import build_query, join_url
+from app.toolkit.net import build_query, join_url, strip_query
 
 
 def test_build_query_basic():
@@ -31,3 +31,18 @@ def test_join_url_edge_cases():
     assert join_url("http://example.com/api/", "") == "http://example.com/api/"
     # Absolute relative overrides base
     assert join_url("http://example.com/api", "https://other.com/path") == "https://other.com/path"
+
+
+def test_strip_query_basic():
+    """Removing a standard query string."""
+    url = "https://example.com/path?foo=bar&baz=qux"
+    assert strip_query(url) == "https://example.com/path"
+
+
+def test_strip_query_edge_cases():
+    """No query returns unchanged; fragment is preserved."""
+    # No query
+    assert strip_query("https://example.com/path") == "https://example.com/path"
+    # Query with fragment
+    url = "https://example.com/path?foo=bar#section"
+    assert strip_query(url) == "https://example.com/path#section"

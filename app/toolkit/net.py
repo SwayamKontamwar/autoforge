@@ -9,7 +9,7 @@ string follows the insertion order of the input mapping.
 from __future__ import annotations
 
 from typing import Any, Mapping
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import quote_plus, urlparse, urlunparse
 
 
 def build_query(params: Mapping[str, Any]) -> str:
@@ -62,3 +62,31 @@ def join_url(base: str, relative: str) -> str:
     base_stripped = base.rstrip("/")
     rel_stripped = relative.lstrip("/")
     return f"{base_stripped}/{rel_stripped}"
+
+
+def strip_query(url: str) -> str:
+    """Return *url* without its query component.
+
+    The function preserves the scheme, netloc, path, params, and fragment.
+    If *url* has no query part, it is returned unchanged.
+
+    Args:
+        url: The URL string to process.
+
+    Returns:
+        The URL without the query string.
+    """
+    parsed = urlparse(url)
+    if not parsed.query:
+        return url
+    # Rebuild the URL with an empty query component.
+    return urlunparse(
+        (
+            parsed.scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            "",
+            parsed.fragment,
+        )
+    )
