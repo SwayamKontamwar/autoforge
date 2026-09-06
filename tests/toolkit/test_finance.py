@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.finance import compound_interest
+from app.toolkit.finance import compound_interest, monthly_payment
 
 
 def test_compound_interest_typical() -> None:
@@ -18,3 +18,15 @@ def test_compound_interest_edge_cases() -> None:
     assert compound_interest(-100, 0.1, 2) == pytest.approx(-121.0, rel=1e-9)
     # Negative rate (deflation) reduces the amount
     assert compound_interest(200, -0.05, 2) == pytest.approx(180.5, rel=1e-9)
+
+
+def test_monthly_payment_typical() -> None:
+    # $100,000 loan, 5% annual rate, 30 years → ~ $536.82 monthly
+    payment = monthly_payment(100_000, 0.05, 30)
+    assert payment == pytest.approx(536.821623, rel=1e-6)
+
+
+def test_monthly_payment_zero_rate() -> None:
+    # Zero interest: payment should be principal divided by months
+    payment = monthly_payment(1_200, 0.0, 1)
+    assert payment == pytest.approx(100.0, rel=1e-9)

@@ -4,6 +4,8 @@ Provides functions for common financial calculations. Currently includes:
 
 - ``compound_interest``: Compute future value of a principal amount with
   compound interest applied at a fixed rate per period.
+- ``monthly_payment``: Compute the fixed monthly payment for a loan given
+  principal, annual interest rate, and term in years.
 """
 
 from __future__ import annotations
@@ -36,3 +38,36 @@ def compound_interest(principal: Number, rate: Number, periods: int) -> float:
         raise ValueError("periods must be a non‑negative integer")
     # Convert to float to avoid integer overflow and ensure fractional rates work.
     return float(principal) * (1.0 + float(rate)) ** periods
+
+
+def monthly_payment(principal: Number, annual_rate: Number, years: int) -> float:
+    """Return the fixed monthly payment for a loan.
+
+    The calculation uses the standard amortizing loan formula::
+
+        i = annual_rate / 12          # monthly interest rate (decimal)
+        n = years * 12                # total number of payments
+        payment = principal * i * (1 + i) ** n / ((1 + i) ** n - 1)
+
+    If ``annual_rate`` is zero, the payment is simply ``principal / n``.
+
+    Args:
+        principal: Loan amount (may be negative for debt representation).
+        annual_rate: Annual interest rate as a decimal (e.g., ``0.05`` for 5 %).
+        years: Length of the loan in years. Must be a positive integer.
+
+    Returns:
+        The monthly payment as a ``float``.
+
+    Raises:
+        ValueError: If *years* is not a positive integer.
+    """
+    if years <= 0:
+        raise ValueError("years must be a positive integer")
+    n = years * 12
+    i = float(annual_rate) / 12.0
+    if i == 0.0:
+        return float(principal) / n
+    factor = (1.0 + i) ** n
+    payment = float(principal) * i * factor / (factor - 1.0)
+    return payment

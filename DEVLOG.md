@@ -2723,3 +2723,9 @@ Guardrail: ruff + import + pytest passed.
 Implement haversine distance, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-06T16:18Z — success: (finance) Implement `monthly_payment` in app/toolkit/finance.py: compute a fixed loan payment given rate and term. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `monthly_payment` from app/toolkit/__init__.py.
+
+Implement monthly_payment, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
