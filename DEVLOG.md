@@ -2717,3 +2717,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement celsius_to_kelvin, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-06T11:45Z — success: (geometry) Implement `haversine` in app/toolkit/geometry.py: return the great-circle distance between two lat/long points. Add a pytest in tests/toolkit/test_geometry.py covering the documented behaviour and at least one edge case, and export `haversine` from app/toolkit/__init__.py.
+
+Implement haversine distance, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

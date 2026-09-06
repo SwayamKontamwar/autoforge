@@ -23,7 +23,7 @@ from app.toolkit.encoding import base58_encode, base62_decode, base62_encode
 from app.toolkit.files import human_path, split_extension
 from app.toolkit.finance import compound_interest
 from app.toolkit.functional import compose, curry, pipe
-from app.toolkit.geometry import distance_2d, manhattan_distance
+from app.toolkit.geometry import distance_2d, haversine, manhattan_distance
 from app.toolkit.graphx import floyd_warshall
 from app.toolkit.hashing import md5_hex, sha1_hex, sha256_hex
 from app.toolkit.i18n import format_list, plural_rule_en
@@ -109,6 +109,7 @@ __all__ = [
     "celsius_to_kelvin",
     "distance_2d",
     "manhattan_distance",
+    "haversine",
     "compound_interest",
     "get_env_bool",
     "get_env_int",
