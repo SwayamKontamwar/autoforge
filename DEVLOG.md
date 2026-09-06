@@ -2729,3 +2729,9 @@ Guardrail: ruff + import + pytest passed.
 Implement monthly_payment, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-06T19:20Z — success: (config) Implement `get_env_list` in app/toolkit/config.py: read a comma-separated environment variable into a list. Add a pytest in tests/toolkit/test_config.py covering the documented behaviour and at least one edge case, and export `get_env_list` from app/toolkit/__init__.py.
+
+Implement get_env_list, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

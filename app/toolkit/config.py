@@ -71,3 +71,26 @@ def get_env_int(name: str, default: int = 0) -> int:
         return int(raw.strip())
     except Exception as exc:
         raise ValueError(f"Environment variable {name!r} has non‑integer value: {raw!r}") from exc
+
+
+def get_env_list(name: str, default: list[str] | None = None) -> list[str]:
+    """Return a list environment variable.
+
+    The function reads ``name`` from ``os.getenv``. If the variable is not set,
+    ``default`` (or an empty list if ``default`` is ``None``) is returned.
+    The variable's value is split on commas, each element is stripped of
+    surrounding whitespace, and empty entries are discarded.
+
+    Args:
+        name: Environment variable name.
+        default: List to return when the variable is missing.
+
+    Returns:
+        A list of non‑empty, stripped strings.
+    """
+    raw = os.getenv(name)
+    if raw is None:
+        return default if default is not None else []
+    # Split on commas, strip whitespace, and filter out empty strings
+    items = [item.strip() for item in raw.split(",")]
+    return [item for item in items if item]
