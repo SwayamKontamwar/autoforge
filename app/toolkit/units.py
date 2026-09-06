@@ -40,3 +40,21 @@ def fahrenheit_to_celsius(fahrenheit: float) -> float:
         100.0
     """
     return (fahrenheit - 32.0) * 5.0 / 9.0
+
+
+def celsius_to_kelvin(celsius: float) -> float:
+    """Convert a temperature from Celsius to Kelvin.
+
+    Args:
+        celsius: Temperature in degrees Celsius.
+
+    Returns:
+        Temperature in Kelvin.
+
+    Example:
+        >>> celsius_to_kelvin(0)
+        273.15
+        >>> celsius_to_kelvin(-273.15)
+        0.0
+    """
+    return celsius + 273.15
