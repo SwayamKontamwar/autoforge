@@ -12,7 +12,7 @@ from app.toolkit.algorithms import binary_search, bisect_left, quicksort
 from app.toolkit.bits import clear_bit, set_bit
 from app.toolkit.calendars import easter_date, nth_weekday_of_month
 from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
-from app.toolkit.cli import confirm_prompt, parse_args_simple
+from app.toolkit.cli import confirm_prompt, parse_args_simple, progress_bar
 from app.toolkit.collections import chunk, flatten, flatten_deep
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation, permutation_index
@@ -119,6 +119,7 @@ __all__ = [
     "CircuitBreaker",
     "parse_args_simple",
     "confirm_prompt",
+    "progress_bar",
     "Router",
     "path_to_regex",
     "Stopwatch",

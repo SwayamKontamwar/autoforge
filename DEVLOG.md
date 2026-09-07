@@ -2749,3 +2749,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement CircuitBreaker with open/close logic, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-07T18:16Z — success: (cli) Implement `progress_bar` in app/toolkit/cli.py: render a text progress bar for a fraction. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `progress_bar` from app/toolkit/__init__.py.
+
+Implement progress_bar utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

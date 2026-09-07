@@ -91,3 +91,32 @@ def confirm_prompt(prompt: str, default: bool | None = None) -> bool:
     if response in {"n", "no"}:
         return False
     raise ValueError(f"Invalid response: {response!r}")
+
+
+def progress_bar(fraction: float, width: int = 20) -> str:
+    """Render a simple text progress bar.
+
+    The bar consists of ``width`` characters enclosed in square brackets.
+    Filled portions are represented by ``#`` and the remaining portion by ``-``.
+    ``fraction`` is clamped to the range ``[0.0, 1.0]``; values outside this
+    range are treated as the nearest bound.
+
+    Args:
+        fraction: Progress as a float where ``0.0`` is empty and ``1.0`` is full.
+        width: Number of characters in the bar (default 20). Must be positive.
+
+    Returns:
+        A string like ``"[####------]"`` representing the progress.
+
+    Raises:
+        ValueError: If ``width`` is not a positive integer.
+    """
+    if width <= 0:
+        raise ValueError("width must be a positive integer")
+    # Clamp fraction to [0.0, 1.0]
+    clamped = max(0.0, min(1.0, fraction))
+    filled = int(round(clamped * width))
+    # Ensure filled does not exceed width due to rounding
+    filled = min(filled, width)
+    empty = width - filled
+    return "[" + "#" * filled + "-" * empty + "]"
