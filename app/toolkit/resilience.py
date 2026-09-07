@@ -56,3 +56,50 @@ def retry(
         return wrapper  # type: ignore[return-value]
 
     return decorator
+
+
+class CircuitBreakerOpenError(RuntimeError):
+    """Raised when a circuit breaker is open and a call is attempted."""
+
+
+class CircuitBreaker:
+    """Simple circuit breaker that opens after a number of consecutive failures.
+
+    The breaker starts in a closed state. Each call to a wrapped function that
+    raises an exception increments the failure count. When the count reaches
+    ``failure_threshold`` the circuit opens and further calls raise
+    :class:`CircuitBreakerOpenError` without invoking the wrapped function.
+
+    The circuit can be manually reset via :meth:`reset`, which closes the
+    circuit and clears the failure count.
+    """
+
+    def __init__(self, failure_threshold: int = 5):
+        if failure_threshold < 1:
+            raise ValueError("failure_threshold must be >= 1")
+        self.failure_threshold = failure_threshold
+        self._failure_count = 0
+        self._open = False
+
+    def __call__(self, func: Callable[..., Any]) -> Callable[..., Any]:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            if self._open:
+                raise CircuitBreakerOpenError("circuit is open")
+            try:
+                result = func(*args, **kwargs)
+                # Reset failure count on success
+                self._failure_count = 0
+                return result
+            except Exception:
+                self._failure_count += 1
+                if self._failure_count >= self.failure_threshold:
+                    self._open = True
+                raise
+
+        return wrapper
+
+    def reset(self) -> None:
+        """Close the circuit and reset the failure counter."""
+        self._failure_count = 0
+        self._open = False

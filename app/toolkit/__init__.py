@@ -41,7 +41,7 @@ from app.toolkit.physics import kinetic_energy, potential_energy
 from app.toolkit.probability import binomial_pmf, poisson_pmf
 from app.toolkit.randomness import random_hex, random_string, uuid4
 from app.toolkit.regexutil import extract_emails, extract_urls
-from app.toolkit.resilience import retry
+from app.toolkit.resilience import CircuitBreaker, retry
 from app.toolkit.scheduling import cron_iter, next_cron_time
 from app.toolkit.security import constant_time_equals, generate_token
 from app.toolkit.serialization import from_jsonl, to_jsonl
@@ -116,6 +116,7 @@ __all__ = [
     "get_env_int",
     "get_env_list",
     "retry",
+    "CircuitBreaker",
     "parse_args_simple",
     "confirm_prompt",
     "Router",
