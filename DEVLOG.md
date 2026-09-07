@@ -2755,3 +2755,7 @@ Guardrail: ruff + import + pytest passed.
 Implement progress_bar utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-07T20:40Z — rejected: (webframework) Implement `match_route` in app/toolkit/webframework.py: match a method and path against a route table. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `match_route` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
