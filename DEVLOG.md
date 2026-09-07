@@ -2739,3 +2739,7 @@ Guardrail: ruff + import + pytest passed.
 ## 2026-09-06T22:54Z — rejected: (resilience) Implement `CircuitBreaker` in app/toolkit/resilience.py: a circuit breaker that opens after repeated failures. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `CircuitBreaker` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-07T07:23Z — rejected: (resilience) Implement `CircuitBreaker` in app/toolkit/resilience.py: a circuit breaker that opens after repeated failures. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `CircuitBreaker` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
