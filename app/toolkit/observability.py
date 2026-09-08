@@ -73,3 +73,49 @@ class Timer:
         self.elapsed = self._stopwatch.stop()
         # Do not suppress exceptions.
         return False
+
+
+class RateCounter:
+    """Count events and report a per‑second rate.
+
+    Typical usage::
+
+        rc = RateCounter()
+        rc.tick()          # record an event
+        rc.tick(3)         # record three more events
+        current_rate = rc.rate()   # events per second since first tick
+
+    The counter starts timing on the first ``tick``. ``rate`` returns ``0.0`` if
+    no events have been recorded or if the elapsed time is effectively zero.
+    The counter can be cleared with :meth:`reset`.
+    """
+
+    __slots__ = ("_start", "_count")
+
+    def __init__(self) -> None:
+        self._start: Optional[float] = None
+        self._count: int = 0
+
+    def tick(self, n: int = 1) -> None:
+        """Record ``n`` events (default ``1``). Starts the timer on first call."""
+        if self._start is None:
+            self._start = time.perf_counter()
+        self._count += max(n, 0)
+
+    def rate(self) -> float:
+        """Return the current event rate (events per second).
+
+        Returns ``0.0`` when no events have been recorded or when the elapsed
+        time is zero or negative.
+        """
+        if self._count == 0 or self._start is None:
+            return 0.0
+        elapsed = time.perf_counter() - self._start
+        if elapsed <= 0.0:
+            return 0.0
+        return self._count / elapsed
+
+    def reset(self) -> None:
+        """Clear the counter and timer."""
+        self._start = None
+        self._count = 0

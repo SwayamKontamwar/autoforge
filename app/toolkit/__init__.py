@@ -35,7 +35,7 @@ from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url, strip_query
 from app.toolkit.numbers import clamp, inverse_lerp, lerp
 from app.toolkit.numbertheory import euler_totient, mobius
-from app.toolkit.observability import Stopwatch, Timer
+from app.toolkit.observability import RateCounter, Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy, potential_energy
 from app.toolkit.probability import binomial_pmf, poisson_pmf
@@ -124,6 +124,7 @@ __all__ = [
     "path_to_regex",
     "Stopwatch",
     "Timer",
+    "RateCounter",
     "to_jsonl",
     "from_jsonl",
     "constant_time_equals",

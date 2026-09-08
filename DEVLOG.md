@@ -2769,3 +2769,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-09-08T12:18Z — success: (observability) Implement `RateCounter` in app/toolkit/observability.py: count events and report a per-second rate. Add a pytest in tests/toolkit/test_observability.py covering the documented behaviour and at least one edge case, and export `RateCounter` from app/toolkit/__init__.py.
+
+Implement RateCounter, export it, and add tests covering its behavior and edge cases
+
+Guardrail: ruff + import + pytest passed.
