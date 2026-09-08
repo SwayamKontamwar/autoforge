@@ -2819,3 +2819,9 @@ Rejected: the patch changed production code under app/ but the suite still colle
 Implement dataclass_to_dict, export it, and add failing test
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-08T23:25Z — success: (security) Implement `hash_password` in app/toolkit/security.py: hash a password with a salted PBKDF2 and return an encoded string. Add a pytest in tests/toolkit/test_security.py covering the documented behaviour and at least one edge case, and export `hash_password` from app/toolkit/__init__.py.
+
+Implement PBKDF2 password hashing, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

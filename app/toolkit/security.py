@@ -1,11 +1,14 @@
 """Security‑related helper utilities.
 
 This module currently provides a constant‑time string comparison function to
-mitigate timing attacks when checking secrets such as tokens or passwords.
+mitigate timing attacks when checking secrets such as tokens or passwords,
+and a URL‑safe token generator.  It now also offers a simple password‑hashing
+utility based on PBKDF2‑HMAC‑SHA256.
 """
 
 from __future__ import annotations
 
+import hashlib
 import itertools
 import secrets
 from typing import Iterable
@@ -73,3 +76,46 @@ def generate_token(byte_length: int) -> str:
     # ``secrets.token_urlsafe`` returns a string with the requested amount of
     # randomness, URL‑safe, and without padding.
     return secrets.token_urlsafe(byte_length)
+
+
+def hash_password(
+    password: str,
+    *,
+    iterations: int = 100_000,
+    salt: bytes | None = None,
+) -> str:
+    """Hash a password using PBKDF2‑HMAC‑SHA256.
+
+    The function generates a random 16‑byte salt if none is supplied, derives
+    a 32‑byte key using ``hashlib.pbkdf2_hmac`` and returns a string that
+    encodes the iteration count, salt and derived key in hexadecimal, separated
+    by ``$`` characters:
+
+    ``"{iterations}${salt_hex}${hash_hex}"``
+
+    This format is simple to store and later verify with the same parameters.
+
+    Args:
+        password: The password to hash.
+        iterations: Number of PBKDF2 iterations (default 100 000).
+        salt: Optional 16‑byte salt. If omitted, a cryptographically secure random
+            salt is generated.
+
+    Returns:
+        A string containing the iteration count, salt and hash.
+    """
+    if not isinstance(iterations, int) or iterations <= 0:
+        raise ValueError("iterations must be a positive integer")
+    if salt is None:
+        salt = secrets.token_bytes(16)
+    elif not isinstance(salt, (bytes, bytearray)):
+        raise TypeError("salt must be bytes")
+    # Derive a 32‑byte key (256‑bit) using SHA‑256.
+    dk = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt,
+        iterations,
+        dklen=32,
+    )
+    return f"{iterations}${salt.hex()}${dk.hex()}"

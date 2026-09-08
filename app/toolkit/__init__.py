@@ -43,7 +43,7 @@ from app.toolkit.randomness import random_hex, random_string, uuid4
 from app.toolkit.regexutil import extract_emails, extract_urls
 from app.toolkit.resilience import CircuitBreaker, retry
 from app.toolkit.scheduling import cron_iter, next_cron_time
-from app.toolkit.security import constant_time_equals, generate_token
+from app.toolkit.security import constant_time_equals, generate_token, hash_password
 from app.toolkit.serialization import dataclass_to_dict, from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean, harmonic_mean
@@ -130,6 +130,7 @@ __all__ = [
     "dataclass_to_dict",
     "constant_time_equals",
     "generate_token",
+    "hash_password",
     "set_bit",
     "clear_bit",
     "batched",
