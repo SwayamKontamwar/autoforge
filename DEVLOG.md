@@ -2813,3 +2813,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 606 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-09-08T19:59Z — success: (serialization) Implement `dataclass_to_dict` in app/toolkit/serialization.py: recursively convert a dataclass instance to a dict. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `dataclass_to_dict` from app/toolkit/__init__.py.
+
+Implement dataclass_to_dict, export it, and add failing test
+
+Guardrail: ruff + import + pytest passed.

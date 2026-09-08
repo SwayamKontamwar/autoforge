@@ -44,7 +44,7 @@ from app.toolkit.regexutil import extract_emails, extract_urls
 from app.toolkit.resilience import CircuitBreaker, retry
 from app.toolkit.scheduling import cron_iter, next_cron_time
 from app.toolkit.security import constant_time_equals, generate_token
-from app.toolkit.serialization import from_jsonl, to_jsonl
+from app.toolkit.serialization import dataclass_to_dict, from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean, harmonic_mean
 from app.toolkit.streams import batched, iterate
@@ -127,6 +127,7 @@ __all__ = [
     "RateCounter",
     "to_jsonl",
     "from_jsonl",
+    "dataclass_to_dict",
     "constant_time_equals",
     "generate_token",
     "set_bit",
