@@ -2831,3 +2831,9 @@ Guardrail: ruff + import + pytest passed.
 Implement toggle_bit utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-09T12:29Z — success: (streams) Implement `repeat_each` in app/toolkit/streams.py: repeat each item of an iterable n times. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `repeat_each` from app/toolkit/__init__.py.
+
+Implement repeat_each, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

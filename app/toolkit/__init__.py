@@ -47,7 +47,7 @@ from app.toolkit.security import constant_time_equals, generate_token, hash_pass
 from app.toolkit.serialization import dataclass_to_dict, from_jsonl, to_jsonl
 from app.toolkit.statemachine import StateMachine
 from app.toolkit.stats import geometric_mean, harmonic_mean
-from app.toolkit.streams import batched, iterate
+from app.toolkit.streams import batched, iterate, repeat_each
 from app.toolkit.strings import slugify, title_case, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache, TTLCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio, ngrams
@@ -136,6 +136,7 @@ __all__ = [
     "toggle_bit",
     "batched",
     "iterate",
+    "repeat_each",
     "hypot",
     "clamp_angle",
     "mat_zeros",

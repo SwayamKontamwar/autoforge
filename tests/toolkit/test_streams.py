@@ -2,7 +2,7 @@ import itertools
 
 import pytest
 
-from app.toolkit.streams import batched, iterate
+from app.toolkit.streams import batched, iterate, repeat_each
 
 
 def test_batched_basic() -> None:
@@ -30,3 +30,19 @@ def test_iterate_identity_edge_case() -> None:
     # Identity function should repeat the start value indefinitely.
     seq = itertools.islice(iterate("a", lambda x: x), 3)
     assert list(seq) == ["a", "a", "a"]
+
+
+def test_repeat_each_basic() -> None:
+    result = list(repeat_each([1, 2, 3], 2))
+    assert result == [1, 1, 2, 2, 3, 3]
+
+
+def test_repeat_each_n_one_returns_original() -> None:
+    original = [4, 5, 6]
+    result = list(repeat_each(original, 1))
+    assert result == original
+
+
+def test_repeat_each_invalid_n() -> None:
+    with pytest.raises(ValueError):
+        list(repeat_each([1, 2], 0))

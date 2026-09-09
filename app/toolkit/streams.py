@@ -50,3 +50,23 @@ def iterate(start: T, f: Callable[[T], T]) -> Iterator[T]:
     while True:
         yield value
         value = f(value)
+
+
+def repeat_each(iterable: Iterable[T], n: int) -> Iterator[T]:
+    """Yield each element of *iterable* repeated *n* times consecutively.
+
+    Args:
+        iterable: Source of items.
+        n: Number of repetitions for each item; must be a positive integer.
+
+    Yields:
+        The items from *iterable*, each appearing *n* times in order.
+
+    Raises:
+        ValueError: If *n* is not a positive integer.
+    """
+    if n <= 0:
+        raise ValueError("n must be a positive integer")
+    for item in iterable:
+        for _ in range(n):
+            yield item
