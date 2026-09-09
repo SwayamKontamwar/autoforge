@@ -2843,3 +2843,9 @@ Guardrail: ruff + import + pytest passed.
 Implement deg_normalize, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-09T19:54Z — success: (matrix) Implement `mat_add` in app/toolkit/matrix.py: add two matrices element-wise. Add a pytest in tests/toolkit/test_matrix.py covering the documented behaviour and at least one edge case, and export `mat_add` from app/toolkit/__init__.py.
+
+Implement mat_add, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
