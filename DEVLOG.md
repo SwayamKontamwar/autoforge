@@ -2849,3 +2849,9 @@ Guardrail: ruff + import + pytest passed.
 Implement mat_add, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-09T23:16Z — success: (stats) Implement `weighted_mean` in app/toolkit/stats.py: return the weighted mean of values and weights. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `weighted_mean` from app/toolkit/__init__.py.
+
+Implement weighted_mean, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

@@ -68,3 +68,34 @@ def harmonic_mean(values: Iterable[float] | Sequence[float]) -> float:
             raise ValueError("harmonic_mean is defined only for positive numbers")
 
     return len(vals) / sum(1.0 / v for v in vals)
+
+
+def weighted_mean(
+    values: Iterable[float] | Sequence[float],
+    weights: Iterable[float] | Sequence[float],
+) -> float:
+    """Return the weighted mean of *values* with corresponding *weights*.
+
+    Both iterables must have the same non‑empty length.  All weights must be
+    non‑negative and the total weight must be positive.  An empty iterable or a
+    mismatch raises :class:`ValueError`.
+
+    Example:
+        >>> weighted_mean([1, 2, 3], [0.2, 0.3, 0.5])
+        2.3
+    """
+    vals = list(values)
+    wts = list(weights)
+
+    if not vals or not wts:
+        raise ValueError("weighted_mean requires non‑empty values and weights")
+    if len(vals) != len(wts):
+        raise ValueError("values and weights must have the same length")
+    total_weight = sum(wts)
+    if total_weight <= 0:
+        raise ValueError("total weight must be positive")
+    for w in wts:
+        if w < 0:
+            raise ValueError("weights must be non‑negative")
+    weighted_sum = sum(v * w for v, w in zip(vals, wts))
+    return weighted_sum / total_weight
