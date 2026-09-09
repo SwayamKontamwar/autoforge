@@ -5,6 +5,7 @@ toolkit.  Currently includes:
 
 * ``hypot`` – Euclidean norm (length) of an arbitrary number of components.
 * ``clamp_angle`` – Wrap an angle into the range -π to π.
+* ``deg_normalize`` – Normalize a degree value into the range [0, 360).
 """
 
 from __future__ import annotations
@@ -53,3 +54,22 @@ def clamp_angle(angle: Number) -> float:
     wrapped = (float(angle) + math.pi) % two_pi - math.pi
     # Correct possible negative zero to positive zero for consistency.
     return 0.0 if wrapped == -0.0 else wrapped
+
+
+def deg_normalize(degrees: Number) -> float:
+    """Normalize a degree value into the range ``[0, 360)``.
+
+    The function returns an equivalent angle such that the result lies
+    between ``0`` (inclusive) and ``360`` (exclusive).  It works for any
+    real numeric input, handling large magnitudes by using modular arithmetic.
+
+    Args:
+        degrees: The angle in degrees to be normalized.
+
+    Returns:
+        The normalized angle as a ``float`` within ``[0, 360)``.
+    """
+    # Using Python's modulo with a positive divisor yields a result in [0, divisor).
+    normalized = float(degrees) % 360.0
+    # Convert -0.0 to 0.0 for consistency.
+    return 0.0 if normalized == -0.0 else normalized

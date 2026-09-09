@@ -2837,3 +2837,9 @@ Guardrail: ruff + import + pytest passed.
 Implement repeat_each, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-09T17:10Z — success: (mathx) Implement `deg_normalize` in app/toolkit/mathx.py: normalise a degree value into 0 to 360. Add a pytest in tests/toolkit/test_mathx.py covering the documented behaviour and at least one edge case, and export `deg_normalize` from app/toolkit/__init__.py.
+
+Implement deg_normalize, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
