@@ -9,7 +9,7 @@ collections, encoding, validation, data, structures, algorithms, and more.
 from __future__ import annotations
 
 from app.toolkit.algorithms import binary_search, bisect_left, quicksort
-from app.toolkit.bits import clear_bit, set_bit
+from app.toolkit.bits import clear_bit, set_bit, toggle_bit
 from app.toolkit.calendars import easter_date, nth_weekday_of_month
 from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple, progress_bar
@@ -133,6 +133,7 @@ __all__ = [
     "hash_password",
     "set_bit",
     "clear_bit",
+    "toggle_bit",
     "batched",
     "iterate",
     "hypot",

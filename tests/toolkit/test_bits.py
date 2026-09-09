@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.toolkit import clear_bit, set_bit
+from app.toolkit import clear_bit, set_bit, toggle_bit
 
 
 def test_set_bit_basic():
@@ -45,3 +45,24 @@ def test_clear_bit_negative_position():
     """Negative positions are rejected for clear_bit as well."""
     with pytest.raises(ValueError):
         clear_bit(1, -2)
+
+
+def test_toggle_bit_basic():
+    """Toggle bits on a value."""
+    # toggling bit 0 of 0 yields 1
+    assert toggle_bit(0, 0) == 1
+    # toggling bit 1 of 0b10 (2) yields 0b00 (0)
+    assert toggle_bit(2, 1) == 0
+    # toggling bit 2 of 0b101 (5) flips 1 to 0 => 0b001 (1)
+    assert toggle_bit(5, 2) == 1
+
+
+def test_toggle_bit_edge():
+    """Edge cases for toggle_bit."""
+    # toggling a high bit beyond current bits adds that bit
+    assert toggle_bit(0, 5) == 32
+    # toggling already set bit clears it
+    assert toggle_bit(32, 5) == 0
+    # negative position raises
+    with pytest.raises(ValueError):
+        toggle_bit(1, -1)

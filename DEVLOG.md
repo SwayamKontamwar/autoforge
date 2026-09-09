@@ -2825,3 +2825,9 @@ Guardrail: ruff + import + pytest passed.
 Implement PBKDF2 password hashing, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-09T07:27Z — success: (bits) Implement `toggle_bit` in app/toolkit/bits.py: return an integer with the bit at a position toggled. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `toggle_bit` from app/toolkit/__init__.py.
+
+Implement toggle_bit utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

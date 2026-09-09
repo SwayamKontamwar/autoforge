@@ -40,3 +40,23 @@ def clear_bit(value: int, position: int) -> int:
     if position < 0:
         raise ValueError("position must be non‑negative")
     return value & ~(1 << position)
+
+
+def toggle_bit(value: int, position: int) -> int:
+    """Return *value* with the bit at *position* toggled.
+
+    The bit is flipped: ``1`` becomes ``0`` and ``0`` becomes ``1``.
+
+    Args:
+        value: Integer whose bits are to be modified.
+        position: Zero‑based index of the bit to toggle. Must be non‑negative.
+
+    Returns:
+        New integer with the specified bit toggled.
+
+    Raises:
+        ValueError: If *position* is negative.
+    """
+    if position < 0:
+        raise ValueError("position must be non‑negative")
+    return value ^ (1 << position)
