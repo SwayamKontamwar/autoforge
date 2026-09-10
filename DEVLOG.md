@@ -2861,3 +2861,7 @@ Guardrail: ruff + import + pytest passed.
 Implement divisor_count, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-10T12:22Z — rejected: (combinatorics) Implement `nth_combination` in app/toolkit/combinatorics.py: return the nth combination of a size from a sequence. Add a pytest in tests/toolkit/test_combinatorics.py covering the documented behaviour and at least one edge case, and export `nth_combination` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
