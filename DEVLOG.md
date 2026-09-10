@@ -2855,3 +2855,9 @@ Guardrail: ruff + import + pytest passed.
 Implement weighted_mean, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-10T07:23Z — success: (numbertheory) Implement `divisor_count` in app/toolkit/numbertheory.py: return the number of divisors of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `divisor_count` from app/toolkit/__init__.py.
+
+Implement divisor_count, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

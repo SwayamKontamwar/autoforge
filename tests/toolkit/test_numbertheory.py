@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.numbertheory import euler_totient, mobius
+from app.toolkit.numbertheory import divisor_count, euler_totient, mobius
 
 
 def test_euler_totient_typical() -> None:
@@ -48,3 +48,24 @@ def test_mobius_edge_cases() -> None:
         mobius(0)
     with pytest.raises(ValueError):
         mobius(-3)
+
+
+def test_divisor_count_typical() -> None:
+    cases = {
+        1: 1,
+        2: 2,
+        6: 4,
+        28: 6,
+        36: 9,
+        100: 9,
+        101: 2,
+    }
+    for n, expected in cases.items():
+        assert divisor_count(n) == expected
+
+
+def test_divisor_count_edge_cases() -> None:
+    with pytest.raises(ValueError):
+        divisor_count(0)
+    with pytest.raises(ValueError):
+        divisor_count(-5)

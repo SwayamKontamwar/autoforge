@@ -79,3 +79,38 @@ def mobius(n: int) -> int:
         # Remaining prime factor
         mu = -mu
     return mu
+
+
+def divisor_count(n: int) -> int:
+    """Return the number of positive divisors of *n*.
+
+    The divisor count τ(n) is the product over the prime factorisation
+    ``n = ∏ p_i**a_i`` of ``(a_i + 1)``.
+
+    Args:
+        n: Positive integer whose divisor count is to be computed.
+
+    Returns:
+        The number of positive divisors of *n*.
+
+    Raises:
+        ValueError: If *n* is not a positive integer.
+    """
+    if n <= 0:
+        raise ValueError("n must be a positive integer")
+    if n == 1:
+        return 1
+
+    count = 1
+    temp = n
+    for p in range(2, math.isqrt(temp) + 1):
+        if temp % p == 0:
+            exp = 0
+            while temp % p == 0:
+                temp //= p
+                exp += 1
+            count *= exp + 1
+    if temp > 1:
+        # Remaining prime factor contributes exponent 1
+        count *= 2
+    return count
