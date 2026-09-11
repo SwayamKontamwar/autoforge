@@ -28,6 +28,7 @@ from app.toolkit.graphx import floyd_warshall
 from app.toolkit.hashing import md5_hex, sha1_hex, sha256_hex
 from app.toolkit.i18n import format_list, plural_rule_en
 from app.toolkit.imageppm import ppm_new, ppm_set_pixel
+from app.toolkit.markdown import md_bold, md_italic, md_link
 from app.toolkit.mathx import clamp_angle, deg_normalize, hypot
 from app.toolkit.matrix import mat_add, mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
@@ -155,6 +156,7 @@ __all__ = [
     "extract_hashtags",
     "md_bold",
     "md_italic",
+    "md_link",
     "easter_date",
     "nth_weekday_of_month",
     "plural_rule_en",

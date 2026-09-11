@@ -2895,3 +2895,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement extract_hashtags, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-11T19:53Z — success: (markdown) Implement `md_link` in app/toolkit/markdown.py: build a markdown link from text and a URL. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_link` from app/toolkit/__init__.py.
+
+Implement md_link utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.
