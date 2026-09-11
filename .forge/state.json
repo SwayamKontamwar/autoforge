@@ -1,5 +1,5 @@
 {
-  "(probability) Implement `geometric_pmf` in app/toolkit/probability.py: evaluate the geometric probability mass function. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `geometric_pmf` from app/toolkit/__init__.py.": 1,
+  "(probability) Implement `geometric_pmf` in app/toolkit/probability.py: evaluate the geometric probability mass function. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `geometric_pmf` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
