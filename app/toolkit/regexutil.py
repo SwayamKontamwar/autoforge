@@ -47,4 +47,15 @@ def extract_urls(text: str) -> List[str]:
     return cleaned
 
 
-__all__ = ["extract_emails", "extract_urls"]
+def extract_hashtags(text: str) -> List[str]:
+    """Return a list of hashtag strings (without the leading ``#``) found in *text*.
+
+    Hashtags consist of letters, digits, or underscores and are terminated by
+    any character that is not part of that set. Trailing punctuation is not
+    included.
+    """
+    # Capture the characters after the leading '#'.
+    return re.findall(r"#([A-Za-z0-9_]+)", text)
+
+
+__all__ = ["extract_emails", "extract_urls", "extract_hashtags"]

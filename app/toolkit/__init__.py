@@ -39,7 +39,7 @@ from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy, potential_energy
 from app.toolkit.probability import binomial_pmf, poisson_pmf
 from app.toolkit.randomness import random_hex, random_string, uuid4
-from app.toolkit.regexutil import extract_emails, extract_urls
+from app.toolkit.regexutil import extract_emails, extract_hashtags, extract_urls
 from app.toolkit.resilience import CircuitBreaker, retry
 from app.toolkit.scheduling import cron_iter, next_cron_time
 from app.toolkit.security import constant_time_equals, generate_token, hash_password
@@ -152,6 +152,7 @@ __all__ = [
     "poisson_pmf",
     "extract_emails",
     "extract_urls",
+    "extract_hashtags",
     "md_bold",
     "md_italic",
     "easter_date",
