@@ -1,4 +1,5 @@
 {
+  "(i18n) Implement `format_ordinal_word` in app/toolkit/i18n.py: return the English ordinal word for a small integer. Add a pytest in tests/toolkit/test_i18n.py covering the documented behaviour and at least one edge case, and export `format_ordinal_word` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }

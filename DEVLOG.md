@@ -2915,3 +2915,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement last_weekday_of_month, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-12T16:19Z — rejected: (i18n) Implement `format_ordinal_word` in app/toolkit/i18n.py: return the English ordinal word for a small integer. Add a pytest in tests/toolkit/test_i18n.py covering the documented behaviour and at least one edge case, and export `format_ordinal_word` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
