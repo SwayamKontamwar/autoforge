@@ -2909,3 +2909,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-12T07:13Z — rejected: (calendars) Implement `last_weekday_of_month` in app/toolkit/calendars.py: return the last given weekday of a month. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `last_weekday_of_month` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-12T11:44Z — success: (calendars) Implement `last_weekday_of_month` in app/toolkit/calendars.py: return the last given weekday of a month. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `last_weekday_of_month` from app/toolkit/__init__.py.
+
+Implement last_weekday_of_month, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

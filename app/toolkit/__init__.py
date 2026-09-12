@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from app.toolkit.algorithms import binary_search, bisect_left, quicksort
 from app.toolkit.bits import clear_bit, set_bit, toggle_bit
-from app.toolkit.calendars import easter_date, nth_weekday_of_month
+from app.toolkit.calendars import easter_date, last_weekday_of_month, nth_weekday_of_month
 from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple, progress_bar
 from app.toolkit.collections import chunk, flatten, flatten_deep
@@ -159,6 +159,7 @@ __all__ = [
     "md_link",
     "easter_date",
     "nth_weekday_of_month",
+    "last_weekday_of_month",
     "plural_rule_en",
     "format_list",
     "v3_add",

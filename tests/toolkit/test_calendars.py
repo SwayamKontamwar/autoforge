@@ -2,7 +2,11 @@ import datetime
 
 import pytest
 
-from app.toolkit.calendars import easter_date, nth_weekday_of_month
+from app.toolkit.calendars import (
+    easter_date,
+    last_weekday_of_month,
+    nth_weekday_of_month,
+)
 
 
 def test_easter_date_known_years() -> None:
@@ -33,3 +37,13 @@ def test_nth_weekday_of_month_missing_occurrence() -> None:
     """February 2021 has only four Mondays; requesting the fifth should raise."""
     with pytest.raises(ValueError):
         nth_weekday_of_month(2021, 2, 0, 5)
+
+
+def test_last_weekday_of_month_basic() -> None:
+    """Last Friday of September 2023 is the 29th."""
+    assert last_weekday_of_month(2023, 9, 4) == datetime.date(2023, 9, 29)
+
+
+def test_last_weekday_of_month_edge() -> None:
+    """February 2021 ends on a Sunday; last Sunday should be the 28th."""
+    assert last_weekday_of_month(2021, 2, 6) == datetime.date(2021, 2, 28)
