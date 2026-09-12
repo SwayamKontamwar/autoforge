@@ -59,3 +59,50 @@ def format_list(items: Sequence[Any]) -> str:
     # then add an Oxford comma before the final ``and``.
     *head, last = strs
     return f"{', '.join(head)}, and {last}"
+
+
+def format_ordinal_word(n: int) -> str:
+    """Return the English ordinal word for a small integer.
+
+    Supports values from 0 to 20 inclusive. Raises :class:`TypeError` for
+    non‑integer inputs and :class:`ValueError` for integers outside the
+    supported range.
+
+    Args:
+        n: The integer to convert.
+
+    Returns:
+        The ordinal word (e.g., ``1`` → ``"first"``).
+
+    Raises:
+        TypeError: If *n* is not an ``int``.
+        ValueError: If *n* is outside the supported range.
+    """
+    if not isinstance(n, int):
+        raise TypeError("n must be an integer")
+    mapping = {
+        0: "zeroth",
+        1: "first",
+        2: "second",
+        3: "third",
+        4: "fourth",
+        5: "fifth",
+        6: "sixth",
+        7: "seventh",
+        8: "eighth",
+        9: "ninth",
+        10: "tenth",
+        11: "eleventh",
+        12: "twelfth",
+        13: "thirteenth",
+        14: "fourteenth",
+        15: "fifteenth",
+        16: "sixteenth",
+        17: "seventeenth",
+        18: "eighteenth",
+        19: "nineteenth",
+        20: "twentieth",
+    }
+    if n in mapping:
+        return mapping[n]
+    raise ValueError("n is out of the supported range (0‑20)")

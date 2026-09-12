@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.toolkit.i18n import format_list, plural_rule_en
+from app.toolkit.i18n import format_list, format_ordinal_word, plural_rule_en
 
 
 def test_plural_rule_en_basic():
@@ -33,3 +33,21 @@ def test_format_list_various_cases():
     assert format_list(["apple", "banana", "cherry"]) == "apple, banana, and cherry"
     # Non‑string items are stringified
     assert format_list([1, 2, 3]) == "1, 2, and 3"
+
+
+def test_format_ordinal_word_basic():
+    """Validate ordinal word conversion for supported range."""
+    assert format_ordinal_word(0) == "zeroth"
+    assert format_ordinal_word(1) == "first"
+    assert format_ordinal_word(2) == "second"
+    assert format_ordinal_word(3) == "third"
+    assert format_ordinal_word(11) == "eleventh"
+    assert format_ordinal_word(20) == "twentieth"
+
+
+def test_format_ordinal_word_errors():
+    """Check error handling for invalid inputs."""
+    with pytest.raises(TypeError):
+        format_ordinal_word(1.0)
+    with pytest.raises(ValueError):
+        format_ordinal_word(21)
