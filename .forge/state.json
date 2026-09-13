@@ -1,5 +1,4 @@
 {
-  "(vectors3d) Implement `v3_scale` in app/toolkit/vectors3d.py: scale a 3-vector by a scalar. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_scale` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
