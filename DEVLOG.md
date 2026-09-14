@@ -2967,3 +2967,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-14T18:38Z — rejected: (imageppm) Implement `ppm_get_pixel` in app/toolkit/imageppm.py: read a pixel's colour from a grid. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_get_pixel` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-14T20:59Z — skipped: (imageppm) Implement `ppm_get_pixel` in app/toolkit/imageppm.py: read a pixel's colour from a grid. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_get_pixel` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
