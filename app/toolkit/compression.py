@@ -59,8 +59,7 @@ def rle_bytes_decode(data: bytes) -> bytes:
     """Decode *data* from run‑length encoding back to the original bytes.
 
     The input must consist of an even number of bytes, each pair representing
-    ``<count><value>``. ``count`` must be in the range 1‑255; a ``ValueError`` is
-    raised for malformed input.
+    ``<count><value>``. ``count`` must be in the range 1‑255.
 
     Args:
         data: The RLE‑encoded bytes.
@@ -69,18 +68,41 @@ def rle_bytes_decode(data: bytes) -> bytes:
         The original uncompressed ``bytes`` object.
 
     Raises:
-        ValueError: If *data* has an odd length.
+        ValueError: If *data* has an odd length or contains an invalid count.
     """
     if not data:
         return b""
 
     if len(data) % 2 != 0:
-        raise ValueError("Encoded data length must be even")
+        raise ValueError("RLE data must contain an even number of bytes")
 
     decoded = bytearray()
-    for i in range(0, len(data), 2):
-        count = data[i]
-        value = data[i + 1]
+    # Iterate over pairs (count, value)
+    it = iter(data)
+    for count, value in zip(it, it):
+        if count == 0:
+            raise ValueError("RLE count cannot be zero")
         decoded.extend([value] * count)
 
     return bytes(decoded)
+
+
+def delta_encode(values: List[int]) -> List[int]:
+    """Delta‑encode a list of integers.
+
+    The first element is emitted unchanged; each subsequent element is the
+    difference between the current value and the previous one.
+
+    Args:
+        values: List of integers to encode.
+
+    Returns:
+        A new list containing the delta‑encoded integers.
+    """
+    if not values:
+        return []
+
+    deltas: List[int] = [values[0]]
+    for prev, cur in zip(values, values[1:]):
+        deltas.append(cur - prev)
+    return deltas

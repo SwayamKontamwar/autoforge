@@ -1,6 +1,10 @@
 import pytest
 
-from app.toolkit.compression import rle_bytes_decode, rle_bytes_encode
+from app.toolkit.compression import (
+    delta_encode,
+    rle_bytes_decode,
+    rle_bytes_encode,
+)
 
 
 def test_rle_bytes_encode_basic() -> None:
@@ -41,3 +45,23 @@ def test_rle_bytes_decode_malformed() -> None:
     # Odd length should raise ValueError
     with pytest.raises(ValueError):
         rle_bytes_decode(b"\x03")
+
+
+def test_delta_encode_basic() -> None:
+    data = [10, 12, 15, 15, 20]
+    expected = [10, 2, 3, 0, 5]
+    assert delta_encode(data) == expected
+
+
+def test_delta_encode_empty() -> None:
+    assert delta_encode([]) == []
+
+
+def test_delta_encode_single() -> None:
+    assert delta_encode([42]) == [42]
+
+
+def test_delta_encode_negative() -> None:
+    data = [-5, -3, -10]
+    expected = [-5, 2, -7]
+    assert delta_encode(data) == expected
