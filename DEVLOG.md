@@ -3036,3 +3036,7 @@ help: Add unused import `v3_sub` to __all__
 Found 30 errors.
 
 ```
+
+## 2026-09-15T20:19Z — rejected: (statemachine) Implement `can_transition` in app/toolkit/statemachine.py: test whether an event is valid from the current state. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `can_transition` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
