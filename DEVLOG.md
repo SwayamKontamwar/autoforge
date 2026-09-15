@@ -2987,3 +2987,52 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-09-15T17:41Z — failed: (statemachine) Implement `can_transition` in app/toolkit/statemachine.py: test whether an event is valid from the current state. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `can_transition` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+rom app.toolkit.security import constant_time_equals, generate_token, hash_password
+47 | from app.toolkit.serialization import dataclass_to_dict, from_jsonl, to_jsonl
+   |
+help: Add unused import `cron_iter` to __all__
+
+F401 `app.toolkit.scheduling.next_cron_time` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:45:47
+   |
+43 | from app.toolkit.regexutil import extract_emails, extract_hashtags, extract_urls
+44 | from app.toolkit.resilience import CircuitBreaker, retry
+45 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |                                               ^^^^^^^^^^^^^^
+46 | from app.toolkit.security import constant_time_equals, generate_token, hash_password
+47 | from app.toolkit.serialization import dataclass_to_dict, from_jsonl, to_jsonl
+   |
+help: Add unused import `next_cron_time` to __all__
+
+F401 `app.toolkit.vectors3d.v3_add` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:56:35
+   |
+54 | from app.toolkit.units import celsius_to_fahrenheit, celsius_to_kelvin, fahrenheit_to_celsius
+55 | from app.toolkit.validation import is_email, is_url
+56 | from app.toolkit.vectors3d import v3_add, v3_sub
+   |                                   ^^^^^^
+57 | from app.toolkit.webframework import Router, path_to_regex
+   |
+help: Add unused import `v3_add` to __all__
+
+F401 `app.toolkit.vectors3d.v3_sub` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:56:43
+   |
+54 | from app.toolkit.units import celsius_to_fahrenheit, celsius_to_kelvin, fahrenheit_to_celsius
+55 | from app.toolkit.validation import is_email, is_url
+56 | from app.toolkit.vectors3d import v3_add, v3_sub
+   |                                           ^^^^^^
+57 | from app.toolkit.webframework import Router, path_to_regex
+   |
+help: Add unused import `v3_sub` to __all__
+
+Found 30 errors.
+
+```
