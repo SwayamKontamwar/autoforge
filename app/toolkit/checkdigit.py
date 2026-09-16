@@ -66,11 +66,10 @@ def ean13_check_digit(ean: Union[str, int]) -> int:
     if len(ean_str) != 12 or not ean_str.isdigit():
         raise ValueError("EAN must be exactly 12 decimal digits")
 
-    # Sum of digits in even positions (2,4,6,8,10,12) multiplied by 3
-    even_sum = sum(int(ean_str[i]) for i in range(1, 12, 2))
-    # Sum of digits in odd positions (1,3,5,7,9,11)
-    odd_sum = sum(int(ean_str[i]) for i in range(0, 12, 2))
+    # Positions are 1‑based. Even positions (2,4,6,8,10,12) are weighted by 3.
+    odd_sum = sum(int(ean_str[i]) for i in range(0, 12, 2))  # 1,3,5,7,9,11
+    even_sum = sum(int(ean_str[i]) for i in range(1, 12, 2))  # 2,4,6,8,10,12
 
-    total = (even_sum * 3) + odd_sum
+    total = odd_sum + (even_sum * 3)
     check_digit = (10 - (total % 10)) % 10
     return check_digit

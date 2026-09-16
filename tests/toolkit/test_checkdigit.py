@@ -31,3 +31,9 @@ def test_ean13_check_digit_typical() -> None:
 def test_ean13_check_digit_all_zero() -> None:
     # All zeros should yield a check digit of 0
     assert ean13_check_digit("000000000000") == 0
+
+
+def test_ean13_check_digit_invalid_length() -> None:
+    # Payload with incorrect length should raise ValueError
+    with pytest.raises(ValueError):
+        ean13_check_digit("1234567890")  # only 10 digits
