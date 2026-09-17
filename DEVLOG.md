@@ -3072,3 +3072,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement ean13_check_digit, add edge‑case test, ensure export
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-17T07:47Z — rejected: (strings) Implement `snake_case` in app/toolkit/strings.py: convert any string to snake_case. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `snake_case` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
