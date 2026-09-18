@@ -18,7 +18,7 @@ from app.toolkit.colors import hex_to_rgb, rgb_to_hex
 from app.toolkit.combinatorics import nth_permutation, permutation_index
 from app.toolkit.compression import delta_encode, rle_bytes_decode, rle_bytes_encode
 from app.toolkit.config import get_env_bool, get_env_int, get_env_list
-from app.toolkit.datetimes import now_utc, parse_iso, to_iso
+from app.toolkit.datetimes import humanize_delta, now_utc, parse_iso, to_iso
 from app.toolkit.encoding import base58_encode, base62_decode, base62_encode
 from app.toolkit.files import human_path, split_extension
 from app.toolkit.finance import compound_interest, monthly_payment
@@ -70,6 +70,7 @@ __all__ = [
     "parse_iso",
     "to_iso",
     "now_utc",
+    "humanize_delta",
     "chunk",
     "flatten",
     "flatten_deep",
