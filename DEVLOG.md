@@ -3094,3 +3094,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-17T23:33Z — rejected: (numbers) Implement `remap` in app/toolkit/numbers.py: map a value from one numeric range to another. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `remap` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-18T07:28Z — skipped: (numbers) Implement `remap` in app/toolkit/numbers.py: map a value from one numeric range to another. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `remap` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
