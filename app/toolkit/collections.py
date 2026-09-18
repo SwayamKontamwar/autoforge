@@ -47,15 +47,7 @@ def flatten(iterable: Iterable[Any]) -> List[Any]:
     """Flatten one level of nested iterables.
 
     Elements that are themselves iterable containers (list, tuple, set,
-    frozenset) are expanded into the result list. Strings and bytes are treated
-    as atomic values and are not iterated over.
-
-    Args:
-        iterable: An iterable whose elements may be iterables themselves.
-
-    Returns:
-        A flat list containing the original non‑iterable elements and the items
-        of any nested iterable containers.
+    frozenset) are expanded, while strings are left untouched.
     """
     result: List[Any] = []
     for item in iterable:
@@ -67,22 +59,30 @@ def flatten(iterable: Iterable[Any]) -> List[Any]:
 
 
 def flatten_deep(iterable: Iterable[Any]) -> List[Any]:
-    """Recursively flatten arbitrarily nested iterables.
+    """Recursively flatten nested iterables.
 
-    Containers such as ``list``, ``tuple``, ``set`` and ``frozenset`` are
-    traversed recursively. Strings and bytes are treated as atomic values and
-    are not iterated over.
-
-    Args:
-        iterable: An iterable that may contain nested iterable containers.
-
-    Returns:
-        A flat list containing all non‑container elements in depth‑first order.
+    All nested containers (list, tuple, set, frozenset) are flattened
+    completely. Strings are treated as atomic values and are not split.
     """
     result: List[Any] = []
     for item in iterable:
         if isinstance(item, (list, tuple, set, frozenset)):
             result.extend(flatten_deep(item))
         else:
+            result.append(item)
+    return result
+
+
+def unique(iterable: Iterable[_T]) -> List[_T]:
+    """Return items in *iterable* preserving order, with duplicates removed.
+
+    The first occurrence of each value is kept; subsequent duplicates are
+    discarded. Elements must be hashable.
+    """
+    seen: set[_T] = set()
+    result: List[_T] = []
+    for item in iterable:
+        if item not in seen:
+            seen.add(item)
             result.append(item)
     return result

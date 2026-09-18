@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.collections import chunk, flatten, flatten_deep
+from app.toolkit.collections import chunk, flatten, flatten_deep, unique
 
 
 def test_chunk_basic() -> None:
@@ -45,3 +45,14 @@ def test_flatten_deep_edge_cases() -> None:
     assert flatten_deep([]) == []
     # Strings remain atomic even when nested.
     assert flatten_deep(["hi", ["there", ["!"]]]) == ["hi", "there", "!"]
+
+
+def test_unique_basic() -> None:
+    # Duplicates are removed while preserving order.
+    data = [1, 2, 1, 3, 2, 4]
+    assert unique(data) == [1, 2, 3, 4]
+
+
+def test_unique_empty() -> None:
+    # Empty iterable returns empty list.
+    assert unique([]) == []

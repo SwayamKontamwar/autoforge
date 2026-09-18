@@ -3106,3 +3106,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement humanize_delta, export it, add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-18T17:06Z — success: (collections) Implement `unique` in app/toolkit/collections.py: return items in order with duplicates removed. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `unique` from app/toolkit/__init__.py.
+
+Implement unique utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
