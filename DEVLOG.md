@@ -3112,3 +3112,7 @@ Guardrail: ruff + import + pytest passed.
 Implement unique utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-18T19:47Z — rejected: (functional) Implement `partial_right` in app/toolkit/functional.py: bind arguments from the right of a function. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `partial_right` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.

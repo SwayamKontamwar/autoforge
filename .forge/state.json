@@ -1,4 +1,5 @@
 {
+  "(functional) Implement `partial_right` in app/toolkit/functional.py: bind arguments from the right of a function. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `partial_right` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
