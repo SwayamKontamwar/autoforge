@@ -3120,3 +3120,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-18T23:19Z — rejected: (functional) Implement `partial_right` in app/toolkit/functional.py: bind arguments from the right of a function. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `partial_right` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-19T07:24Z — skipped: (functional) Implement `partial_right` in app/toolkit/functional.py: bind arguments from the right of a function. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `partial_right` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
