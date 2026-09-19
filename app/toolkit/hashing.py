@@ -6,9 +6,10 @@ Provides functions for common cryptographic hash operations.
 from __future__ import annotations
 
 import hashlib
+import zlib
 from typing import Final
 
-__all__: Final = ["md5_hex", "sha256_hex", "sha1_hex"]
+__all__: Final = ["md5_hex", "sha256_hex", "sha1_hex", "crc32"]
 
 
 def md5_hex(data: bytes) -> str:
@@ -60,3 +61,21 @@ def sha1_hex(data: bytes) -> str:
     if not isinstance(data, (bytes, bytearray, memoryview)):
         raise TypeError("sha1_hex expects a bytes-like object")
     return hashlib.sha1(data).hexdigest()
+
+
+def crc32(data: bytes) -> int:
+    """Return the CRC‑32 checksum of *data* as an unsigned integer.
+
+    Args:
+        data: Bytes-like object to checksum.
+
+    Returns:
+        Unsigned 32‑bit integer CRC‑32 value.
+
+    Raises:
+        TypeError: If *data* is not a ``bytes``‑like object.
+    """
+    if not isinstance(data, (bytes, bytearray, memoryview)):
+        raise TypeError("crc32 expects a bytes-like object")
+    # zlib.crc32 may return signed int on some platforms; mask to unsigned.
+    return zlib.crc32(data) & 0xFFFFFFFF

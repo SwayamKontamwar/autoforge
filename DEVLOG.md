@@ -3136,3 +3136,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement base58_decode, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-19T19:25Z — success: (hashing) Implement `crc32` in app/toolkit/hashing.py: return the crc32 checksum of bytes. Add a pytest in tests/toolkit/test_hashing.py covering the documented behaviour and at least one edge case, and export `crc32` from app/toolkit/__init__.py.
+
+Implement crc32 function, export it, and add tests for it
+
+Guardrail: ruff + import + pytest passed.

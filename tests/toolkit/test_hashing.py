@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.hashing import md5_hex, sha1_hex, sha256_hex
+from app.toolkit.hashing import crc32, md5_hex, sha1_hex, sha256_hex
 
 
 def test_md5_hex_basic() -> None:
@@ -42,3 +42,17 @@ def test_sha1_hex_empty() -> None:
 def test_sha1_hex_invalid_type() -> None:
     with pytest.raises(TypeError):
         sha1_hex(None)  # type: ignore
+
+
+def test_crc32_basic() -> None:
+    # Known CRC‑32 of b"hello" is 0x3610A686 (decimal 907060870)
+    assert crc32(b"hello") == 907060870
+
+
+def test_crc32_empty() -> None:
+    assert crc32(b"") == 0
+
+
+def test_crc32_invalid_type() -> None:
+    with pytest.raises(TypeError):
+        crc32("not bytes")  # type: ignore
