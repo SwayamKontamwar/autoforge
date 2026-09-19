@@ -3130,3 +3130,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-09-19T12:03Z — rejected: (encoding) Implement `base58_decode` in app/toolkit/encoding.py: decode a base58 string to bytes. Add a pytest in tests/toolkit/test_encoding.py covering the documented behaviour and at least one edge case, and export `base58_decode` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-19T16:31Z — success: (encoding) Implement `base58_decode` in app/toolkit/encoding.py: decode a base58 string to bytes. Add a pytest in tests/toolkit/test_encoding.py covering the documented behaviour and at least one edge case, and export `base58_decode` from app/toolkit/__init__.py.
+
+Implement base58_decode, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

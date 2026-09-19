@@ -1,6 +1,7 @@
 import pytest
 
 from app.toolkit.encoding import (
+    base58_decode,
     base58_encode,
     base62_decode,
     base62_encode,
@@ -52,3 +53,27 @@ def test_base58_encode_invalid_input() -> None:
         base58_encode(-5)
     with pytest.raises(TypeError):
         base58_encode("not an int")  # type: ignore[arg-type]
+
+
+def test_base58_decode_basic_cases() -> None:
+    assert base58_decode("1") == 0
+    assert base58_decode("z") == 57
+    assert base58_decode("21") == 58
+
+
+def test_base58_decode_edge_cases() -> None:
+    # Empty string is invalid.
+    with pytest.raises(ValueError):
+        base58_decode("")
+    # Non‑string input raises TypeError.
+    with pytest.raises(TypeError):
+        base58_decode(456)  # type: ignore[arg-type]
+    # Invalid character raises ValueError.
+    with pytest.raises(ValueError):
+        base58_decode("0OIl")  # characters not in base58 alphabet
+
+
+def test_base58_decode_roundtrip() -> None:
+    for n in [0, 1, 57, 58, 12345, 987654321]:
+        encoded = base58_encode(n)
+        assert base58_decode(encoded) == n

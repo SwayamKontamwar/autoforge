@@ -19,6 +19,7 @@ __all__: list[str] = [
     "base62_encode",
     "base62_decode",
     "base58_encode",
+    "base58_decode",
 ]
 
 
@@ -52,43 +53,35 @@ def base62_encode(value: int) -> str:
     return "".join(reversed(digits))
 
 
-def base62_decode(text: str) -> int:
+def base62_decode(value: str) -> int:
     """Decode a base‑62 string back to an integer.
 
-    The decoding expects characters from the same alphabet used by
-    :func:`base62_encode`. Leading zeros are allowed and are ignored in the
-    numeric value.
-
     Args:
-        text: A string consisting only of characters ``0‑9``, ``a‑z``, ``A‑Z``.
+        value: A non‑empty string consisting only of base‑62 characters.
 
     Returns:
-        The integer represented by ``text``.
+        The integer represented by ``value``.
 
     Raises:
-        TypeError: If ``text`` is not a ``str``.
-        ValueError: If ``text`` is empty or contains characters outside the
-            base‑62 alphabet.
+        TypeError: If ``value`` is not a ``str``.
+        ValueError: If ``value`` is empty or contains invalid characters.
     """
-    if not isinstance(text, str):
-        raise TypeError("text must be a str")
-    if not text:
-        raise ValueError("text must be non‑empty")
-    value = 0
-    for char in text:
+    if not isinstance(value, str):
+        raise TypeError("value must be a str")
+    if not value:
+        raise ValueError("value must be non‑empty")
+    num = 0
+    for char in value:
         try:
-            digit = _ALPHABET.index(char)
+            idx = _ALPHABET.index(char)
         except ValueError as exc:
-            raise ValueError(f"invalid character '{char}' for base‑62") from exc
-        value = value * _BASE + digit
-    return value
+            raise ValueError(f"invalid character {char!r}") from exc
+        num = num * _BASE + idx
+    return num
 
 
 def base58_encode(value: int) -> str:
     """Encode a non‑negative integer to a Bitcoin‑style base‑58 string.
-
-    The alphabet excludes characters that are easily confused: ``0``, ``O``,
-    ``I`` and ``l``. ``1`` represents zero and ``z`` represents fifty‑seven.
 
     Args:
         value: An integer greater than or equal to ``0``.
@@ -112,3 +105,30 @@ def base58_encode(value: int) -> str:
         value, rem = divmod(value, _BASE58)
         digits.append(_ALPHABET_BASE58[rem])
     return "".join(reversed(digits))
+
+
+def base58_decode(value: str) -> int:
+    """Decode a Bitcoin‑style base‑58 string back to an integer.
+
+    Args:
+        value: A non‑empty string consisting only of base‑58 characters.
+
+    Returns:
+        The integer represented by ``value``.
+
+    Raises:
+        TypeError: If ``value`` is not a ``str``.
+        ValueError: If ``value`` is empty or contains invalid characters.
+    """
+    if not isinstance(value, str):
+        raise TypeError("value must be a str")
+    if not value:
+        raise ValueError("value must be non‑empty")
+    num = 0
+    for char in value:
+        try:
+            idx = _ALPHABET_BASE58.index(char)
+        except ValueError as exc:
+            raise ValueError(f"invalid character {char!r}") from exc
+        num = num * _BASE58 + idx
+    return num
