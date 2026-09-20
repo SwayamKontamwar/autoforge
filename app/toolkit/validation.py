@@ -7,6 +7,7 @@ dependencies. Functions return ``True`` when the input satisfies the check,
 
 from __future__ import annotations
 
+import ipaddress
 import re
 from urllib.parse import urlparse
 
@@ -59,3 +60,25 @@ def is_url(value: str) -> bool:
         return False
     parsed = urlparse(value)
     return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+
+
+def is_ipv6(value: str) -> bool:
+    """Return ``True`` if *value* is a valid IPv6 address.
+
+    Validation is performed using :class:`ipaddress.IPv6Address` from the
+    standard library, which accepts all canonical and compressed forms,
+    including IPv4‑mapped addresses.
+
+    Args:
+        value: The string to validate.
+
+    Returns:
+        ``True`` if *value* parses as an IPv6 address, ``False`` otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+    try:
+        ipaddress.IPv6Address(value)
+        return True
+    except Exception:
+        return False

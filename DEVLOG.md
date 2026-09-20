@@ -3180,3 +3180,9 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 653 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-09-20T07:48Z — success: (validation) Implement `is_ipv6` in app/toolkit/validation.py: validate an IPv6 address. Add a pytest in tests/toolkit/test_validation.py covering the documented behaviour and at least one edge case, and export `is_ipv6` from app/toolkit/__init__.py.
+
+Implement IPv6 validation, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

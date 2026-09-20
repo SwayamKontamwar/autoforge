@@ -52,7 +52,7 @@ from app.toolkit.strings import slugify, title_case, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache, TTLCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio, ngrams
 from app.toolkit.units import celsius_to_fahrenheit, celsius_to_kelvin, fahrenheit_to_celsius
-from app.toolkit.validation import is_email, is_url
+from app.toolkit.validation import is_email, is_ipv6, is_url
 from app.toolkit.vectors3d import v3_add, v3_sub
 from app.toolkit.webframework import Router, path_to_regex
 
@@ -88,6 +88,7 @@ __all__ = [
     "crc32",
     "is_email",
     "is_url",
+    "is_ipv6",
     "parse_semver",
     "compare_semver",
     "LRUCache",
