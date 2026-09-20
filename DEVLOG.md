@@ -3190,3 +3190,7 @@ Guardrail: ruff + import + pytest passed.
 ## 2026-09-20T12:37Z — rejected: (parsing) Implement `parse_bytes_size` in app/toolkit/parsing.py: parse '10MB' style sizes into a byte count. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `parse_bytes_size` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-20T16:48Z — rejected: (parsing) Implement `parse_bytes_size` in app/toolkit/parsing.py: parse '10MB' style sizes into a byte count. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `parse_bytes_size` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
