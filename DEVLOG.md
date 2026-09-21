@@ -3214,3 +3214,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-09-21T18:42Z — rejected: (algorithms) Implement `mergesort` in app/toolkit/algorithms.py: sort a list with a stable merge sort. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `mergesort` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
