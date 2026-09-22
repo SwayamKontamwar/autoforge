@@ -1,4 +1,5 @@
 {
+  "(randomness) Implement `uuid7` in app/toolkit/randomness.py: return a time-ordered UUID7 string. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `uuid7` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
