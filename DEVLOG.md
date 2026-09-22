@@ -3263,3 +3263,7 @@ F821 Undefined name `uuid`
 Found 2 errors.
 
 ```
+
+## 2026-09-22T20:16Z — rejected: (textsearch) Implement `word_ngrams` in app/toolkit/textsearch.py: return the word n-grams of a token list. Add a pytest in tests/toolkit/test_textsearch.py covering the documented behaviour and at least one edge case, and export `word_ngrams` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
