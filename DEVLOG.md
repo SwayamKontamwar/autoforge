@@ -3236,3 +3236,30 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-22T12:49Z — rejected: (randomness) Implement `uuid7` in app/toolkit/randomness.py: return a time-ordered UUID7 string. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `uuid7` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-22T17:39Z — skipped: (randomness) Implement `uuid7` in app/toolkit/randomness.py: return a time-ordered UUID7 string. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `uuid7` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F821 Undefined name `uuid`
+  --> tests/toolkit/test_randomness.py:63:16
+   |
+61 |     assert first != second
+62 |     # Compare as integers to ensure ordering (timestamp component dominates)
+63 |     assert int(uuid.UUID(first)) < int(uuid.UUID(second))
+   |                ^^^^
+
+F821 Undefined name `uuid`
+  --> tests/toolkit/test_randomness.py:63:40
+   |
+61 |     assert first != second
+62 |     # Compare as integers to ensure ordering (timestamp component dominates)
+63 |     assert int(uuid.UUID(first)) < int(uuid.UUID(second))
+   |                                        ^^^^
+
+Found 2 errors.
+
+```
