@@ -1,5 +1,4 @@
 {
-  "(net) Implement `get_query_param` in app/toolkit/net.py: return the first value of a query parameter from a URL. Add a pytest in tests/toolkit/test_net.py covering the documented behaviour and at least one edge case, and export `get_query_param` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
