@@ -1,5 +1,5 @@
 {
-  "(finance) Implement `amortization_schedule` in app/toolkit/finance.py: return the per-period amortisation rows of a loan. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `amortization_schedule` from app/toolkit/__init__.py.": 1,
+  "(finance) Implement `amortization_schedule` in app/toolkit/finance.py: return the per-period amortisation rows of a loan. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `amortization_schedule` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }

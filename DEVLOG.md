@@ -3335,3 +3335,7 @@ Guardrail: ruff + import + pytest passed.
 ## 2026-09-25T17:57Z — rejected: (finance) Implement `amortization_schedule` in app/toolkit/finance.py: return the per-period amortisation rows of a loan. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `amortization_schedule` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-25T20:34Z — rejected: (finance) Implement `amortization_schedule` in app/toolkit/finance.py: return the per-period amortisation rows of a loan. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `amortization_schedule` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
