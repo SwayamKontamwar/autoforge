@@ -58,3 +58,22 @@ def celsius_to_kelvin(celsius: float) -> float:
         0.0
     """
     return celsius + 273.15
+
+
+def km_to_miles(kilometers: float) -> float:
+    """Convert a distance from kilometres to miles.
+
+    Args:
+        kilometers: Distance in kilometres.
+
+    Returns:
+        Distance in miles.
+
+    Example:
+        >>> km_to_miles(1)
+        0.621371
+        >>> km_to_miles(0)
+        0.0
+    """
+    # 1 kilometre = 0.621371 miles (exact conversion factor)
+    return kilometers * 0.62137119223733

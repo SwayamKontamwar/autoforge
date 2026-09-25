@@ -51,7 +51,12 @@ from app.toolkit.streams import batched, iterate, repeat_each
 from app.toolkit.strings import slugify, title_case, truncate, word_wrap
 from app.toolkit.structures import LFUCache, LRUCache, TTLCache
 from app.toolkit.textsearch import fuzzy_best_match, fuzzy_ratio, ngrams
-from app.toolkit.units import celsius_to_fahrenheit, celsius_to_kelvin, fahrenheit_to_celsius
+from app.toolkit.units import (
+    celsius_to_fahrenheit,
+    celsius_to_kelvin,
+    fahrenheit_to_celsius,
+    km_to_miles,
+)
 from app.toolkit.validation import is_email, is_ipv6, is_url
 from app.toolkit.vectors3d import v3_add, v3_sub
 from app.toolkit.webframework import Router, path_to_regex
@@ -113,6 +118,7 @@ __all__ = [
     "celsius_to_fahrenheit",
     "fahrenheit_to_celsius",
     "celsius_to_kelvin",
+    "km_to_miles",
     "distance_2d",
     "manhattan_distance",
     "haversine",

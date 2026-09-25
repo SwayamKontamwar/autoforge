@@ -4,6 +4,7 @@ from app.toolkit.units import (
     celsius_to_fahrenheit,
     celsius_to_kelvin,
     fahrenheit_to_celsius,
+    km_to_miles,
 )
 
 
@@ -43,3 +44,12 @@ def test_celsius_to_kelvin_edge_cases() -> None:
     assert celsius_to_kelvin(-273.15) == pytest.approx(0.0)
     # Negative temperature conversion
     assert celsius_to_kelvin(-40) == pytest.approx(233.15)
+
+
+def test_km_to_miles_basic_and_edge_cases() -> None:
+    # Zero distance
+    assert km_to_miles(0) == 0.0
+    # One kilometre conversion
+    assert km_to_miles(1) == pytest.approx(0.62137119223733, rel=1e-12)
+    # Negative distance
+    assert km_to_miles(-5) == pytest.approx(-3.10685596118665, rel=1e-12)
