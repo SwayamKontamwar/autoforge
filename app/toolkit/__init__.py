@@ -23,7 +23,7 @@ from app.toolkit.encoding import base58_decode, base58_encode, base62_decode, ba
 from app.toolkit.files import human_path, split_extension
 from app.toolkit.finance import compound_interest, monthly_payment
 from app.toolkit.functional import compose, curry, pipe
-from app.toolkit.geometry import distance_2d, haversine, manhattan_distance
+from app.toolkit.geometry import distance_2d, haversine, manhattan_distance, point_in_rect
 from app.toolkit.graphx import astar, floyd_warshall
 from app.toolkit.hashing import crc32, md5_hex, sha1_hex, sha256_hex
 from app.toolkit.i18n import format_list, format_ordinal_word, plural_rule_en
@@ -122,6 +122,7 @@ __all__ = [
     "distance_2d",
     "manhattan_distance",
     "haversine",
+    "point_in_rect",
     "compound_interest",
     "monthly_payment",
     "get_env_bool",

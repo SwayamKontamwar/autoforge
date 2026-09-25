@@ -3325,3 +3325,9 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement km_to_miles conversion, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-25T12:59Z — success: (geometry) Implement `point_in_rect` in app/toolkit/geometry.py: return whether a point lies inside a rectangle. Add a pytest in tests/toolkit/test_geometry.py covering the documented behaviour and at least one edge case, and export `point_in_rect` from app/toolkit/__init__.py.
+
+Implement point_in_rect, export it, add tests for inclusion and edge case
+
+Guardrail: ruff + import + pytest passed.

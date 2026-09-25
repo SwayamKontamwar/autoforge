@@ -10,6 +10,7 @@ from typing import Tuple, Union
 
 Number = Union[int, float]
 Point2D = Tuple[Number, Number]
+Rect = Tuple[Number, Number, Number, Number]  # (x1, y1, x2, y2)
 
 
 def distance_2d(p1: Point2D, p2: Point2D) -> float:
@@ -76,3 +77,25 @@ def haversine(
     c = 2.0 * math.asin(math.sqrt(a))
 
     return radius * c
+
+
+def point_in_rect(point: Point2D, rect: Rect) -> bool:
+    """Return whether a point lies inside a rectangle (inclusive of edges).
+
+    The rectangle is defined by two opposite corners ``(x1, y1)`` and
+    ``(x2, y2)``.  The order of the corners does not matter; the function
+    normalises them to the minimum and maximum extents.
+
+    Args:
+        point: ``(x, y)`` coordinates of the point to test.
+        rect: ``(x1, y1, x2, y2)`` defining the rectangle.
+
+    Returns:
+        ``True`` if the point is inside the rectangle or on its border,
+        ``False`` otherwise.
+    """
+    x, y = point
+    x1, y1, x2, y2 = rect
+    min_x, max_x = (x1, x2) if x1 <= x2 else (x2, x1)
+    min_y, max_y = (y1, y2) if y1 <= y2 else (y2, y1)
+    return min_x <= x <= max_x and min_y <= y <= max_y
