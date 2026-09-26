@@ -3351,3 +3351,55 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement deep_get utility, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-09-26T12:28Z — failed: (resilience) Implement `TokenBucket` in app/toolkit/resilience.py: a token-bucket rate limiter with try_acquire. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `TokenBucket` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+ple` has been deprecated, please use `examples` instead
+    app = create_app()
+
+tests/test_alias_conflict.py:9
+  /home/runner/work/autoforge/autoforge/tests/test_alias_conflict.py:9: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app(), follow_redirects=False)
+
+tests/test_alias_validation.py:10
+  /home/runner/work/autoforge/autoforge/tests/test_alias_validation.py:10: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app(), follow_redirects=False)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/toolkit/test_algorithms.py
+ERROR tests/toolkit/test_bits.py
+ERROR tests/toolkit/test_cli.py
+ERROR tests/toolkit/test_cli_confirm.py
+ERROR tests/toolkit/test_cli_progress_bar.py
+ERROR tests/toolkit/test_config.py
+ERROR tests/toolkit/test_config_deep_get.py
+ERROR tests/toolkit/test_datetimes.py
+ERROR tests/toolkit/test_datetimes_humanize.py
+ERROR tests/toolkit/test_datetimes_now.py
+ERROR tests/toolkit/test_resilience_circuitbreaker.py
+ERROR tests/toolkit/test_scheduling.py
+ERROR tests/toolkit/test_security.py
+ERROR tests/toolkit/test_serialization.py
+ERROR tests/toolkit/test_serialization_dataclass.py
+ERROR tests/toolkit/test_statemachine.py
+ERROR tests/toolkit/test_stats.py
+ERROR tests/toolkit/test_streams.py
+ERROR tests/toolkit/test_strings.py
+ERROR tests/toolkit/test_strings_title_case.py
+ERROR tests/toolkit/test_structures.py
+ERROR tests/toolkit/test_structures_ttl.py
+ERROR tests/toolkit/test_textsearch.py
+ERROR tests/toolkit/test_units.py
+ERROR tests/toolkit/test_validation.py
+ERROR tests/toolkit/test_vectors3d.py
+ERROR tests/toolkit/test_webframework.py
+ERROR tests/toolkit/test_webframework_path_to_regex.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 28 errors during collection !!!!!!!!!!!!!!!!!!!
+4 warnings, 28 errors in 0.43s
+
+```
