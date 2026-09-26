@@ -8,7 +8,7 @@ reasonable defaults and validation. Currently includes a boolean reader
 from __future__ import annotations
 
 import os
-from typing import Final
+from typing import Any, Final
 
 # Accepted true/false strings (case‑insensitive)
 _TRUE_VALUES: Final[set[str]] = {"true", "1", "yes", "y", "on"}
@@ -79,18 +79,35 @@ def get_env_list(name: str, default: list[str] | None = None) -> list[str]:
     The function reads ``name`` from ``os.getenv``. If the variable is not set,
     ``default`` (or an empty list if ``default`` is ``None``) is returned.
     The variable's value is split on commas, each element is stripped of
-    surrounding whitespace, and empty entries are discarded.
-
-    Args:
-        name: Environment variable name.
-        default: List to return when the variable is missing.
-
-    Returns:
-        A list of non‑empty, stripped strings.
+    surrounding whitespace, and empty strings are discarded.
     """
     raw = os.getenv(name)
     if raw is None:
-        return default if default is not None else []
-    # Split on commas, strip whitespace, and filter out empty strings
-    items = [item.strip() for item in raw.split(",")]
-    return [item for item in items if item]
+        return [] if default is None else default
+    # Split on commas and strip whitespace
+    parts = [part.strip() for part in raw.split(",")]
+    # Filter out empty strings
+    return [part for part in parts if part]
+
+
+def deep_get(data: dict[str, Any], path: str, default: Any = None) -> Any:
+    """Retrieve a nested value from ``data`` using a dotted ``path``.
+
+    Args:
+        data: The dictionary to search.
+        path: Dotted path string, e.g. ``"a.b.c"``.
+        default: Value to return if any part of the path is missing.
+
+    Returns:
+        The value found at the path, or ``default`` if the path cannot be fully
+        resolved.
+    """
+    if not path:
+        return default
+    current: Any = data
+    for key in path.split("."):
+        if isinstance(current, dict) and key in current:
+            current = current[key]
+        else:
+            return default
+    return current
