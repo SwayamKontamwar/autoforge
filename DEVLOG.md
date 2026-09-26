@@ -3407,3 +3407,9 @@ ERROR tests/toolkit/test_webframework_path_to_regex.py
 ## 2026-09-26T17:10Z — rejected: (resilience) Implement `TokenBucket` in app/toolkit/resilience.py: a token-bucket rate limiter with try_acquire. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `TokenBucket` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-26T19:59Z — skipped: (resilience) Implement `TokenBucket` in app/toolkit/resilience.py: a token-bucket rate limiter with try_acquire. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `TokenBucket` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
