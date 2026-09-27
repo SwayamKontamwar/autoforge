@@ -3458,3 +3458,34 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-27T20:15Z — rejected: (webframework) Implement `parse_headers` in app/toolkit/webframework.py: parse a raw HTTP header block into a case-insensitive dict. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `parse_headers` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-27T23:50Z — skipped: (webframework) Implement `parse_headers` in app/toolkit/webframework.py: parse a raw HTTP header block into a case-insensitive dict. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `parse_headers` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_webframework.py::test_static_and_parameterised_routes - AttributeError: 'Router' object has no attribute 'add_route'
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...ttribute \'add_route\'\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_webframework.py::test_static_and_parameterised_routes - AttributeError: 'Router' object has no attribute 'add_route'
+FAILED tests/toolkit/test_webframework.py::test_precedence_static_over_param_when_added_later - AttributeError: 'Router' object has no attribute 'add_route'
+FAILED tests/toolkit/test_webframework.py::test_method_mismatch_returns_none - AttributeError: 'Router' object has no attribute 'add_route'
+4 failed, 659 passed, 22 warnings in 43.10s
+
+```
