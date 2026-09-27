@@ -3450,3 +3450,7 @@ FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_invalid_width -
 6 failed, 657 passed, 22 warnings in 40.22s
 
 ```
+
+## 2026-09-27T17:44Z — rejected: (webframework) Implement `parse_headers` in app/toolkit/webframework.py: parse a raw HTTP header block into a case-insensitive dict. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `parse_headers` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.

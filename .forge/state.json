@@ -1,4 +1,5 @@
 {
+  "(webframework) Implement `parse_headers` in app/toolkit/webframework.py: parse a raw HTTP header block into a case-insensitive dict. Add a pytest in tests/toolkit/test_webframework.py covering the documented behaviour and at least one edge case, and export `parse_headers` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
