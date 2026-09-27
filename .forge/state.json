@@ -1,5 +1,4 @@
 {
-  "(cli) Implement `spinner_frames` in app/toolkit/cli.py: yield spinner animation frames. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `spinner_frames` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
