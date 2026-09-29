@@ -1,5 +1,4 @@
 {
-  "(serialization) Implement `dict_to_dataclass` in app/toolkit/serialization.py: build a dataclass instance from a dict. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `dict_to_dataclass` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
