@@ -3525,3 +3525,56 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-09-29T18:38Z — rejected: (security) Implement `verify_password` in app/toolkit/security.py: verify a password against a PBKDF2 encoded hash. Add a pytest in tests/toolkit/test_security.py covering the documented behaviour and at least one edge case, and export `verify_password` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-29T21:28Z — skipped: (security) Implement `verify_password` in app/toolkit/security.py: verify a password against a PBKDF2 encoded hash. Add a pytest in tests/toolkit/test_security.py covering the documented behaviour and at least one edge case, and export `verify_password` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+ircuitBreaker, retry
+   |                                    ^^^^^^^^^^^^^^
+45 | from app.toolkit.scheduling import cron_iter, next_cron_time
+46 | from app.toolkit.security import (
+   |
+help: Add unused import `CircuitBreaker` to __all__
+
+F401 `app.toolkit.resilience.retry` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:44:52
+   |
+42 | from app.toolkit.randomness import random_hex, random_string, uuid4
+43 | from app.toolkit.regexutil import extract_emails, extract_hashtags, extract_urls
+44 | from app.toolkit.resilience import CircuitBreaker, retry
+   |                                                    ^^^^^
+45 | from app.toolkit.scheduling import cron_iter, next_cron_time
+46 | from app.toolkit.security import (
+   |
+help: Add unused import `retry` to __all__
+
+F401 `app.toolkit.scheduling.cron_iter` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:45:36
+   |
+43 | from app.toolkit.regexutil import extract_emails, extract_hashtags, extract_urls
+44 | from app.toolkit.resilience import CircuitBreaker, retry
+45 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |                                    ^^^^^^^^^
+46 | from app.toolkit.security import (
+47 |     constant_time_equals,
+   |
+help: Add unused import `cron_iter` to __all__
+
+F401 `app.toolkit.scheduling.next_cron_time` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:45:47
+   |
+43 | from app.toolkit.regexutil import extract_emails, extract_hashtags, extract_urls
+44 | from app.toolkit.resilience import CircuitBreaker, retry
+45 | from app.toolkit.scheduling import cron_iter, next_cron_time
+   |                                               ^^^^^^^^^^^^^^
+46 | from app.toolkit.security import (
+47 |     constant_time_equals,
+   |
+help: Add unused import `next_cron_time` to __all__
+
+Found 48 errors.
+
+```
