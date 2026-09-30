@@ -3615,3 +3615,30 @@ ERROR tests/toolkit/test_bits.py::test_bit
 1 failed, 662 passed, 22 warnings, 1 error in 39.53s
 
 ```
+
+## 2026-09-30T08:41Z — failed: (bits) Implement `test_bit` in app/toolkit/bits.py: return whether the bit at a position is set. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `test_bit` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F811 Redefinition of unused `test_bit` from line 7
+  --> tests/toolkit/test_bits.py:71:5
+   |
+71 | def test_bit():
+   |     ^^^^^^^^ `test_bit` redefined here
+72 |     """Test the ``test_bit`` utility."""
+73 |     # basic checks
+   |
+  ::: tests/toolkit/test_bits.py:7:45
+   |
+ 5 | import pytest
+ 6 |
+ 7 | from app.toolkit import clear_bit, set_bit, test_bit, toggle_bit
+   |                                             -------- previous definition of `test_bit` here
+help: Remove definition: `test_bit`
+
+Found 1 error.
+
+```
