@@ -3652,3 +3652,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-09-30T18:26Z — rejected: (streams) Implement `cycle_n` in app/toolkit/streams.py: cycle an iterable a fixed number of times. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `cycle_n` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-09-30T21:28Z — rejected: (streams) Implement `cycle_n` in app/toolkit/streams.py: cycle an iterable a fixed number of times. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `cycle_n` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
