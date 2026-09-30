@@ -1,7 +1,4 @@
 {
-  "(bits) Implement `test_bit` in app/toolkit/bits.py: return whether the bit at a position is set. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `test_bit` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {
-    "(bits) Implement `test_bit` in app/toolkit/bits.py: return whether the bit at a position is set. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `test_bit` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\nF811 Redefinition of unused `test_bit` from line 7\n  --> tests/toolkit/test_bits.py:71:5\n   |\n71 | def test_bit():\n   |     ^^^^^^^^ `test_bit` redefined here\n72 |     \"\"\"Test the ``test_bit`` utility.\"\"\"\n73 |     # basic checks\n   |\n  ::: tests/toolkit/test_bits.py:7:45\n   |\n 5 | import pytest\n 6 |\n 7 | from app.toolkit import clear_bit, set_bit, test_bit, toggle_bit\n   |                                             -------- previous definition of `test_bit` here\nhelp: Remove definition: `test_bit`\n\nFound 1 error.\n"
-  }
+  "__last_failures__": {}
 }

@@ -3642,3 +3642,9 @@ help: Remove definition: `test_bit`
 Found 1 error.
 
 ```
+
+## 2026-09-30T14:14Z — skipped: (bits) Implement `test_bit` in app/toolkit/bits.py: return whether the bit at a position is set. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `test_bit` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
