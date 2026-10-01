@@ -28,8 +28,7 @@ from app.toolkit.graphx import astar, floyd_warshall
 from app.toolkit.hashing import crc32, md5_hex, sha1_hex, sha256_hex
 from app.toolkit.i18n import format_list, format_ordinal_word, plural_rule_en
 from app.toolkit.imageppm import ppm_new, ppm_set_pixel
-from app.toolkit.markdown import md_bold, md_italic, md_link
-from app.toolkit.mathx import clamp_angle, deg_normalize, hypot
+from app.toolkit.mathx import clamp_angle, deg_normalize, factorial_iter, hypot
 from app.toolkit.matrix import mat_add, mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url, strip_query
@@ -152,6 +151,7 @@ __all__ = [
     "iterate",
     "repeat_each",
     "hypot",
+    "factorial_iter",
     "clamp_angle",
     "deg_normalize",
     "mat_zeros",

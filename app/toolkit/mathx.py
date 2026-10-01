@@ -6,6 +6,7 @@ toolkit.  Currently includes:
 * ``hypot`` – Euclidean norm (length) of an arbitrary number of components.
 * ``clamp_angle`` – Wrap an angle into the range -π to π.
 * ``deg_normalize`` – Normalize a degree value into the range [0, 360).
+* ``factorial_iter`` – Iterative factorial for non‑negative integers.
 """
 
 from __future__ import annotations
@@ -69,7 +70,30 @@ def deg_normalize(degrees: Number) -> float:
     Returns:
         The normalized angle as a ``float`` within ``[0, 360)``.
     """
-    # Using Python's modulo with a positive divisor yields a result in [0, divisor).
+    # Use modulo to wrap into [0, 360). Python's % works with floats.
     normalized = float(degrees) % 360.0
     # Convert -0.0 to 0.0 for consistency.
     return 0.0 if normalized == -0.0 else normalized
+
+
+def factorial_iter(n: int) -> int:
+    """Return the factorial of *n* computed iteratively.
+
+    The function supports non‑negative integers.  For ``n == 0`` the result
+    is ``1``.  ``n`` must be an ``int``; a ``TypeError`` is raised for other
+    types.  Negative values raise ``ValueError``.
+
+    Args:
+        n: Non‑negative integer whose factorial is desired.
+
+    Returns:
+        The factorial of ``n`` as an ``int``.
+    """
+    if not isinstance(n, int):
+        raise TypeError("n must be an integer")
+    if n < 0:
+        raise ValueError("factorial is undefined for negative values")
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result

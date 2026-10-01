@@ -3676,3 +3676,9 @@ invalid-syntax: Expected an expression
 Found 1 error.
 
 ```
+
+## 2026-10-01T09:04Z — success: (mathx) Implement `factorial_iter` in app/toolkit/mathx.py: compute a factorial iteratively for large n. Add a pytest in tests/toolkit/test_mathx.py covering the documented behaviour and at least one edge case, and export `factorial_iter` from app/toolkit/__init__.py.
+
+Implement factorial_iter, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
