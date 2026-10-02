@@ -3714,3 +3714,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-02T18:25Z — rejected: (numbertheory) Implement `divisor_sum` in app/toolkit/numbertheory.py: return the sum of divisors of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `divisor_sum` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-02T21:22Z — rejected: (numbertheory) Implement `divisor_sum` in app/toolkit/numbertheory.py: return the sum of divisors of an integer. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `divisor_sum` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
