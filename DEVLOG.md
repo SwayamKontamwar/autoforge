@@ -3704,3 +3704,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-02T08:38Z — rejected: (stats) Implement `covariance` in app/toolkit/stats.py: return the sample covariance of two sequences. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `covariance` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-02T14:08Z — skipped: (stats) Implement `covariance` in app/toolkit/stats.py: return the sample covariance of two sequences. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `covariance` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
