@@ -15,7 +15,7 @@ from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple, progress_bar
 from app.toolkit.collections import chunk, flatten, flatten_deep, unique
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex
-from app.toolkit.combinatorics import nth_permutation, permutation_index
+from app.toolkit.combinatorics import multinomial, nth_permutation, permutation_index
 from app.toolkit.compression import delta_encode, rle_bytes_decode, rle_bytes_encode
 from app.toolkit.config import deep_get, get_env_bool, get_env_int, get_env_list
 from app.toolkit.datetimes import humanize_delta, now_utc, parse_iso, to_iso
@@ -163,6 +163,7 @@ __all__ = [
     "weighted_mean",
     "nth_permutation",
     "permutation_index",
+    "multinomial",
     "binomial_pmf",
     "poisson_pmf",
     "extract_emails",

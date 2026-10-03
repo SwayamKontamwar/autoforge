@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.combinatorics import nth_permutation, permutation_index
+from app.toolkit.combinatorics import multinomial, nth_permutation, permutation_index
 
 
 def test_nth_permutation_typical() -> None:
@@ -37,3 +37,17 @@ def test_permutation_index_edge_cases() -> None:
 
     with pytest.raises(ValueError):
         permutation_index([1, 2, 3], [1, 1, 2])  # duplicate / missing items
+
+
+def test_multinomial_typical() -> None:
+    # Multinomial coefficient for counts [2, 1, 1] => 4! / (2! * 1! * 1!) = 12
+    assert multinomial([2, 1, 1]) == 12
+
+
+def test_multinomial_edge_cases() -> None:
+    # Empty counts should return 1
+    assert multinomial([]) == 1
+
+    # Negative count should raise ValueError
+    with pytest.raises(ValueError):
+        multinomial([1, -1, 2])

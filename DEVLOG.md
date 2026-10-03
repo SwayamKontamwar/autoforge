@@ -3724,3 +3724,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement divisor_sum, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-10-03T08:16Z — success: (combinatorics) Implement `multinomial` in app/toolkit/combinatorics.py: return the multinomial coefficient of a group of counts. Add a pytest in tests/toolkit/test_combinatorics.py covering the documented behaviour and at least one edge case, and export `multinomial` from app/toolkit/__init__.py.
+
+Implement multinomial coefficient, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

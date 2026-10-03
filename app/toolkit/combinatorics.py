@@ -51,45 +51,67 @@ def nth_permutation(seq: Sequence[T], n: int) -> List[T]:
 
 
 def permutation_index(seq: Sequence[T], perm: Sequence[T]) -> int:
-    """Return the lexicographic index of *perm* relative to *seq*.
+    """Return the lexicographic index of *perm* within all permutations of *seq*.
 
-    Both *seq* and *perm* must contain the same distinct items.  The index is
-    zero‑based, meaning that if *perm* equals *seq* the function returns ``0``.
-    The ordering used is the order of items in *seq*.
+    Both *seq* and *perm* must contain the same distinct elements. The index is
+    zero‑based, matching the behaviour of :func:`nth_permutation`.
 
     Args:
-        seq: The reference sequence defining the ordering.
-        perm: A permutation of ``seq`` whose index is desired.
+        seq: The original sequence of distinct items.
+        perm: A permutation of ``seq``.
 
     Returns:
-        The zero‑based lexicographic index of ``perm`` among all permutations
-        of ``seq``.
+        The zero‑based index of ``perm`` in the lexicographic ordering.
 
     Raises:
-        ValueError: If ``perm`` is not a permutation of ``seq``.
+        ValueError: If ``perm`` is not a valid permutation of ``seq``.
     """
     if len(seq) != len(perm):
         raise ValueError("seq and perm must have the same length")
 
-    # Map each item to its position in the original sequence for ordering.
-    order = {item: idx for idx, item in enumerate(seq)}
+    # Ensure both contain the same elements (no duplicates, no missing)
     if set(seq) != set(perm):
-        raise ValueError("perm must be a permutation of seq")
+        raise ValueError("perm is not a valid permutation of seq")
 
     index = 0
-    remaining_items = list(seq)  # mutable list of items not yet placed
-    factorial = math.factorial
+    remaining = list(seq)
 
-    for i, p in enumerate(perm):
-        # Determine how many remaining items are less than the current one
-        # according to the original ordering.
-        less_count = sum(1 for item in remaining_items if order[item] < order[p])
-        remaining_len = len(remaining_items)
-        index += less_count * factorial(remaining_len - 1)
-        # Remove the used item.
-        remaining_items.remove(p)
+    for p in perm:
+        pos = remaining.index(p)
+        f = math.factorial(len(remaining) - 1)
+        index += pos * f
+        remaining.pop(pos)
 
     return index
 
 
-__all__ = ["nth_permutation", "permutation_index"]
+def multinomial(counts: Sequence[int]) -> int:
+    """Return the multinomial coefficient for the given *counts*.
+
+    The multinomial coefficient is defined as::
+
+        (sum(counts))! / (c1! * c2! * ... * ck!)
+
+    where ``counts`` is a sequence of non‑negative integers. An empty ``counts``
+    sequence yields ``1`` (the coefficient of the empty partition).
+
+    Args:
+        counts: A sequence of non‑negative integer counts.
+
+    Returns:
+        The multinomial coefficient as an integer.
+
+    Raises:
+        ValueError: If any count is negative.
+    """
+    if any(c < 0 for c in counts):
+        raise ValueError("multinomial counts must be non‑negative")
+
+    total = sum(counts)
+    numerator = math.factorial(total)
+
+    denominator = 1
+    for c in counts:
+        denominator *= math.factorial(c)
+
+    return numerator // denominator
