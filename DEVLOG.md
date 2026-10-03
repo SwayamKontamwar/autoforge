@@ -3738,3 +3738,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-03T17:17Z — rejected: (probability) Implement `normal_cdf` in app/toolkit/probability.py: evaluate the standard normal cumulative distribution. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `normal_cdf` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-03T20:01Z — skipped: (probability) Implement `normal_cdf` in app/toolkit/probability.py: evaluate the standard normal cumulative distribution. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `normal_cdf` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
