@@ -33,7 +33,7 @@ from app.toolkit.matrix import mat_add, mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn
 from app.toolkit.net import build_query, join_url, strip_query
 from app.toolkit.numbers import clamp, inverse_lerp, lerp
-from app.toolkit.numbertheory import divisor_count, euler_totient, mobius
+from app.toolkit.numbertheory import divisor_count, divisor_sum, euler_totient, mobius
 from app.toolkit.observability import RateCounter, Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy, potential_energy
@@ -71,6 +71,7 @@ __all__ = [
     "euler_totient",
     "mobius",
     "divisor_count",
+    "divisor_sum",
     "parse_iso",
     "to_iso",
     "now_utc",
