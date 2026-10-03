@@ -1,4 +1,5 @@
 {
+  "(probability) Implement `normal_cdf` in app/toolkit/probability.py: evaluate the standard normal cumulative distribution. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `normal_cdf` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
