@@ -1,5 +1,5 @@
 {
-  "(regexutil) Implement `extract_mentions` in app/toolkit/regexutil.py: return all @mentions found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_mentions` from app/toolkit/__init__.py.": 1,
+  "(regexutil) Implement `extract_mentions` in app/toolkit/regexutil.py: return all @mentions found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_mentions` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
