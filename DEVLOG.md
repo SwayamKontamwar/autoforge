@@ -3752,3 +3752,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-04T08:31Z — rejected: (regexutil) Implement `extract_mentions` in app/toolkit/regexutil.py: return all @mentions found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_mentions` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-04T13:29Z — success: (regexutil) Implement `extract_mentions` in app/toolkit/regexutil.py: return all @mentions found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_mentions` from app/toolkit/__init__.py.
+
+Implement extract_mentions, export it, and add tests for typical and edge cases
+
+Guardrail: ruff + import + pytest passed.

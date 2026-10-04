@@ -51,11 +51,19 @@ def extract_hashtags(text: str) -> List[str]:
     """Return a list of hashtag strings (without the leading ``#``) found in *text*.
 
     Hashtags consist of letters, digits, or underscores and are terminated by
-    any character that is not part of that set. Trailing punctuation is not
-    included.
+    any character that is not part of that set.
     """
-    # Capture the characters after the leading '#'.
-    return re.findall(r"#([A-Za-z0-9_]+)", text)
+    hashtag_pattern = re.compile(r"#([A-Za-z0-9_]+)")
+    return hashtag_pattern.findall(text)
 
 
-__all__ = ["extract_emails", "extract_urls", "extract_hashtags"]
+def extract_mentions(text: str) -> List[str]:
+    """Return a list of @mention usernames (without the leading ``@``) found in *text*.
+
+    Mentions consist of letters, digits, or underscores. The ``@`` must not be
+    part of an email address, so a negative look‑behind ensures the preceding
+    character is not typical of an email local‑part.
+    """
+    # Negative look‑behind prevents matching the @ in email addresses.
+    mention_pattern = re.compile(r"(?<![A-Za-z0-9._%+-])@([A-Za-z0-9_]+)")
+    return mention_pattern.findall(text)
