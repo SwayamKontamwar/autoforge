@@ -3758,3 +3758,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement extract_mentions, export it, and add tests for typical and edge cases
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-10-04T17:35Z — success: (markdown) Implement `md_image` in app/toolkit/markdown.py: build a markdown image from alt text and a URL. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_image` from app/toolkit/__init__.py.
+
+Implement md_image, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

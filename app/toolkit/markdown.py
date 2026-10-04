@@ -45,3 +45,20 @@ def md_link(text: str, url: str) -> str:
         A string representing a markdown link, e.g. ``[example](https://example.com)``.
     """
     return f"[{text}]({url})"
+
+
+def md_image(alt: str, url: str) -> str:
+    """Return a markdown image constructed from *alt* text and *url*.
+
+    The function formats the arguments into the standard markdown image syntax
+    ``![alt](url)``. No validation or escaping is performed; the caller must
+    provide appropriate values.
+
+    Args:
+        alt: The alternative text that will appear inside the brackets.
+        url: The image URL that will appear inside the parentheses.
+
+    Returns:
+        A string representing a markdown image, e.g. ``![example](https://example.com/img.png)``.
+    """
+    return f"![{alt}]({url})"
