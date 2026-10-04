@@ -3768,3 +3768,7 @@ Guardrail: ruff + import + pytest passed.
 ## 2026-10-04T20:16Z — rejected: (calendars) Implement `is_us_federal_holiday` in app/toolkit/calendars.py: test whether a date is a US federal holiday. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `is_us_federal_holiday` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-04T23:57Z — rejected: (calendars) Implement `is_us_federal_holiday` in app/toolkit/calendars.py: test whether a date is a US federal holiday. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `is_us_federal_holiday` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
