@@ -1,4 +1,5 @@
 {
+  "(calendars) Implement `is_us_federal_holiday` in app/toolkit/calendars.py: test whether a date is a US federal holiday. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `is_us_federal_holiday` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
