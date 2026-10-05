@@ -3786,3 +3786,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-05T21:06Z — rejected: (i18n) Implement `number_to_words_en` in app/toolkit/i18n.py: spell a non-negative integer in English words. Add a pytest in tests/toolkit/test_i18n.py covering the documented behaviour and at least one edge case, and export `number_to_words_en` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-05T23:14Z — skipped: (i18n) Implement `number_to_words_en` in app/toolkit/i18n.py: spell a non-negative integer in English words. Add a pytest in tests/toolkit/test_i18n.py covering the documented behaviour and at least one edge case, and export `number_to_words_en` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
