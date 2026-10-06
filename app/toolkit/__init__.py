@@ -58,7 +58,7 @@ from app.toolkit.units import (
     km_to_miles,
 )
 from app.toolkit.validation import is_email, is_ipv6, is_url
-from app.toolkit.vectors3d import v3_add, v3_sub
+from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
 from app.toolkit.webframework import Router, path_to_regex
 
 __all__ = [
@@ -183,6 +183,7 @@ __all__ = [
     "format_ordinal_word",
     "v3_add",
     "v3_sub",
+    "v3_dot",
     "kinetic_energy",
     "potential_energy",
     "rle_bytes_encode",

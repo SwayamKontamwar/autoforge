@@ -39,24 +39,11 @@ def v3_add(v1: Iterable[float], v2: Iterable[float]) -> Tuple[float, float, floa
     Returns
     -------
     tuple[float, float, float]
-        The component‑wise sum of the two vectors. Each component is rounded to
-        12 decimal places to avoid typical floating‑point representation noise,
-        ensuring deterministic equality in tests.
-
-    Raises
-    ------
-    ValueError
-        If either vector does not contain exactly three components.
+        The component‑wise sum of the two vectors.
     """
     a = _validate_vector(v1)
     b = _validate_vector(v2)
-
-    summed = tuple(a[i] + b[i] for i in range(3))
-
-    # Round floats to a reasonable precision to make equality checks stable.
-    # ``round`` leaves integers unchanged; for non‑float types the call is a
-    # no‑op because ``isinstance(x, float)`` will be False.
-    return tuple(round(x, 12) if isinstance(x, float) else x for x in summed)
+    return (a[0] + b[0], a[1] + b[1], a[2] + b[2])
 
 
 def v3_sub(v1: Iterable[float], v2: Iterable[float]) -> Tuple[float, float, float]:
@@ -70,17 +57,26 @@ def v3_sub(v1: Iterable[float], v2: Iterable[float]) -> Tuple[float, float, floa
     Returns
     -------
     tuple[float, float, float]
-        The component‑wise difference of the two vectors. Each component is
-        rounded to 12 decimal places to avoid floating‑point noise.
-
-    Raises
-    ------
-    ValueError
-        If either vector does not contain exactly three components.
+        The component‑wise difference of the two vectors.
     """
     a = _validate_vector(v1)
     b = _validate_vector(v2)
+    return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
 
-    diff = tuple(a[i] - b[i] for i in range(3))
 
-    return tuple(round(x, 12) if isinstance(x, float) else x for x in diff)
+def v3_dot(v1: Iterable[float], v2: Iterable[float]) -> float:
+    """Return the dot product of two 3‑vectors.
+
+    Parameters
+    ----------
+    v1, v2:
+        Iterables with exactly three numeric components each.
+
+    Returns
+    -------
+    float
+        The scalar dot product of the two vectors.
+    """
+    a = _validate_vector(v1)
+    b = _validate_vector(v2)
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]

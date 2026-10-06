@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.vectors3d import v3_add, v3_sub
+from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
 
 
 def test_v3_add_typical() -> None:
@@ -43,3 +43,23 @@ def test_v3_sub_edge_cases() -> None:
 
     with pytest.raises(ValueError):
         v3_sub((1, 2, 3, 4), (0, 0, 0))
+
+
+def test_v3_dot_typical() -> None:
+    """Typical dot product calculation."""
+    v1 = (1, 2, 3)
+    v2 = (4, 5, 6)
+    assert v3_dot(v1, v2) == 32  # 1*4 + 2*5 + 3*6
+
+
+def test_v3_dot_edge_cases() -> None:
+    """Edge cases: dot with zero vector and length validation."""
+    zero = (0, 0, 0)
+    v = (7, -8, 9)
+    assert v3_dot(v, zero) == 0
+
+    with pytest.raises(ValueError):
+        v3_dot((1, 2), (3, 4, 5))
+
+    with pytest.raises(ValueError):
+        v3_dot((1, 2, 3, 4), (0, 0, 0))
