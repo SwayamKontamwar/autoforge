@@ -3826,3 +3826,39 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-07T14:45Z — failed: (imageppm) Implement `ppm_fill` in app/toolkit/imageppm.py: fill an entire grid with a colour. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_fill` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: missing closing quote in string literal
+   --> app/toolkit/__init__.py:112:5
+    |
+110 |     "fuzzy_best_match",
+111 |     "ngrams",
+112 |     "
+    |     ^
+113 | ... (truncated)
+    |
+
+invalid-syntax: Expected `,`, found `...`
+   --> app/toolkit/__init__.py:113:1
+    |
+111 |     "ngrams",
+112 |     "
+113 | ... (truncated)
+    | ^^^
+
+invalid-syntax: unexpected EOF while parsing
+   --> app/toolkit/__init__.py:113:17
+    |
+112 |     "
+113 | ... (truncated)
+    |                ^
+
+Found 3 errors.
+
+```

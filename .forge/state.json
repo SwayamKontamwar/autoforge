@@ -1,4 +1,7 @@
 {
+  "(imageppm) Implement `ppm_fill` in app/toolkit/imageppm.py: fill an entire grid with a colour. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_fill` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "(imageppm) Implement `ppm_fill` in app/toolkit/imageppm.py: fill an entire grid with a colour. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_fill` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\ninvalid-syntax: missing closing quote in string literal\n   --> app/toolkit/__init__.py:112:5\n    |\n110 |     \"fuzzy_best_match\",\n111 |     \"ngrams\",\n112 |     \"\n    |     ^\n113 | ... (truncated)\n    |\n\ninvalid-syntax: Expected `,`, found `...`\n   --> app/toolkit/__init__.py:113:1\n    |\n111 |     \"ngrams\",\n112 |     \"\n113 | ... (truncated)\n    | ^^^\n\ninvalid-syntax: unexpected EOF while parsing\n   --> app/toolkit/__init__.py:113:17\n    |\n112 |     \"\n113 | ... (truncated)\n    |                ^\n\nFound 3 errors.\n"
+  }
 }
