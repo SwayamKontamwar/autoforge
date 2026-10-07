@@ -3816,3 +3816,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-06T21:45Z — rejected: (compression) Implement `delta_decode` in app/toolkit/compression.py: reverse delta encoding of integers. Add a pytest in tests/toolkit/test_compression.py covering the documented behaviour and at least one edge case, and export `delta_decode` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-07T00:43Z — rejected: (compression) Implement `delta_decode` in app/toolkit/compression.py: reverse delta encoding of integers. Add a pytest in tests/toolkit/test_compression.py covering the documented behaviour and at least one edge case, and export `delta_decode` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
