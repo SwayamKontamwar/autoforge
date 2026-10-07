@@ -1,5 +1,4 @@
 {
-  "(compression) Implement `delta_decode` in app/toolkit/compression.py: reverse delta encoding of integers. Add a pytest in tests/toolkit/test_compression.py covering the documented behaviour and at least one edge case, and export `delta_decode` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
