@@ -3941,3 +3941,7 @@ help: Add unused import `v3_sub` to __all__
 Found 49 errors.
 
 ```
+
+## 2026-10-08T22:14Z — rejected: (statemachine) Implement `fire_event` in app/toolkit/statemachine.py: apply an event advancing the machine or raising if invalid. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `fire_event` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
