@@ -3886,3 +3886,58 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-08T19:17Z — failed: (statemachine) Implement `fire_event` in app/toolkit/statemachine.py: apply an event advancing the machine or raising if invalid. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `fire_event` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+sing a redundant alias
+  --> app/toolkit/__init__.py:46:72
+   |
+44 | from app.toolkit.resilience import CircuitBreaker, retry
+45 | from app.toolkit.scheduling import cron_iter, next_cron_time
+46 | from app.toolkit.security import constant_time_equals, generate_token, hash_password
+   |                                                                        ^^^^^^^^^^^^^
+47 | from app.toolkit.serialization import dataclass_to_dict, from_jsonl, to_jsonl
+48 | from app.toolkit.statemachine import StateMachine, fire_event
+   |
+help: Add unused import `hash_password` to __all__
+
+F401 `app.toolkit.vectors3d.v3_add` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:61:35
+   |
+59 | )
+60 | from app.toolkit.validation import is_email, is_ipv6, is_url
+61 | from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
+   |                                   ^^^^^^
+62 | from app.toolkit.webframework import Router, path_to_regex
+   |
+help: Add unused import `v3_add` to __all__
+
+F401 `app.toolkit.vectors3d.v3_dot` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:61:43
+   |
+59 | )
+60 | from app.toolkit.validation import is_email, is_ipv6, is_url
+61 | from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
+   |                                           ^^^^^^
+62 | from app.toolkit.webframework import Router, path_to_regex
+   |
+help: Add unused import `v3_dot` to __all__
+
+F401 `app.toolkit.vectors3d.v3_sub` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+  --> app/toolkit/__init__.py:61:51
+   |
+59 | )
+60 | from app.toolkit.validation import is_email, is_ipv6, is_url
+61 | from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
+   |                                                   ^^^^^^
+62 | from app.toolkit.webframework import Router, path_to_regex
+   |
+help: Add unused import `v3_sub` to __all__
+
+Found 49 errors.
+
+```
