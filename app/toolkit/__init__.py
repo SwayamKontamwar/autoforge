@@ -31,7 +31,7 @@ from app.toolkit.imageppm import ppm_new, ppm_set_pixel
 from app.toolkit.markdown import md_bold, md_image, md_italic, md_link
 from app.toolkit.mathx import clamp_angle, deg_normalize, factorial_iter, hypot
 from app.toolkit.matrix import mat_add, mat_identity, mat_zeros
-from app.toolkit.ml import euclidean_knn
+from app.toolkit.ml import euclidean_knn, linear_fit_gd
 from app.toolkit.net import build_query, join_url, strip_query
 from app.toolkit.numbers import clamp, inverse_lerp, lerp
 from app.toolkit.numbertheory import divisor_count, divisor_sum, euler_totient, mobius
@@ -195,6 +195,7 @@ __all__ = [
     "cron_iter",
     "StateMachine",
     "euclidean_knn",
+    "linear_fit_gd",
     "upc_check_digit",
     "ean13_check_digit",
     "floyd_warshall",

@@ -53,3 +53,63 @@ def euclidean_knn(
     nearest_labels = [label for _, label in distances[:k]]
     most_common = Counter(nearest_labels).most_common(1)[0][0]
     return most_common
+
+
+def linear_fit_gd(
+    xs: Sequence[float],
+    ys: Sequence[float],
+    *,
+    lr: float = 0.01,
+    epochs: int = 1000,
+) -> Tuple[float, float]:
+    """Fit a line ``y = m * x + b`` to data using gradient descent.
+
+    Parameters
+    ----------
+    xs, ys:
+        Sequences of equal length containing the x‑ and y‑coordinates of the
+        training data.
+    lr:
+        Learning rate for gradient descent. Must be positive.
+    epochs:
+        Number of gradient‑descent iterations to perform. Must be positive.
+
+    Returns
+    -------
+    Tuple[float, float]
+        The slope ``m`` and intercept ``b`` that (approximately) minimise the
+        mean‑squared error.
+
+    Raises
+    ------
+    ValueError
+        If ``xs`` and ``ys`` have different lengths, are empty, or if ``lr``
+        or ``epochs`` are not positive.
+    """
+    if len(xs) != len(ys):
+        raise ValueError("xs and ys must have the same length")
+    if not xs:
+        raise ValueError("xs and ys must not be empty")
+    if lr <= 0:
+        raise ValueError("learning rate must be positive")
+    if epochs <= 0:
+        raise ValueError("epochs must be positive")
+
+    m = 0.0
+    b = 0.0
+    n = float(len(xs))
+
+    for _ in range(epochs):
+        # Compute predictions and errors
+        preds = [m * x + b for x in xs]
+        errors = [y - p for y, p in zip(ys, preds)]
+
+        # Gradients of MSE w.r.t. m and b
+        dm = (-2.0 / n) * sum(x * e for x, e in zip(xs, errors))
+        db = (-2.0 / n) * sum(errors)
+
+        # Update parameters
+        m -= lr * dm
+        b -= lr * db
+
+    return m, b
