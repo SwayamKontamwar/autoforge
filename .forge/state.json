@@ -1,5 +1,4 @@
 {
-  "(graphx) Implement `mst_kruskal` in app/toolkit/graphx.py: compute a minimum spanning tree via Kruskal. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `mst_kruskal` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
