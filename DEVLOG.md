@@ -3951,3 +3951,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-09T09:14Z — rejected: (graphx) Implement `mst_kruskal` in app/toolkit/graphx.py: compute a minimum spanning tree via Kruskal. Add a pytest in tests/toolkit/test_graphx.py covering the documented behaviour and at least one edge case, and export `mst_kruskal` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
