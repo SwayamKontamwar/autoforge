@@ -3945,3 +3945,9 @@ Found 49 errors.
 ## 2026-10-08T22:14Z — rejected: (statemachine) Implement `fire_event` in app/toolkit/statemachine.py: apply an event advancing the machine or raising if invalid. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `fire_event` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-09T01:14Z — skipped: (statemachine) Implement `fire_event` in app/toolkit/statemachine.py: apply an event advancing the machine or raising if invalid. Add a pytest in tests/toolkit/test_statemachine.py covering the documented behaviour and at least one edge case, and export `fire_event` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
