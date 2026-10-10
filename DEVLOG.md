@@ -3985,3 +3985,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-10T17:51Z — rejected: (strings) Implement `camel_case` in app/toolkit/strings.py: convert any string to camelCase. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `camel_case` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
