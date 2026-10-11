@@ -4083,3 +4083,9 @@ FAILED tests/toolkit/test_datetimes_humanize.py::test_humanize_delta_zero - NotI
 ## 2026-10-11T18:05Z — rejected: (datetimes) Implement `days_between` in app/toolkit/datetimes.py: return the whole number of days between two dates. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `days_between` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-11T21:00Z — skipped: (datetimes) Implement `days_between` in app/toolkit/datetimes.py: return the whole number of days between two dates. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `days_between` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
