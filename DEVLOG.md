@@ -4046,3 +4046,36 @@ ERROR tests/toolkit/test_webframework_path_to_regex.py
 Implement round_to utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-10-11T14:24Z — failed: (datetimes) Implement `days_between` in app/toolkit/datetimes.py: return the whole number of days between two dates. Add a pytest in tests/toolkit/test_datetimes.py covering the documented behaviour and at least one edge case, and export `days_between` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+ecedence.py::test_the_catch_all_still_serves_real_short_codes
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:38: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_datetimes.py::test_humanize_delta_future - NotImplementedError
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov... - NotImplementedError\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_datetimes.py::test_humanize_delta_future - NotImplementedError
+FAILED tests/toolkit/test_datetimes_humanize.py::test_humanize_delta_past_hours - NotImplementedError
+FAILED tests/toolkit/test_datetimes_humanize.py::test_humanize_delta_future_minutes - NotImplementedError
+FAILED tests/toolkit/test_datetimes_humanize.py::test_humanize_delta_zero - NotImplementedError
+5 failed, 671 passed, 22 warnings in 45.80s
+
+```
