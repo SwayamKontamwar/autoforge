@@ -4,6 +4,7 @@ Currently provides:
 * ``clamp`` – constrain a numeric value to an inclusive ``min_``/``max_`` range.
 * ``lerp`` – linearly interpolate between two numbers by a fraction.
 * ``inverse_lerp`` – compute the fraction of a value between two bounds.
+* ``round_to`` – round a number to the nearest multiple of a given step.
 """
 
 from __future__ import annotations
@@ -40,34 +41,32 @@ def clamp(value: Number, min_: Number, max_: Number) -> Number:
 def lerp(start: Number, end: Number, fraction: Number) -> Number:
     """Linearly interpolate between ``start`` and ``end`` by ``fraction``.
 
-    The result is ``start + (end - start) * fraction``.  ``fraction`` may be
-    outside the ``[0, 1]`` interval; values less than 0 extrapolate before
-    ``start`` and values greater than 1 extrapolate beyond ``end``.
+    ``fraction`` of ``0`` returns ``start``; ``1`` returns ``end``.
+    Values outside ``[0, 1]`` extrapolate linearly.
 
     Args:
-        start: The starting numeric value.
-        end: The ending numeric value.
-        fraction: The interpolation fraction.
+        start: Starting value.
+        end: Ending value.
+        fraction: Interpolation factor.
 
     Returns:
-        The interpolated numeric value.
+        Interpolated value.
     """
     return start + (end - start) * fraction
 
 
 def inverse_lerp(start: Number, end: Number, value: Number) -> Number:
-    """Return the fractional position of ``value`` between ``start`` and ``end``.
+    """Calculate the fraction that ``value`` represents between ``start`` and ``end``.
 
-    The result is ``(value - start) / (end - start)``.  If ``start`` and ``end``
-    are equal, a ``ValueError`` is raised because the fraction is undefined.
+    ``start`` and ``end`` must not be equal.
 
     Args:
-        start: The lower bound of the range.
-        end: The upper bound of the range.
-        value: The value whose fractional position is desired.
+        start: Lower bound.
+        end: Upper bound.
+        value: Value to locate.
 
     Returns:
-        The fraction representing ``value``'s position between ``start`` and ``end``.
+        Fraction representing ``value``'s position.
 
     Raises:
         ValueError: If ``start`` equals ``end``.
@@ -77,4 +76,23 @@ def inverse_lerp(start: Number, end: Number, value: Number) -> Number:
     return (value - start) / (end - start)
 
 
-__all__ = ["clamp", "lerp", "inverse_lerp"]
+def round_to(value: Number, step: Number) -> Number:
+    """Round ``value`` to the nearest multiple of ``step``.
+
+    ``step`` must be non‑zero. The sign of ``step`` is ignored; rounding is
+    performed using the absolute magnitude of ``step``.
+
+    Args:
+        value: The number to round.
+        step: The step size to round to.
+
+    Returns:
+        ``value`` rounded to the nearest multiple of ``step``.
+
+    Raises:
+        ValueError: If ``step`` is zero.
+    """
+    if step == 0:
+        raise ValueError("step must not be zero")
+    abs_step = abs(step)
+    return round(value / abs_step) * abs_step

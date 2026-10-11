@@ -4040,3 +4040,9 @@ ERROR tests/toolkit/test_webframework_path_to_regex.py
 4 warnings, 19 errors in 0.35s
 
 ```
+
+## 2026-10-11T09:02Z — success: (numbers) Implement `round_to` in app/toolkit/numbers.py: round a number to the nearest multiple of a step. Add a pytest in tests/toolkit/test_numbers.py covering the documented behaviour and at least one edge case, and export `round_to` from app/toolkit/__init__.py.
+
+Implement round_to utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.numbers import clamp, inverse_lerp, lerp
+from app.toolkit.numbers import clamp, inverse_lerp, lerp, round_to
 
 
 def test_clamp_basic() -> None:
@@ -54,3 +54,20 @@ def test_inverse_lerp_invalid_range() -> None:
     # start == end should raise ValueError
     with pytest.raises(ValueError):
         inverse_lerp(5, 5, 5)
+
+
+def test_round_to_basic() -> None:
+    # Nearest multiple of 5
+    assert round_to(7, 5) == 5
+    assert round_to(8, 5) == 10
+    # Works with floats
+    assert round_to(2.3, 0.5) == 2.5
+    assert round_to(2.75, 0.5) == 3.0
+
+
+def test_round_to_edge_cases() -> None:
+    # Negative numbers
+    assert round_to(-3, 2) == -4
+    # Zero step raises
+    with pytest.raises(ValueError):
+        round_to(5, 0)

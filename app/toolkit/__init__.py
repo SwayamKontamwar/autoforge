@@ -33,7 +33,7 @@ from app.toolkit.mathx import clamp_angle, deg_normalize, factorial_iter, hypot
 from app.toolkit.matrix import mat_add, mat_identity, mat_zeros
 from app.toolkit.ml import euclidean_knn, linear_fit_gd
 from app.toolkit.net import build_query, join_url, strip_query
-from app.toolkit.numbers import clamp, inverse_lerp, lerp
+from app.toolkit.numbers import clamp, inverse_lerp, lerp, round_to
 from app.toolkit.numbertheory import divisor_count, divisor_sum, euler_totient, mobius
 from app.toolkit.observability import RateCounter, Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
@@ -69,6 +69,7 @@ __all__ = [
     "clamp",
     "lerp",
     "inverse_lerp",
+    "round_to",
     "euler_totient",
     "mobius",
     "divisor_count",
