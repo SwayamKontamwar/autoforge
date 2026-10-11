@@ -3993,3 +3993,50 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-10T20:36Z — rejected: (strings) Implement `camel_case` in app/toolkit/strings.py: convert any string to camelCase. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `camel_case` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-11T00:15Z — skipped: (strings) Implement `camel_case` in app/toolkit/strings.py: convert any string to camelCase. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `camel_case` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+toolcache/Python/3.11.17/x64/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+app/main.py:255
+  /home/runner/work/autoforge/autoforge/app/main.py:255: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    app = create_app()
+
+tests/test_alias_conflict.py:9
+  /home/runner/work/autoforge/autoforge/tests/test_alias_conflict.py:9: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app(), follow_redirects=False)
+
+tests/test_alias_validation.py:10
+  /home/runner/work/autoforge/autoforge/tests/test_alias_validation.py:10: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+    client = TestClient(create_app(), follow_redirects=False)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR tests/toolkit/test_algorithms.py
+ERROR tests/toolkit/test_bits.py
+ERROR tests/toolkit/test_cli.py
+ERROR tests/toolkit/test_cli_confirm.py
+ERROR tests/toolkit/test_cli_progress_bar.py
+ERROR tests/toolkit/test_config.py
+ERROR tests/toolkit/test_config_deep_get.py
+ERROR tests/toolkit/test_datetimes.py
+ERROR tests/toolkit/test_datetimes_humanize.py
+ERROR tests/toolkit/test_datetimes_now.py
+ERROR tests/toolkit/test_strings_title_case.py
+ERROR tests/toolkit/test_structures.py
+ERROR tests/toolkit/test_structures_ttl.py
+ERROR tests/toolkit/test_textsearch.py
+ERROR tests/toolkit/test_units.py
+ERROR tests/toolkit/test_validation.py
+ERROR tests/toolkit/test_vectors3d.py
+ERROR tests/toolkit/test_webframework.py
+ERROR tests/toolkit/test_webframework_path_to_regex.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 19 errors during collection !!!!!!!!!!!!!!!!!!!
+4 warnings, 19 errors in 0.35s
+
+```
