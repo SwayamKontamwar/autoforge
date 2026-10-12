@@ -4093,3 +4093,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-12T00:33Z — rejected: (collections) Implement `unique_by` in app/toolkit/collections.py: deduplicate items by a key function preserving order. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `unique_by` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-12T09:23Z — rejected: (collections) Implement `unique_by` in app/toolkit/collections.py: deduplicate items by a key function preserving order. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `unique_by` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.

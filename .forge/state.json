@@ -1,5 +1,5 @@
 {
-  "(collections) Implement `unique_by` in app/toolkit/collections.py: deduplicate items by a key function preserving order. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `unique_by` from app/toolkit/__init__.py.": 1,
+  "(collections) Implement `unique_by` in app/toolkit/collections.py: deduplicate items by a key function preserving order. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `unique_by` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
