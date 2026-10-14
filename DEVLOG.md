@@ -4159,3 +4159,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement is_uuid validation, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-10-14T23:56Z — rejected: (parsing) Implement `format_bytes_size` in app/toolkit/parsing.py: format a byte count as a human-readable size. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `format_bytes_size` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
