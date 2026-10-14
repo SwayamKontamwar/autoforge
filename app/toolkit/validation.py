@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ipaddress
 import re
+import uuid
 from urllib.parse import urlparse
 
 # Simple but practical email regex:
@@ -80,5 +81,38 @@ def is_ipv6(value: str) -> bool:
     try:
         ipaddress.IPv6Address(value)
         return True
-    except Exception:
+    except ValueError:
+        return False
+
+
+def is_uuid(value: str) -> bool:
+    """Return ``True`` if *value* is a valid UUID string in the canonical
+    8‑4‑4‑4‑12 hyphenated format.
+
+    The function checks that *value* is a string, matches the standard UUID
+    representation (hex digits with hyphens), and can be parsed by
+    :class:`uuid.UUID`. It does **not** enforce a specific UUID version.
+
+    Args:
+        value: The string to validate.
+
+    Returns:
+        ``True`` if *value* is a valid UUID, ``False`` otherwise.
+    """
+    if not isinstance(value, str):
+        return False
+    # Regex for canonical UUID format (lower or upper case hex)
+    _UUID_REGEX = re.compile(
+        r"^[0-9a-fA-F]{8}-"
+        r"[0-9a-fA-F]{4}-"
+        r"[0-9a-fA-F]{4}-"
+        r"[0-9a-fA-F]{4}-"
+        r"[0-9a-fA-F]{12}$"
+    )
+    if not _UUID_REGEX.fullmatch(value):
+        return False
+    try:
+        uuid.UUID(value)
+        return True
+    except (ValueError, AttributeError):
         return False

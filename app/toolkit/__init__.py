@@ -57,7 +57,7 @@ from app.toolkit.units import (
     fahrenheit_to_celsius,
     km_to_miles,
 )
-from app.toolkit.validation import is_email, is_ipv6, is_url
+from app.toolkit.validation import is_email, is_ipv6, is_url, is_uuid
 from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
 from app.toolkit.webframework import Router, path_to_regex
 
@@ -96,6 +96,7 @@ __all__ = [
     "is_email",
     "is_url",
     "is_ipv6",
+    "is_uuid",
     "parse_semver",
     "compare_semver",
     "LRUCache",
