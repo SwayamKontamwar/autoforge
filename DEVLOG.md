@@ -4173,3 +4173,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-15T17:46Z — rejected: (structures) Implement `BloomFilter` in app/toolkit/structures.py: a bloom filter with add and probable-membership queries. Add a pytest in tests/toolkit/test_structures.py covering the documented behaviour and at least one edge case, and export `BloomFilter` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
