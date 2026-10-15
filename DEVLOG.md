@@ -4167,3 +4167,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-15T07:33Z — rejected: (parsing) Implement `format_bytes_size` in app/toolkit/parsing.py: format a byte count as a human-readable size. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `format_bytes_size` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-15T12:51Z — skipped: (parsing) Implement `format_bytes_size` in app/toolkit/parsing.py: format a byte count as a human-readable size. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `format_bytes_size` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
