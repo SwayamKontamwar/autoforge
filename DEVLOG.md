@@ -4201,3 +4201,25 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-16T20:00Z — failed: (randomness) Implement `nanoid` in app/toolkit/randomness.py: generate a URL-safe NanoID of a given size. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `nanoid` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+E501 Line too long (102 > 100)
+  --> app/toolkit/randomness.py:48:101
+   |
+46 |     """Return a URL‑safe NanoID of *size* characters.
+47 |
+48 |     The NanoID uses the alphabet ``ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-``.
+   |                                                                                                     ^^
+49 |     If *size* is non‑positive, an empty string is returned.
+50 |     """
+   |
+
+Found 1 error.
+
+```

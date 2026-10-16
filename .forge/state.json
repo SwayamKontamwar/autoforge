@@ -1,4 +1,7 @@
 {
+  "(randomness) Implement `nanoid` in app/toolkit/randomness.py: generate a URL-safe NanoID of a given size. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `nanoid` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "(randomness) Implement `nanoid` in app/toolkit/randomness.py: generate a URL-safe NanoID of a given size. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `nanoid` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\nE501 Line too long (102 > 100)\n  --> app/toolkit/randomness.py:48:101\n   |\n46 |     \"\"\"Return a URL\u2011safe NanoID of *size* characters.\n47 |\n48 |     The NanoID uses the alphabet ``ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-``.\n   |                                                                                                     ^^\n49 |     If *size* is non\u2011positive, an empty string is returned.\n50 |     \"\"\"\n   |\n\nFound 1 error.\n"
+  }
 }
