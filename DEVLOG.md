@@ -4191,3 +4191,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-16T07:18Z — rejected: (algorithms) Implement `heapsort` in app/toolkit/algorithms.py: sort a list using a binary heap. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `heapsort` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-16T12:44Z — rejected: (algorithms) Implement `heapsort` in app/toolkit/algorithms.py: sort a list using a binary heap. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `heapsort` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
