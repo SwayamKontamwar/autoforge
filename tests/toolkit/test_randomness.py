@@ -1,4 +1,4 @@
-from app.toolkit.randomness import random_hex, random_string, uuid4
+from app.toolkit.randomness import nanoid, random_hex, random_string, uuid4
 
 
 def test_random_string_length_and_charset() -> None:
@@ -40,3 +40,15 @@ def test_uuid4_format_and_version() -> None:
 def test_uuid4_uniqueness() -> None:
     # Very low probability of collision; two successive calls should differ
     assert uuid4() != uuid4()
+
+
+def test_nanoid_length_and_charset() -> None:
+    nid = nanoid(21)
+    assert len(nid) == 21
+    allowed = set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-")
+    assert set(nid).issubset(allowed)
+
+
+def test_nanoid_zero_and_negative() -> None:
+    assert nanoid(0) == ""
+    assert nanoid(-4) == ""

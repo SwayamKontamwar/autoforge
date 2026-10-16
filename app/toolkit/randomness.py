@@ -34,6 +34,19 @@ def uuid4() -> str:
     """Return a random UUID4 string.
 
     The UUID is generated using :func:`uuid.uuid4` and returned in the
-    canonical 8‑4‑4‑4‑12 hexadecimal format (e.g. ``'123e4567-e89b-12d3-a456-426614174000'`).
+    canonical 8‑4‑4‑4‑12 hexadecimal format (e.g. ``'123e4567-e89b-12d3-a456-426614174000'``).
     """
     return str(uuid.uuid4())
+
+
+def nanoid(size: int) -> str:
+    """Return a URL‑safe NanoID of *size* characters.
+
+    The NanoID uses the alphabet
+    ``ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-``.
+    If *size* is non‑positive, an empty string is returned.
+    """
+    if size <= 0:
+        return ""
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-"
+    return "".join(secrets.choice(alphabet) for _ in range(size))

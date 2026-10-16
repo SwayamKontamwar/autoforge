@@ -4223,3 +4223,9 @@ E501 Line too long (102 > 100)
 Found 1 error.
 
 ```
+
+## 2026-10-16T23:37Z — success: (randomness) Implement `nanoid` in app/toolkit/randomness.py: generate a URL-safe NanoID of a given size. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `nanoid` from app/toolkit/__init__.py.
+
+Implement nanoid utility, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
