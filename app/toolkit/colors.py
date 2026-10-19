@@ -39,3 +39,43 @@ def rgb_to_hex(rgb: tuple[int, int, int]) -> str:
         if not (0 <= comp <= 255):
             raise ValueError("rgb components must be in the range 0-255")
     return f"#{r:02x}{g:02x}{b:02x}"
+
+
+def rgb_to_hsv(rgb: tuple[int, int, int]) -> tuple[float, float, float]:
+    """Convert an ``(r, g, b)`` tuple to an ``(h, s, v)`` tuple.
+
+    The input components must be integers in the range 0‑255 inclusive.
+    The returned hue ``h`` is a float in degrees in the range ``0‑360``.
+    Saturation ``s`` and value ``v`` are floats in the range ``0‑1``.
+    """
+    if not isinstance(rgb, tuple) or len(rgb) != 3:
+        raise TypeError("rgb must be a tuple of three integers")
+    r, g, b = rgb
+    for comp in (r, g, b):
+        if not isinstance(comp, int):
+            raise TypeError("rgb components must be integers")
+        if not (0 <= comp <= 255):
+            raise ValueError("rgb components must be in the range 0-255")
+
+    r_f, g_f, b_f = r / 255.0, g / 255.0, b / 255.0
+    max_c = max(r_f, g_f, b_f)
+    min_c = min(r_f, g_f, b_f)
+    v = max_c
+
+    delta = max_c - min_c
+    if max_c == 0:
+        s = 0.0
+    else:
+        s = delta / max_c
+
+    if delta == 0:
+        h = 0.0
+    else:
+        if max_c == r_f:
+            h = ((g_f - b_f) / delta) % 6
+        elif max_c == g_f:
+            h = ((b_f - r_f) / delta) + 2
+        else:
+            h = ((r_f - g_f) / delta) + 4
+        h *= 60.0
+    return (h, s, v)
