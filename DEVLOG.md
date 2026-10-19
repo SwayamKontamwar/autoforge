@@ -4285,3 +4285,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement rgb_to_hsv, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-10-19T19:20Z — rejected: (units) Implement `miles_to_km` in app/toolkit/units.py: convert miles to kilometres. Add a pytest in tests/toolkit/test_units.py covering the documented behaviour and at least one edge case, and export `miles_to_km` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
