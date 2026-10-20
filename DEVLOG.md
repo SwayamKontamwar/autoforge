@@ -4293,3 +4293,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-19T21:36Z — rejected: (units) Implement `miles_to_km` in app/toolkit/units.py: convert miles to kilometres. Add a pytest in tests/toolkit/test_units.py covering the documented behaviour and at least one edge case, and export `miles_to_km` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-20T00:21Z — skipped: (units) Implement `miles_to_km` in app/toolkit/units.py: convert miles to kilometres. Add a pytest in tests/toolkit/test_units.py covering the documented behaviour and at least one edge case, and export `miles_to_km` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.

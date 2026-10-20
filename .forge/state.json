@@ -1,5 +1,4 @@
 {
-  "(units) Implement `miles_to_km` in app/toolkit/units.py: convert miles to kilometres. Add a pytest in tests/toolkit/test_units.py covering the documented behaviour and at least one edge case, and export `miles_to_km` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
