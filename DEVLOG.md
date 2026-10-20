@@ -4317,3 +4317,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-20T20:44Z — rejected: (finance) Implement `future_value_annuity` in app/toolkit/finance.py: compute the future value of a regular annuity. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `future_value_annuity` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-20T23:54Z — rejected: (finance) Implement `future_value_annuity` in app/toolkit/finance.py: compute the future value of a regular annuity. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `future_value_annuity` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.

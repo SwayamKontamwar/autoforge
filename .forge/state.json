@@ -1,5 +1,5 @@
 {
-  "(finance) Implement `future_value_annuity` in app/toolkit/finance.py: compute the future value of a regular annuity. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `future_value_annuity` from app/toolkit/__init__.py.": 1,
+  "(finance) Implement `future_value_annuity` in app/toolkit/finance.py: compute the future value of a regular annuity. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `future_value_annuity` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
