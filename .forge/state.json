@@ -1,5 +1,4 @@
 {
-  "(config) Implement `deep_set` in app/toolkit/config.py: set a nested dict value by a dotted path creating parents. Add a pytest in tests/toolkit/test_config.py covering the documented behaviour and at least one edge case, and export `deep_set` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
