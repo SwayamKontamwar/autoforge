@@ -4341,3 +4341,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-22T00:01Z — rejected: (resilience) Implement `LeakyBucket` in app/toolkit/resilience.py: a leaky-bucket rate limiter. Add a pytest in tests/toolkit/test_resilience.py covering the documented behaviour and at least one edge case, and export `LeakyBucket` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
