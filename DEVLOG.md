@@ -4420,3 +4420,41 @@ invalid-syntax: missing closing quote in string literal
 Found 32 errors.
 
 ```
+
+## 2026-10-22T20:40Z — failed: (cli) Implement `colorize` in app/toolkit/cli.py: wrap text in ANSI colour codes by name. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `colorize` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+... (truncated)
+s` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_cli.py::test_colorize_case_insensitive - AssertionError: assert '\x1b[94mworld\x1b[0m' == '\x1b[94]world\x1b[0m'
+    
+    - [94]world[0m
+    ?     ^
+    + [94mworld[0m
+    ?     ^
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...orld\x1b[0m\n  ?     ^\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_cli.py::test_colorize_case_insensitive - AssertionError: assert '\x1b[94mworld\x1b[0m' == '\x1b[94]world\x1b[0m'
+  
+  - [94]world[0m
+  ?     ^
+  + [94mworld[0m
+  ?     ^
+FAILED tests/toolkit/test_cli_confirm.py::test_confirm_prompt_with_default_and_empty_input - NotImplementedError
+FAILED tests/toolkit/test_cli_confirm.py::test_confirm_prompt_explicit_and_invalid_inputs - NotImplementedError
+FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_empty - TypeError: progress_bar() got an unexpected keyword argument 'width'
+FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_half - TypeError: progress_bar() got an unexpected keyword argument 'width'
+FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_full_and_overflow - TypeError: progress_bar() got an unexpected keyword argument 'width'
+FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_negative_clamped - TypeError: progress_bar() got an unexpected keyword argument 'width'
+FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_invalid_width - TypeError: progress_bar() got an unexpected keyword argument 'width'
+9 failed, 674 passed, 22 warnings in 40.02s
+
+```
