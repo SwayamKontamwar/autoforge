@@ -4458,3 +4458,9 @@ FAILED tests/toolkit/test_cli_progress_bar.py::test_progress_bar_invalid_width -
 9 failed, 674 passed, 22 warnings in 40.02s
 
 ```
+
+## 2026-10-22T23:59Z — skipped: (cli) Implement `colorize` in app/toolkit/cli.py: wrap text in ANSI colour codes by name. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `colorize` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
