@@ -4355,3 +4355,68 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-22T17:59Z — failed: (cli) Implement `colorize` in app/toolkit/cli.py: wrap text in ANSI colour codes by name. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `colorize` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+                                                      ^
+89 |     """
+90 |     colour_map: Dict[str, int] = {
+   |
+
+invalid-syntax: Expected a statement
+  --> app/toolkit/cli.py:88:80
+   |
+87 |     The function returns the original *text* surrounded by the appropriate
+88 |     escape sequence and a reset code. Unknown colour names raise ``ValueError``.
+   |                                                                                ^
+89 |     """
+90 |     colour_map: Dict[str, int] = {
+   |
+
+invalid-syntax: Expected a statement
+  --> app/toolkit/cli.py:88:81
+   |
+87 |     The function returns the original *text* surrounded by the appropriate
+88 |     escape sequence and a reset code. Unknown colour names raise ``ValueError``.
+   |                                                                                 ^
+89 |     """
+90 |     colour_map: Dict[str, int] = {
+   |
+
+invalid-syntax: missing closing quote in string literal
+   --> app/toolkit/cli.py:89:5
+    |
+ 87 |       The function returns the original *text* surrounded by the appropriate
+ 88 |       escape sequence and a reset code. Unknown colour names raise ``ValueError``.
+ 89 | /     """
+ 90 | |     colour_map: Dict[str, int] = {
+ 91 | |         "black": 30,
+ 92 | |         "red": 31,
+ 93 | |         "green": 32,
+ 94 | |         "yellow": 33,
+ 95 | |         "blue": 34,
+ 96 | |         "magenta": 35,
+ 97 | |         "cyan": 36,
+ 98 | |         "white": 37,
+ 99 | |         "bright_black": 90,
+100 | |         "bright_red": 91,
+101 | |         "bright_green": 92,
+102 | |         "bright_yellow": 93,
+103 | |         "bright_blue": 94,
+104 | |         "bright_magenta": 95,
+105 | |         "bright_cyan": 96,
+106 | |         "bright_white": 97,
+107 | |     }
+108 | |     code = colour_map.get(color.lower())
+109 | |     if code is None:
+110 | |         raise ValueError(f"Unsupported colour: {color!r}")
+111 | |     return f"\x1b[{code}m{text}\x1b[0m"
+    | |________________________________________^
+
+Found 32 errors.
+
+```
