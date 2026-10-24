@@ -4496,3 +4496,63 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-24T12:13Z — rejected: (serialization) Implement `csv_to_dicts` in app/toolkit/serialization.py: parse CSV text into a list of row dicts. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `csv_to_dicts` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-24T16:36Z — failed: (serialization) Implement `csv_to_dicts` in app/toolkit/serialization.py: parse CSV text into a list of row dicts. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `csv_to_dicts` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 2; code reverted.
+
+```
+... (truncated)
+e_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_serialization.py::test_to_jsonl_basic - assert '{"a": 1}\n{"b": 2}' == '{"a": 1}\\n{"b": 2}'
+    
+    - {"a": 1}\n{"b": 2}
+    + {"a": 1}
+    + {"b": 2}
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...{"a": 1}\n  + {"b": 2}\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_serialization.py::test_to_jsonl_basic - assert '{"a": 1}\n{"b": 2}' == '{"a": 1}\\n{"b": 2}'
+  
+  - {"a": 1}\n{"b": 2}
+  + {"a": 1}
+  + {"b": 2}
+FAILED tests/toolkit/test_serialization.py::test_from_jsonl_basic - json.decoder.JSONDecodeError: Extra data: line 1 column 9 (char 8)
+FAILED tests/toolkit/test_serialization.py::test_csv_to_dicts_basic - AssertionError: assert [] == [{'name': 'Al...'city': 'LA'}]
+  
+  Right contains 2 more items, first extra item: {'name': 'Alice', 'age': '30', 'city': 'NY'}
+  
+  Full diff:
+  + []
+  - [
+  -     {
+  -         'name': 'Alice',
+  -         'age': '30',
+  -         'city': 'NY',
+  -     },
+  -     {
+  -         'name': 'Bob',
+  -         'age': '25',
+  -         'city': 'LA',
+  -     },
+  - ]
+FAILED tests/toolkit/test_serialization.py::test_csv_to_dicts_edge_cases - AssertionError: assert [] == [{'a': 'c, d', 'b': 'e'}]
+  
+  Right contains one more item: {'a': 'c, d', 'b': 'e'}
+  
+  Full diff:
+  + []
+  - [
+  -     {
+  -         'a': 'c, d',
+  -         'b': 'e',
+  -     },
+  - ]
+5 failed, 676 passed, 22 warnings in 43.13s
+
+```
