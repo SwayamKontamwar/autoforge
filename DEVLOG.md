@@ -4556,3 +4556,9 @@ FAILED tests/toolkit/test_serialization.py::test_csv_to_dicts_edge_cases - Asser
 5 failed, 676 passed, 22 warnings in 43.13s
 
 ```
+
+## 2026-10-24T19:35Z — skipped: (serialization) Implement `csv_to_dicts` in app/toolkit/serialization.py: parse CSV text into a list of row dicts. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `csv_to_dicts` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
