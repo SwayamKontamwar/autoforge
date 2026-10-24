@@ -4492,3 +4492,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-24T12:13Z — rejected: (serialization) Implement `csv_to_dicts` in app/toolkit/serialization.py: parse CSV text into a list of row dicts. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `csv_to_dicts` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.

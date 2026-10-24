@@ -1,4 +1,5 @@
 {
+  "(serialization) Implement `csv_to_dicts` in app/toolkit/serialization.py: parse CSV text into a list of row dicts. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `csv_to_dicts` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
