@@ -4614,3 +4614,7 @@ $ test-suite check
 Rejected: the patch changed production code under app/ but the suite still collects 682 tests, so nothing new proves the work. Add a test that fails without this change.
 
 ```
+
+## 2026-10-25T19:48Z — rejected: (bits) Implement `lowest_set_bit` in app/toolkit/bits.py: return the index of the lowest set bit or -1. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `lowest_set_bit` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
