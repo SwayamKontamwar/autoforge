@@ -1,5 +1,4 @@
 {
-  "(streams) Implement `interleave_streams` in app/toolkit/streams.py: round-robin interleave several iterables. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `interleave_streams` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
