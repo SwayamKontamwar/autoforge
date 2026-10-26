@@ -4628,3 +4628,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 ## 2026-10-26T07:54Z — rejected: (streams) Implement `interleave_streams` in app/toolkit/streams.py: round-robin interleave several iterables. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `interleave_streams` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-26T14:33Z — rejected: (streams) Implement `interleave_streams` in app/toolkit/streams.py: round-robin interleave several iterables. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `interleave_streams` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
