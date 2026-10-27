@@ -4652,3 +4652,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-27T13:33Z — rejected: (matrix) Implement `mat_scale` in app/toolkit/matrix.py: multiply a matrix by a scalar. Add a pytest in tests/toolkit/test_matrix.py covering the documented behaviour and at least one edge case, and export `mat_scale` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
