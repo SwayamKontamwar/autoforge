@@ -4680,3 +4680,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-28T18:51Z — rejected: (numbertheory) Implement `is_perfect_number` in app/toolkit/numbertheory.py: test whether an integer equals the sum of its proper divisors. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `is_perfect_number` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
