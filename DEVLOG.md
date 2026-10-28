@@ -4674,3 +4674,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-10-28T08:42Z — rejected: (stats) Implement `correlation` in app/toolkit/stats.py: return the Pearson correlation of two sequences. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `correlation` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-28T14:30Z — skipped: (stats) Implement `correlation` in app/toolkit/stats.py: return the Pearson correlation of two sequences. Add a pytest in tests/toolkit/test_stats.py covering the documented behaviour and at least one edge case, and export `correlation` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
