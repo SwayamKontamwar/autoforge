@@ -4770,3 +4770,7 @@ FAILED tests/toolkit/test_regexutil_mentions.py::test_extract_mentions_edge_case
 2 failed, 682 passed, 22 warnings in 44.78s
 
 ```
+
+## 2026-10-30T18:37Z — rejected: (regexutil) Implement `extract_numbers` in app/toolkit/regexutil.py: return all numeric literals found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_numbers` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
