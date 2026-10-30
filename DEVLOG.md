@@ -4722,3 +4722,51 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-30T14:32Z — failed: (regexutil) Implement `extract_numbers` in app/toolkit/regexutil.py: return all numeric literals found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_numbers` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+... (truncated)
+TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_regexutil_mentions.py::test_extract_mentions_edge_cases - AssertionError: assert ['charlie', 'example', 'eve'] == ['charlie', 'eve']
+    
+    At index 1 diff: 'example' != 'eve'
+    Left contains one more item: 'eve'
+    
+    Full diff: (-: missing in left side, +: extra in left side)
+      [
+          'charlie',
+    +     'example',
+          'eve',
+      ]
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...       \'eve\',\n    ]\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_regexutil_mentions.py::test_extract_mentions_edge_cases - AssertionError: assert ['charlie', 'example', 'eve'] == ['charlie', 'eve']
+  
+  At index 1 diff: 'example' != 'eve'
+  Left contains one more item: 'eve'
+  
+  Full diff: (-: missing in left side, +: extra in left side)
+    [
+        'charlie',
+  +     'example',
+        'eve',
+    ]
+2 failed, 682 passed, 22 warnings in 44.78s
+
+```
