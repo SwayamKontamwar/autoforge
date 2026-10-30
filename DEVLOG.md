@@ -4774,3 +4774,9 @@ FAILED tests/toolkit/test_regexutil_mentions.py::test_extract_mentions_edge_case
 ## 2026-10-30T18:37Z — rejected: (regexutil) Implement `extract_numbers` in app/toolkit/regexutil.py: return all numeric literals found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_numbers` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-10-30T21:37Z — skipped: (regexutil) Implement `extract_numbers` in app/toolkit/regexutil.py: return all numeric literals found in text. Add a pytest in tests/toolkit/test_regexutil.py covering the documented behaviour and at least one edge case, and export `extract_numbers` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
