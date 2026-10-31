@@ -4780,3 +4780,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-10-31T00:48Z — success: (markdown) Implement `md_code` in app/toolkit/markdown.py: wrap text in an inline code span. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_code` from app/toolkit/__init__.py.
+
+Implement md_code utility, export it, and add comprehensive tests
+
+Guardrail: ruff + import + pytest passed.

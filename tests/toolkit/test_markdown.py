@@ -1,4 +1,4 @@
-from app.toolkit.markdown import md_bold, md_image, md_italic, md_link
+from app.toolkit.markdown import md_bold, md_code, md_image, md_italic, md_link
 
 
 def test_md_bold_typical() -> None:
@@ -41,3 +41,12 @@ def test_md_image_typical_and_edge_cases() -> None:
     assert md_image("", "") == "![]()"
     # Edge case: alt text containing brackets
     assert md_image("[alt]", "http://example.com/img.png") == "![[alt]](http://example.com/img.png)"
+
+
+def test_md_code_typical_and_edge_cases() -> None:
+    # Typical usage
+    assert md_code("hello") == "`hello`"
+    # Edge case: empty string
+    assert md_code("") == "``"
+    # Edge case: text containing backticks
+    assert md_code("`code`") == "``code``"

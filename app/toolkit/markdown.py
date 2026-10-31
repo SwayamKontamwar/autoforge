@@ -33,32 +33,36 @@ def md_italic(text: str) -> str:
 def md_link(text: str, url: str) -> str:
     """Return a markdown link constructed from *text* and *url*.
 
-    The function simply formats the two arguments into the standard markdown
-    link syntax ``[text](url)``. No validation or escaping is performed; the
-    caller is responsible for providing appropriate values.
-
     Args:
-        text: The link text that will appear between the brackets.
-        url: The target URL that will appear inside the parentheses.
+        text: The link text.
+        url: The URL the link points to.
 
     Returns:
-        A string representing a markdown link, e.g. ``[example](https://example.com)``.
+        A markdown link, e.g. ``[text](url)``.
     """
     return f"[{text}]({url})"
 
 
 def md_image(alt: str, url: str) -> str:
-    """Return a markdown image constructed from *alt* text and *url*.
-
-    The function formats the arguments into the standard markdown image syntax
-    ``![alt](url)``. No validation or escaping is performed; the caller must
-    provide appropriate values.
+    """Return a markdown image snippet.
 
     Args:
-        alt: The alternative text that will appear inside the brackets.
-        url: The image URL that will appear inside the parentheses.
+        alt: Alt text for the image.
+        url: Image URL.
 
     Returns:
-        A string representing a markdown image, e.g. ``![example](https://example.com/img.png)``.
+        A markdown image tag, e.g. ``![alt](url)``.
     """
     return f"![{alt}]({url})"
+
+
+def md_code(text: str) -> str:
+    """Return *text* wrapped in markdown inline code markers.
+
+    Args:
+        text: The code snippet to be wrapped.
+
+    Returns:
+        The input string surrounded by backticks, e.g. ```text` ``.
+    """
+    return f"`{text}`"
