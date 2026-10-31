@@ -4786,3 +4786,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement md_code utility, export it, and add comprehensive tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-10-31T08:30Z — rejected: (calendars) Implement `weekday_name` in app/toolkit/calendars.py: return the English weekday name for a date. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `weekday_name` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
