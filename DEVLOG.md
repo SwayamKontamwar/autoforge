@@ -4836,3 +4836,7 @@ invalid-syntax: Expected `import`, found `=`
 Found 1 error.
 
 ```
+
+## 2026-11-01T18:25Z — rejected: (vectors3d) Implement `v3_cross` in app/toolkit/vectors3d.py: return the cross product of two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_cross` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
