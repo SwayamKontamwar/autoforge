@@ -1,4 +1,7 @@
 {
+  "(vectors3d) Implement `v3_cross` in app/toolkit/vectors3d.py: return the cross product of two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_cross` from app/toolkit/__init__.py.": 1,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
-  "__last_failures__": {}
+  "__last_failures__": {
+    "(vectors3d) Implement `v3_cross` in app/toolkit/vectors3d.py: return the cross product of two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_cross` from app/toolkit/__init__.py.": "$ ruff check\n(exit 1)\ninvalid-syntax: Expected `import`, found `=`\n  --> app/toolkit/__init__.py:39:26\n   |\n37 | from app.toolkit.numbertheory import divisor_count, divisor_sum, euler_totient, mobius\n38 | from app.toolkit.observability import RateCounter, Stopwatch, Timer\n39 | from app.toolkit.parsing = compare_semver, parse_semver\n   |                          ^\n40 | from app.toolkit.physics import kinetic_energy, potential_energy\n41 | from app.toolkit.probability import binomial_pmf, poisson_pmf\n   |\n\nFound 1 error.\n"
+  }
 }

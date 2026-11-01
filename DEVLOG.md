@@ -4814,3 +4814,25 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-01T14:30Z — failed: (vectors3d) Implement `v3_cross` in app/toolkit/vectors3d.py: return the cross product of two 3-vectors. Add a pytest in tests/toolkit/test_vectors3d.py covering the documented behaviour and at least one edge case, and export `v3_cross` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: Expected `import`, found `=`
+  --> app/toolkit/__init__.py:39:26
+   |
+37 | from app.toolkit.numbertheory import divisor_count, divisor_sum, euler_totient, mobius
+38 | from app.toolkit.observability import RateCounter, Stopwatch, Timer
+39 | from app.toolkit.parsing = compare_semver, parse_semver
+   |                          ^
+40 | from app.toolkit.physics import kinetic_energy, potential_energy
+41 | from app.toolkit.probability import binomial_pmf, poisson_pmf
+   |
+
+Found 1 error.
+
+```
