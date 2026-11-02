@@ -4856,3 +4856,7 @@ Guardrail: ruff + import + pytest passed.
 ## 2026-11-02T09:37Z — rejected: (compression) Implement `lz77_compress` in app/toolkit/compression.py: compress bytes with a simple LZ77 scheme. Add a pytest in tests/toolkit/test_compression.py covering the documented behaviour and at least one edge case, and export `lz77_compress` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-02T17:26Z — rejected: (compression) Implement `lz77_compress` in app/toolkit/compression.py: compress bytes with a simple LZ77 scheme. Add a pytest in tests/toolkit/test_compression.py covering the documented behaviour and at least one edge case, and export `lz77_compress` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
