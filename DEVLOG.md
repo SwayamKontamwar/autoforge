@@ -4866,3 +4866,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-02T23:56Z — rejected: (imageppm) Implement `ppm_to_p3` in app/toolkit/imageppm.py: serialise a grid to ASCII PPM P3 text. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_to_p3` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
