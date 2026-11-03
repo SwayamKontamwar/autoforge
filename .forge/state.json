@@ -1,5 +1,5 @@
 {
-  "(scheduling) Implement `rrule_monthly` in app/toolkit/scheduling.py: yield monthly occurrences on a day of month. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `rrule_monthly` from app/toolkit/__init__.py.": 1,
+  "(scheduling) Implement `rrule_monthly` in app/toolkit/scheduling.py: yield monthly occurrences on a day of month. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `rrule_monthly` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
