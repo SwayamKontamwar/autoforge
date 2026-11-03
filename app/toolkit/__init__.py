@@ -27,7 +27,7 @@ from app.toolkit.geometry import distance_2d, haversine, manhattan_distance, poi
 from app.toolkit.graphx import astar, floyd_warshall
 from app.toolkit.hashing import crc32, md5_hex, sha1_hex, sha256_hex
 from app.toolkit.i18n import format_list, format_ordinal_word, plural_rule_en
-from app.toolkit.imageppm import ppm_new, ppm_set_pixel
+from app.toolkit.imageppm import ppm_new, ppm_set_pixel, ppm_to_p3
 from app.toolkit.markdown import md_bold, md_code, md_image, md_italic, md_link
 from app.toolkit.mathx import clamp_angle, deg_normalize, factorial_iter, hypot
 from app.toolkit.matrix import mat_add, mat_identity, mat_zeros
@@ -197,6 +197,7 @@ __all__ = [
     "delta_encode",
     "ppm_new",
     "ppm_set_pixel",
+    "ppm_to_p3",
     "next_cron_time",
     "cron_iter",
     "StateMachine",

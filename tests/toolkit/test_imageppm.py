@@ -1,6 +1,6 @@
 import pytest
 
-from app.toolkit.imageppm import ppm_new, ppm_set_pixel
+from app.toolkit.imageppm import ppm_new, ppm_set_pixel, ppm_to_p3
 
 
 def test_ppm_new_typical() -> None:
@@ -44,3 +44,16 @@ def test_ppm_set_pixel_typical_and_edge_cases() -> None:
         ppm_set_pixel(grid, 0, 0, (0, -1, 0))
     with pytest.raises(ValueError):
         ppm_set_pixel(grid, 0, 0, (0, 0))  # wrong length
+
+
+def test_ppm_to_p3_typical_and_empty() -> None:
+    """Serialise a small grid and verify handling of an empty grid."""
+    # Typical grid
+    grid = ppm_new(2, 1)
+    ppm_set_pixel(grid, 0, 0, (255, 0, 128))
+    expected = "P3\n2 1\n255\n255 0 128 0 0 0\n"
+    assert ppm_to_p3(grid) == expected
+
+    # Empty grid
+    empty = ppm_new(0, 0)
+    assert ppm_to_p3(empty) == "P3\n0 0\n255\n"
