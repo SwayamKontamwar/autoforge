@@ -4888,3 +4888,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-03T20:06Z — rejected: (scheduling) Implement `rrule_monthly` in app/toolkit/scheduling.py: yield monthly occurrences on a day of month. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `rrule_monthly` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-03T22:24Z — skipped: (scheduling) Implement `rrule_monthly` in app/toolkit/scheduling.py: yield monthly occurrences on a day of month. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `rrule_monthly` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
