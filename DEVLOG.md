@@ -4880,3 +4880,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement ppm_to_p3, export it, and add tests for serialization and empty grid
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-11-03T15:28Z — rejected: (scheduling) Implement `rrule_monthly` in app/toolkit/scheduling.py: yield monthly occurrences on a day of month. Add a pytest in tests/toolkit/test_scheduling.py covering the documented behaviour and at least one edge case, and export `rrule_monthly` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
