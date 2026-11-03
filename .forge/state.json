@@ -1,5 +1,5 @@
 {
-  "(imageppm) Implement `ppm_to_p3` in app/toolkit/imageppm.py: serialise a grid to ASCII PPM P3 text. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_to_p3` from app/toolkit/__init__.py.": 1,
+  "(imageppm) Implement `ppm_to_p3` in app/toolkit/imageppm.py: serialise a grid to ASCII PPM P3 text. Add a pytest in tests/toolkit/test_imageppm.py covering the documented behaviour and at least one edge case, and export `ppm_to_p3` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
