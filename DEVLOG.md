@@ -4922,3 +4922,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-05T09:36Z — rejected: (ml) Implement `logistic_fit` in app/toolkit/ml.py: fit logistic regression by gradient descent. Add a pytest in tests/toolkit/test_ml.py covering the documented behaviour and at least one edge case, and export `logistic_fit` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
