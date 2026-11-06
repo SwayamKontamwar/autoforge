@@ -5001,3 +5001,48 @@ ERROR tests/toolkit/test_webframework_path_to_regex.py
 4 warnings, 19 errors in 0.41s
 
 ```
+
+## 2026-11-06T22:13Z — skipped: (strings) Implement `pascal_case` in app/toolkit/strings.py: convert any string to PascalCase. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `pascal_case` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+ated, please use `examples` instead
+      client = TestClient(create_app())
+  
+  tests/test_route_precedence.py::test_an_unknown_short_code_is_still_a_404
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_route_precedence.py:48: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      response = TestClient(create_app()).get("/definitely-not-a-code")
+  
+  tests/test_url_length.py::test_create_link_rejects_overly_long_url
+    /tmp/pytest-of-runner/pytest-0/test_the_suite_survives_every_0/repo/tests/test_url_length.py:13: FastAPIDeprecationWarning: `example` has been deprecated, please use `examples` instead
+      app = create_app(max_url_length=10)
+  
+  -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+  =========================== short test summary info ============================
+  FAILED tests/toolkit/test_strings_title_case.py::test_title_case_basic - AssertionError: assert 'The Lord Of The Rings' == 'The Lord of the Rings'
+    
+    - The Lord of the Rings
+    ?          ^  ^
+    + The Lord Of The Rings
+    ?          ^  ^
+  !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-m', 'pytest', '-q', '-p', 'no:cacheprov...ngs\n  ?          ^  ^\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!\n', stderr='').returncode
+FAILED tests/toolkit/test_strings_title_case.py::test_title_case_basic - AssertionError: assert 'The Lord Of The Rings' == 'The Lord of the Rings'
+  
+  - The Lord of the Rings
+  ?          ^  ^
+  + The Lord Of The Rings
+  ?          ^  ^
+FAILED tests/toolkit/test_strings_title_case.py::test_title_case_first_word_small - AssertionError: assert 'Of Mice And Men' == 'Of Mice and Men'
+  
+  - Of Mice and Men
+  ?         ^
+  + Of Mice And Men
+  ?         ^
+3 failed, 687 passed, 22 warnings in 31.22s
+
+```
