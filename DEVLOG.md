@@ -4950,3 +4950,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-06T15:23Z — rejected: (strings) Implement `pascal_case` in app/toolkit/strings.py: convert any string to PascalCase. Add a pytest in tests/toolkit/test_strings.py covering the documented behaviour and at least one edge case, and export `pascal_case` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
