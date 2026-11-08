@@ -13,7 +13,7 @@ from app.toolkit.bits import clear_bit, set_bit, toggle_bit
 from app.toolkit.calendars import easter_date, last_weekday_of_month, nth_weekday_of_month
 from app.toolkit.checkdigit import ean13_check_digit, upc_check_digit
 from app.toolkit.cli import confirm_prompt, parse_args_simple, progress_bar
-from app.toolkit.collections import chunk, flatten, flatten_deep, unique
+from app.toolkit.collections import chunk, flatten, flatten_deep, group_by, unique
 from app.toolkit.colors import hex_to_rgb, rgb_to_hex, rgb_to_hsv
 from app.toolkit.combinatorics import multinomial, nth_permutation, permutation_index
 from app.toolkit.compression import delta_encode, rle_bytes_decode, rle_bytes_encode
@@ -82,6 +82,7 @@ __all__ = [
     "flatten",
     "flatten_deep",
     "unique",
+    "group_by",
     "compose",
     "pipe",
     "curry",
