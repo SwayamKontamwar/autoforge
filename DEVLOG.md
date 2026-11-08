@@ -5074,3 +5074,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-08T09:09Z — rejected: (collections) Implement `group_by` in app/toolkit/collections.py: group items into a dict of lists by a key function. Add a pytest in tests/toolkit/test_collections.py covering the documented behaviour and at least one edge case, and export `group_by` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
