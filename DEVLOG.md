@@ -5092,3 +5092,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-08T21:15Z — rejected: (functional) Implement `once` in app/toolkit/functional.py: wrap a function so it runs at most once, caching the result. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `once` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-09T00:55Z — skipped: (functional) Implement `once` in app/toolkit/functional.py: wrap a function so it runs at most once, caching the result. Add a pytest in tests/toolkit/test_functional.py covering the documented behaviour and at least one edge case, and export `once` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
