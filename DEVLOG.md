@@ -5154,3 +5154,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-11T20:12Z — rejected: (structures) Implement `RingBuffer` in app/toolkit/structures.py: a fixed-size circular buffer overwriting oldest items. Add a pytest in tests/toolkit/test_structures.py covering the documented behaviour and at least one edge case, and export `RingBuffer` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
