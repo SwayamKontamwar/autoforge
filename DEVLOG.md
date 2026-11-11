@@ -5140,3 +5140,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-11T01:15Z — rejected: (parsing) Implement `parse_key_value` in app/toolkit/parsing.py: parse 'k=v,k2=v2' strings into a dict. Add a pytest in tests/toolkit/test_parsing.py covering the documented behaviour and at least one edge case, and export `parse_key_value` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
