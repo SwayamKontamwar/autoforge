@@ -5191,3 +5191,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-12T16:14Z — rejected: (algorithms) Implement `insertion_sort` in app/toolkit/algorithms.py: sort a small list with insertion sort. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `insertion_sort` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-12T20:49Z — skipped: (algorithms) Implement `insertion_sort` in app/toolkit/algorithms.py: sort a small list with insertion sort. Add a pytest in tests/toolkit/test_algorithms.py covering the documented behaviour and at least one edge case, and export `insertion_sort` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
