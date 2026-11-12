@@ -5162,3 +5162,24 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-11T23:33Z — rejected: (structures) Implement `RingBuffer` in app/toolkit/structures.py: a fixed-size circular buffer overwriting oldest items. Add a pytest in tests/toolkit/test_structures.py covering the documented behaviour and at least one edge case, and export `RingBuffer` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-12T02:16Z — skipped: (structures) Implement `RingBuffer` in app/toolkit/structures.py: a fixed-size circular buffer overwriting oldest items. Add a pytest in tests/toolkit/test_structures.py covering the documented behaviour and at least one edge case, and export `RingBuffer` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+$ ruff check
+(exit 1)
+invalid-syntax: Expected `import`, found newline
+  --> app/toolkit/__init__.py:25:22
+   |
+23 | from app.toolkit.structures import LRUCache, LFUCache, TTLCache, RingBuffer
+24 | from app.toolkit.streams import StreamReader, StreamWriter
+25 | from app.toolkit.stat
+   |                      ^
+26 | ... (truncated)
+   |
+
+Found 1 error.
+
+```
