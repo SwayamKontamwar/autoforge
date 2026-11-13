@@ -1,5 +1,5 @@
 {
-  "(randomness) Implement `random_choice_weighted` in app/toolkit/randomness.py: choose an item given per-item weights. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `random_choice_weighted` from app/toolkit/__init__.py.": 1,
+  "(randomness) Implement `random_choice_weighted` in app/toolkit/randomness.py: choose an item given per-item weights. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `random_choice_weighted` from app/toolkit/__init__.py.": 2,
   "__builder_fingerprint__": "f2e8d536f3bc6e7e",
   "__last_failures__": {}
 }
