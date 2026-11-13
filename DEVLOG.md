@@ -5205,3 +5205,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-13T01:50Z — rejected: (randomness) Implement `random_choice_weighted` in app/toolkit/randomness.py: choose an item given per-item weights. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `random_choice_weighted` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-13T09:42Z — skipped: (randomness) Implement `random_choice_weighted` in app/toolkit/randomness.py: choose an item given per-item weights. Add a pytest in tests/toolkit/test_randomness.py covering the documented behaviour and at least one edge case, and export `random_choice_weighted` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
