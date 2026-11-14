@@ -1,6 +1,6 @@
 """Tests for the ``app.toolkit.net`` module."""
 
-from app.toolkit.net import build_query, join_url, strip_query
+from app.toolkit.net import build_query, join_url, remove_query_param, strip_query
 
 
 def test_build_query_basic():
@@ -46,3 +46,20 @@ def test_strip_query_edge_cases():
     # Query with fragment
     url = "https://example.com/path?foo=bar#section"
     assert strip_query(url) == "https://example.com/path#section"
+
+
+def test_remove_query_param_basic():
+    """Remove a parameter that appears multiple times, preserving order."""
+    url = "https://example.com/path?foo=bar&baz=qux&foo=second"
+    expected = "https://example.com/path?baz=qux"
+    assert remove_query_param(url, "foo") == expected
+
+
+def test_remove_query_param_edge_cases():
+    """Removing non‑existent param leaves URL unchanged; removing sole param drops query."""
+    url1 = "https://example.com/path?foo=bar#frag"
+    # param not present
+    assert remove_query_param(url1, "missing") == url1
+    # removing the only param
+    url2 = "https://example.com/path?only=val"
+    assert remove_query_param(url2, "only") == "https://example.com/path"

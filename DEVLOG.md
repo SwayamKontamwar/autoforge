@@ -5239,3 +5239,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-14T18:45Z — success: (net) Implement `remove_query_param` in app/toolkit/net.py: return a URL with a query parameter removed. Add a pytest in tests/toolkit/test_net.py covering the documented behaviour and at least one edge case, and export `remove_query_param` from app/toolkit/__init__.py.
+
+Implement remove_query_param, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

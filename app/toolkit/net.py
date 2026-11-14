@@ -1,29 +1,26 @@
 """Network‑related utility helpers.
 
-This module currently provides a single helper, ``build_query``, which converts a
-mapping of query parameters into a URL‑encoded query string, omitting any
-parameters whose value is ``None``. The order of parameters in the resulting
-string follows the insertion order of the input mapping.
+This module provides helpers for building query strings, joining URLs,
+stripping query components, and removing specific query parameters.
 """
 
 from __future__ import annotations
 
-from typing import Any, Mapping
-from urllib.parse import quote_plus, urlparse, urlunparse
+from typing import Any, Mapping, Tuple
+from urllib.parse import (
+    parse_qsl,
+    quote_plus,
+    urlencode,
+    urlparse,
+    urlunparse,
+)
 
 
 def build_query(params: Mapping[str, Any]) -> str:
-    """Return a URL‑encoded query string built from *params*.
+    """Convert a mapping of query parameters into a URL‑encoded query string.
 
-    ``None`` values are omitted from the output. All keys and values are
-    converted to strings and URL‑escaped using :func:`urllib.parse.quote_plus`.
-
-    Args:
-        params: Mapping of query parameter names to values.
-
-    Returns:
-        A query string (e.g. ``"a=1&b=hello+world"``). An empty string is
-        returned when *params* is empty or contains only ``None`` values.
+    Parameters whose value is ``None`` are omitted. The order of parameters
+    follows the insertion order of the input mapping.
     """
     parts: list[str] = []
     for key, value in params.items():
@@ -35,58 +32,41 @@ def build_query(params: Mapping[str, Any]) -> str:
     return "&".join(parts)
 
 
-def join_url(base: str, relative: str) -> str:
-    """Safely join *base* URL with *relative* path.
+def join_url(base: str, rel: str) -> str:
+    """Join a base URL and a relative URL/path.
 
-    The function ensures exactly one ``/`` between the two parts, removes
-    duplicate slashes, and returns *relative* unchanged if it is an absolute
-    URL (i.e. contains a scheme). Empty *base* or *relative* values are handled
-    gracefully.
-
-    Args:
-        base: The base URL (e.g. ``"http://example.com/api"``).
-        relative: The relative path to append (e.g. ``"users"``).
-
-    Returns:
-        The combined URL.
+    - If ``rel`` is an absolute URL (has a scheme), it overrides ``base``.
+    - Empty ``rel`` returns ``base`` unchanged.
+    - Otherwise, exactly one ``/`` is placed between the parts.
     """
-    if not base:
-        return relative
-    if not relative:
+    if not rel:
         return base
-    # If the relative URL is absolute (has a scheme), return it unchanged.
-    if urlparse(relative).scheme:
-        return relative
-    # Remove trailing slash from base and leading slash from relative to avoid
-    # duplicate slashes.
-    base_stripped = base.rstrip("/")
-    rel_stripped = relative.lstrip("/")
-    return f"{base_stripped}/{rel_stripped}"
+    rel_parsed = urlparse(rel)
+    if rel_parsed.scheme:
+        return rel
+    # Ensure single slash between base and rel
+    return f"{base.rstrip('/')}/{rel.lstrip('/')}"
 
 
 def strip_query(url: str) -> str:
-    """Return *url* without its query component.
+    """Return ``url`` without its query component, preserving fragments."""
+    parsed = urlparse(url)
+    stripped = parsed._replace(query="")
+    return urlunparse(stripped)
 
-    The function preserves the scheme, netloc, path, params, and fragment.
-    If *url* has no query part, it is returned unchanged.
 
-    Args:
-        url: The URL string to process.
+def remove_query_param(url: str, param: str) -> str:
+    """Return ``url`` with all occurrences of ``param`` removed from its query.
 
-    Returns:
-        The URL without the query string.
+    The order of remaining parameters is preserved. If the removal results in
+    an empty query string, the ``?`` is omitted. Fragments are preserved.
     """
     parsed = urlparse(url)
-    if not parsed.query:
-        return url
-    # Rebuild the URL with an empty query component.
-    return urlunparse(
-        (
-            parsed.scheme,
-            parsed.netloc,
-            parsed.path,
-            parsed.params,
-            "",
-            parsed.fragment,
-        )
-    )
+    # Parse query preserving order and blank values
+    query_items: list[Tuple[str, str]] = parse_qsl(parsed.query, keep_blank_values=True)
+    # Filter out the unwanted parameter
+    filtered_items = [(k, v) for k, v in query_items if k != param]
+    # Re‑encode the filtered query
+    new_query = urlencode(filtered_items, doseq=True)
+    new_parsed = parsed._replace(query=new_query)
+    return urlunparse(new_parsed)
