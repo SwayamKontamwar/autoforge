@@ -5269,3 +5269,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement meters_to_feet conversion, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-11-15T21:55Z — rejected: (geometry) Implement `polygon_area` in app/toolkit/geometry.py: return the area of a simple polygon via the shoelace formula. Add a pytest in tests/toolkit/test_geometry.py covering the documented behaviour and at least one edge case, and export `polygon_area` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
