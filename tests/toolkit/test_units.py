@@ -5,6 +5,7 @@ from app.toolkit.units import (
     celsius_to_kelvin,
     fahrenheit_to_celsius,
     km_to_miles,
+    meters_to_feet,
 )
 
 
@@ -53,3 +54,12 @@ def test_km_to_miles_basic_and_edge_cases() -> None:
     assert km_to_miles(1) == pytest.approx(0.62137119223733, rel=1e-12)
     # Negative distance
     assert km_to_miles(-5) == pytest.approx(-3.10685596118665, rel=1e-12)
+
+
+def test_meters_to_feet_basic_and_edge_cases() -> None:
+    # Zero distance
+    assert meters_to_feet(0) == 0.0
+    # One metre conversion
+    assert meters_to_feet(1) == pytest.approx(3.2808398950131235, rel=1e-12)
+    # Negative distance
+    assert meters_to_feet(-2) == pytest.approx(-6.561679790026247, rel=1e-12)

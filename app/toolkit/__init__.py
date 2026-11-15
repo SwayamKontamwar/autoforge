@@ -56,6 +56,7 @@ from app.toolkit.units import (
     celsius_to_kelvin,
     fahrenheit_to_celsius,
     km_to_miles,
+    meters_to_feet,
 )
 from app.toolkit.validation import is_email, is_ipv6, is_url, is_uuid
 from app.toolkit.vectors3d import v3_add, v3_dot, v3_sub
@@ -126,6 +127,7 @@ __all__ = [
     "fahrenheit_to_celsius",
     "celsius_to_kelvin",
     "km_to_miles",
+    "meters_to_feet",
     "distance_2d",
     "manhattan_distance",
     "haversine",

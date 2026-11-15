@@ -1,6 +1,7 @@
 """Utility functions for unit conversions.
 
-Currently provides temperature conversion from Celsius to Fahrenheit.
+Currently provides temperature conversion from Celsius to Fahrenheit and
+other common unit conversions.
 """
 
 from __future__ import annotations
@@ -54,8 +55,6 @@ def celsius_to_kelvin(celsius: float) -> float:
     Example:
         >>> celsius_to_kelvin(0)
         273.15
-        >>> celsius_to_kelvin(-273.15)
-        0.0
     """
     return celsius + 273.15
 
@@ -71,9 +70,22 @@ def km_to_miles(kilometers: float) -> float:
 
     Example:
         >>> km_to_miles(1)
-        0.621371
-        >>> km_to_miles(0)
-        0.0
+        0.62137119223733
     """
-    # 1 kilometre = 0.621371 miles (exact conversion factor)
     return kilometers * 0.62137119223733
+
+
+def meters_to_feet(meters: float) -> float:
+    """Convert a distance from metres to feet.
+
+    Args:
+        meters: Distance in metres.
+
+    Returns:
+        Distance in feet.
+
+    Example:
+        >>> meters_to_feet(1)
+        3.2808398950131235
+    """
+    return meters * 3.2808398950131235
