@@ -21,7 +21,7 @@ from app.toolkit.config import deep_get, get_env_bool, get_env_int, get_env_list
 from app.toolkit.datetimes import humanize_delta, now_utc, parse_iso, to_iso
 from app.toolkit.encoding import base58_decode, base58_encode, base62_decode, base62_encode
 from app.toolkit.files import human_path, split_extension
-from app.toolkit.finance import compound_interest, monthly_payment
+from app.toolkit.finance import compound_interest, monthly_payment, present_value
 from app.toolkit.functional import compose, curry, pipe
 from app.toolkit.geometry import distance_2d, haversine, manhattan_distance, point_in_rect
 from app.toolkit.graphx import astar, floyd_warshall
@@ -134,6 +134,7 @@ __all__ = [
     "point_in_rect",
     "compound_interest",
     "monthly_payment",
+    "present_value",
     "get_env_bool",
     "get_env_int",
     "get_env_list",
