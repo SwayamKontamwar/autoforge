@@ -5283,3 +5283,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-16T17:26Z — rejected: (finance) Implement `present_value` in app/toolkit/finance.py: discount a future amount to present value. Add a pytest in tests/toolkit/test_finance.py covering the documented behaviour and at least one edge case, and export `present_value` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
