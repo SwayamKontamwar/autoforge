@@ -5293,3 +5293,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Implement present_value, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-11-17T00:54Z — rejected: (config) Implement `merge_configs` in app/toolkit/config.py: merge a list of config dicts with later ones winning. Add a pytest in tests/toolkit/test_config.py covering the documented behaviour and at least one edge case, and export `merge_configs` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
