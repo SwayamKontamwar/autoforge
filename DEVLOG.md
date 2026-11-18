@@ -5346,3 +5346,7 @@ FAILED tests/toolkit/test_resilience_circuitbreaker.py::test_circuit_breaker_inv
 4 failed, 693 passed, 22 warnings in 36.47s
 
 ```
+
+## 2026-11-18T02:54Z — rejected: (cli) Implement `table` in app/toolkit/cli.py: render a list of rows as an aligned text table. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `table` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
