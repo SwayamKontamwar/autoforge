@@ -5354,3 +5354,68 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-18T10:19Z — rejected: (cli) Implement `table` in app/toolkit/cli.py: render a list of rows as an aligned text table. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `table` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-18T16:43Z — skipped: (cli) Implement `table` in app/toolkit/cli.py: render a list of rows as an aligned text table. Add a pytest in tests/toolkit/test_cli.py covering the documented behaviour and at least one edge case, and export `table` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 3; code reverted.
+
+```
+... (truncated)
+ empty list yields an empty
+107 |         string. No trailing newline is added.
+    |                             ^^^^^^^
+108 |     """
+109 |     if not rows:
+    |
+
+invalid-syntax: Expected an identifier
+   --> app/toolkit/cli.py:107:46
+    |
+105 |     Returns:
+106 |         A string containing the formatted table. An empty list yields an empty
+107 |         string. No trailing newline is added.
+    |                                              ^
+108 |     """
+109 |     if not rows:
+    |
+
+invalid-syntax: missing closing quote in string literal
+   --> app/toolkit/cli.py:108:5
+    |
+106 |           A string containing the formatted table. An empty list yields an empty
+107 |           string. No trailing newline is added.
+108 | /     """
+109 | |     if not rows:
+110 | |         return ""
+111 | |
+112 | |     # Determine the maximum number of columns.
+113 | |     col_count = max(len(row) for row in rows)
+114 | |
+115 | |     # Normalise rows to the same length, converting all cells to strings.
+116 | |     norm_rows: List[List[str]] = []
+117 | |     for row in rows:
+118 | |         str_row = [str(cell) for cell in row]
+119 | |         # Pad missing columns with empty strings.
+120 | |         if len(str_row) < col_count:
+121 | |             str_row.extend("" for _ in range(col_count - len(str_row)))
+122 | |         norm_rows.append(str_row)
+123 | |
+124 | |     # Compute maximum width for each column.
+125 | |     col_widths = [
+126 | |         max(len(str_row[col]) for str_row in norm_rows) for col in range(col_count)
+127 | |     ]
+128 | |
+129 | |     # Build each line with left‑justified cells separated by two spaces.
+130 | |     lines = []
+131 | |     for str_row in norm_rows:
+132 | |         padded_cells = [
+133 | |             str_row[col].ljust(col_widths[col]) for col in range(col_count)
+134 | |         ]
+135 | |         lines.append("  ".join(padded_cells).rstrip())
+136 | |
+137 | |     return "\n".join(lines)
+    | |____________________________^
+
+Found 105 errors.
+
+```
