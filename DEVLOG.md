@@ -5441,3 +5441,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-19T16:47Z — rejected: (observability) Implement `log_context` in app/toolkit/observability.py: a context manager attaching key/values to log records. Add a pytest in tests/toolkit/test_observability.py covering the documented behaviour and at least one edge case, and export `log_context` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-19T21:34Z — skipped: (observability) Implement `log_context` in app/toolkit/observability.py: a context manager attaching key/values to log records. Add a pytest in tests/toolkit/test_observability.py covering the documented behaviour and at least one edge case, and export `log_context` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
