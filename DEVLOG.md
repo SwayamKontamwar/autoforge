@@ -5447,3 +5447,24 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-19T23:40Z — failed: (serialization) Implement `dicts_to_csv` in app/toolkit/serialization.py: serialise a list of dicts to CSV text. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `dicts_to_csv` from app/toolkit/__init__.py.
+
+Guardrail failed on attempt 1; code reverted.
+
+```
+$ ruff check
+(exit 1)
+F821 Undefined name `dataclass`
+  --> tests/toolkit/test_serialization.py:19:6
+   |
+18 | def test_dataclass_to_dict_simple():
+19 |     @dataclass
+   |      ^^^^^^^^^
+20 |     class Simple:
+21 |         x: int
+   |
+
+Found 1 error.
+
+```
