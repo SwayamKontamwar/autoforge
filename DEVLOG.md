@@ -5468,3 +5468,7 @@ F821 Undefined name `dataclass`
 Found 1 error.
 
 ```
+
+## 2026-11-20T02:20Z — rejected: (serialization) Implement `dicts_to_csv` in app/toolkit/serialization.py: serialise a list of dicts to CSV text. Add a pytest in tests/toolkit/test_serialization.py covering the documented behaviour and at least one edge case, and export `dicts_to_csv` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
