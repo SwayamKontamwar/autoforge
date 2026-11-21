@@ -5492,3 +5492,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-21T02:18Z — success: (bits) Implement `highest_set_bit` in app/toolkit/bits.py: return the index of the highest set bit or -1. Add a pytest in tests/toolkit/test_bits.py covering the documented behaviour and at least one edge case, and export `highest_set_bit` from app/toolkit/__init__.py.
+
+Implement highest_set_bit, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.

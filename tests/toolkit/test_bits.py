@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.toolkit import clear_bit, set_bit, toggle_bit
+from app.toolkit import clear_bit, highest_set_bit, set_bit, toggle_bit
 
 
 def test_set_bit_basic():
@@ -66,3 +66,18 @@ def test_toggle_bit_edge():
     # negative position raises
     with pytest.raises(ValueError):
         toggle_bit(1, -1)
+
+
+def test_highest_set_bit_basic():
+    """Basic cases for highest_set_bit."""
+    assert highest_set_bit(0) == -1
+    assert highest_set_bit(1) == 0
+    assert highest_set_bit(2) == 1
+    assert highest_set_bit(5) == 2  # 0b101
+
+
+def test_highest_set_bit_large_and_error():
+    """Large number and negative input handling."""
+    assert highest_set_bit(2**20) == 20
+    with pytest.raises(ValueError):
+        highest_set_bit(-1)
