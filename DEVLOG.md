@@ -5498,3 +5498,7 @@ Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
 Implement highest_set_bit, export it, and add tests
 
 Guardrail: ruff + import + pytest passed.
+
+## 2026-11-21T09:56Z — rejected: (streams) Implement `chain_lazy` in app/toolkit/streams.py: lazily chain iterables without materialising them. Add a pytest in tests/toolkit/test_streams.py covering the documented behaviour and at least one edge case, and export `chain_lazy` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
