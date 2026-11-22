@@ -5554,3 +5554,9 @@ FAILED tests/toolkit/test_mathx_clamp_angle.py::test_clamp_angle_edge_cases - as
 2 failed, 695 passed, 22 warnings in 44.05s
 
 ```
+
+## 2026-11-22T09:54Z — skipped: (mathx) Implement `catalan` in app/toolkit/mathx.py: return the nth Catalan number. Add a pytest in tests/toolkit/test_mathx.py covering the documented behaviour and at least one edge case, and export `catalan` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
