@@ -5560,3 +5560,7 @@ FAILED tests/toolkit/test_mathx_clamp_angle.py::test_clamp_angle_edge_cases - as
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-22T15:40Z — rejected: (matrix) Implement `mat_mul` in app/toolkit/matrix.py: multiply two matrices. Add a pytest in tests/toolkit/test_matrix.py covering the documented behaviour and at least one edge case, and export `mat_mul` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
