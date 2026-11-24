@@ -5588,3 +5588,7 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
 
 Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
+
+## 2026-11-24T00:50Z — rejected: (numbertheory) Implement `is_abundant` in app/toolkit/numbertheory.py: test whether an integer is abundant. Add a pytest in tests/toolkit/test_numbertheory.py covering the documented behaviour and at least one edge case, and export `is_abundant` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
