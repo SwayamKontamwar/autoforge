@@ -38,7 +38,7 @@ from app.toolkit.numbertheory import divisor_count, divisor_sum, euler_totient, 
 from app.toolkit.observability import RateCounter, Stopwatch, Timer
 from app.toolkit.parsing import compare_semver, parse_semver
 from app.toolkit.physics import kinetic_energy, potential_energy, work_done
-from app.toolkit.probability import binomial_pmf, poisson_pmf
+from app.toolkit.probability import binomial_pmf, expected_value, poisson_pmf
 from app.toolkit.randomness import nanoid, random_hex, random_string, uuid4
 from app.toolkit.regexutil import extract_emails, extract_hashtags, extract_mentions, extract_urls
 from app.toolkit.resilience import CircuitBreaker, retry
@@ -177,6 +177,7 @@ __all__ = [
     "multinomial",
     "binomial_pmf",
     "poisson_pmf",
+    "expected_value",
     "extract_emails",
     "extract_urls",
     "extract_hashtags",

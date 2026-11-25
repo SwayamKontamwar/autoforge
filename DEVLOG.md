@@ -5624,3 +5624,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-25T04:12Z — rejected: (probability) Implement `expected_value` in app/toolkit/probability.py: return the expected value of outcomes and probabilities. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `expected_value` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-25T11:28Z — success: (probability) Implement `expected_value` in app/toolkit/probability.py: return the expected value of outcomes and probabilities. Add a pytest in tests/toolkit/test_probability.py covering the documented behaviour and at least one edge case, and export `expected_value` from app/toolkit/__init__.py.
+
+Implement expected_value in probability module, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
