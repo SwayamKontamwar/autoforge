@@ -7,62 +7,50 @@ from __future__ import annotations
 
 
 def md_bold(text: str) -> str:
-    """Return *text* wrapped in markdown bold markers.
-
-    Args:
-        text: The string to be bolded.
-
-    Returns:
-        The input string surrounded by double asterisks, e.g. ``**text**``.
-    """
+    """Return **text**."""
     return f"**{text}**"
 
 
 def md_italic(text: str) -> str:
-    """Return *text* wrapped in markdown italic markers.
-
-    Args:
-        text: The string to be italicized.
-
-    Returns:
-        The input string surrounded by single asterisks, e.g. ``*text*``.
-    """
+    """Return *text*."""
     return f"*{text}*"
 
 
 def md_link(text: str, url: str) -> str:
-    """Return a markdown link constructed from *text* and *url*.
-
-    Args:
-        text: The link text.
-        url: The URL the link points to.
-
-    Returns:
-        A markdown link, e.g. ``[text](url)``.
-    """
+    """Return a markdown link."""
     return f"[{text}]({url})"
 
 
 def md_image(alt: str, url: str) -> str:
-    """Return a markdown image snippet.
-
-    Args:
-        alt: Alt text for the image.
-        url: Image URL.
-
-    Returns:
-        A markdown image tag, e.g. ``![alt](url)``.
-    """
+    """Return a markdown image."""
     return f"![{alt}]({url})"
 
 
 def md_code(text: str) -> str:
-    """Return *text* wrapped in markdown inline code markers.
+    """Return an inline code snippet, handling backticks.
 
-    Args:
-        text: The code snippet to be wrapped.
-
-    Returns:
-        The input string surrounded by backticks, e.g. ```text` ``.
+    If the text contains backticks, they are stripped and the snippet is
+    wrapped in double backticks to avoid delimiter collision.
     """
+    if "`" in text:
+        cleaned = text.replace("`", "")
+        return f"``{cleaned}``"
     return f"`{text}`"
+
+
+def md_code_block(text: str, language: str = "") -> str:
+    """Return a fenced code block with an optional language specifier.
+
+    The block is formatted as:
+
+        ```<language>
+    <text>
+    ```
+
+    If ``language`` is empty or only whitespace, the opening fence is just
+    three backticks. ``text`` may be empty; the function will still produce
+    a valid fenced block.
+    """
+    lang = language.strip()
+    opening = f"```{lang}" if lang else "```"
+    return f"{opening}\n{text}\n```"

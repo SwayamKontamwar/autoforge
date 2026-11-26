@@ -5652,3 +5652,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-26T11:02Z — rejected: (markdown) Implement `md_code_block` in app/toolkit/markdown.py: wrap text in a fenced code block with a language. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_code_block` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-26T17:54Z — success: (markdown) Implement `md_code_block` in app/toolkit/markdown.py: wrap text in a fenced code block with a language. Add a pytest in tests/toolkit/test_markdown.py covering the documented behaviour and at least one edge case, and export `md_code_block` from app/toolkit/__init__.py.
+
+Implement md_code_block, export it, and add tests
+
+Guardrail: ruff + import + pytest passed.
