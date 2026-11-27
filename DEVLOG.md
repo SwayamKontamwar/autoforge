@@ -5666,3 +5666,9 @@ Patch rejected: the provider stopped mid-answer at the completion limit. Return 
 ## 2026-11-27T01:04Z — rejected: (calendars) Implement `month_name` in app/toolkit/calendars.py: return the English month name for a month number. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `month_name` from app/toolkit/__init__.py.
 
 Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+## 2026-11-27T03:38Z — skipped: (calendars) Implement `month_name` in app/toolkit/calendars.py: return the English month name for a month number. Add a pytest in tests/toolkit/test_calendars.py covering the documented behaviour and at least one edge case, and export `month_name` from app/toolkit/__init__.py.
+
+Patch rejected: the provider stopped mid-answer at the completion limit. Return fewer files, and keep each file small; split large work across runs.
+
+Skipped after 3 out-of-bounds attempts so the backlog keeps moving.
